@@ -6,11 +6,42 @@
 
 ## 1. Motivation: The Vision of Sovereign Edge Intelligence
 
-Training a fully functional Artificial Intelligence system, specifically a Large Language Model (LLM), from first principles has been a foundational ambition since the inception of my studies in Artificial Intelligence. In the current landscape, the convergence of distributed computing power and accessible knowledge has never been more potent; consequently, constructing an intelligent machine stands as one of the most exhilarating tasks a group of machine learning specialists can undertake.
+Training a fully functional modern neural network, specifically a Large Language Model (LLM), from first principles has been a foundational ambition since the inception of our community [mii-llm](https://mii-llm.ai) that stands for Made in Italy - Large Language Model. In the current landscape, the convergence of distributed computing power and accessible knowledge has never been more potent; consequently, constructing an intelligent machine stands as one of the most exciting tasks a group of machine learning specialists can undertake.
 
 This vision materialized when Antonio Baldassarra (CEO of Seeweb) and Marco Cristofanilli (Head of AI at Seeweb) commissioned us to develop a Small Language Model (SLM) from scratch utilizing the Seeweb infrastructure. Seeweb, a cloud provider with a strategic focus on AI, granted us access to a cluster of on-demand nodes comprising a total of 64 NVIDIA A100 GPUs.
 
 Our primary objective was to experiment and deliver a state-of-the-art SLM with approximately 500 million parameters, built from the ground up and optimized for edge use cases within the Italian language ecosystem. We hypothesize that, in the coming years, intelligent devices—and virtually any hardware equipped with a chip—will be enhanced by neural architectures with embedded reasoning and language capabilities. Small, efficient models will be key to enabling automation at the edge. To address this need, we created Zagreus, arguably one of the few high-performing small language models dedicated to the Italian language.
+
+We are releasing this detailed blog post, covering every step and data point required to reproduce the project, as we strongly believe in the importance of open source in reducing technological and geopolitical dependencies.
+
+## The Joy and Pain of Training an LLM from Scratch
+
+### A Technical Report on the Development of the Zagreus and Nesso Model Families
+
+---
+
+## 1. Motivation: The Vision of Sovereign Edge Intelligence
+
+Training a fully functional modern neural network, specifically a Large Language Model (LLM), from first principles has been a foundational ambition since the inception of our community [mii-llm](https://mii-llm.ai) that stands for Made in Italy - Large Language Model. In the current landscape, the convergence of distributed computing power and accessible knowledge has never been more potent; consequently, constructing an intelligent machine stands as one of the most exciting tasks a group of machine learning specialists can undertake.
+
+This vision materialized when Antonio Baldassarra (CEO of Seeweb) and Marco Cristofanilli (Head of AI at Seeweb) commissioned us to develop a Small Language Model (SLM) from scratch utilizing the Seeweb infrastructure. Seeweb, a cloud provider with a strategic focus on AI, granted us access to a cluster of on-demand nodes comprising a total of 64 NVIDIA A100 GPUs.
+
+Our primary objective was to experiment and deliver a state-of-the-art SLM with approximately 500 million parameters, built from the ground up and optimized for edge use cases within the Italian language ecosystem. We hypothesize that, in the coming years, intelligent devices—and virtually any hardware equipped with a chip—will be enhanced by neural architectures with embedded reasoning and language capabilities. Small, efficient models will be key to enabling automation at the edge. To address this need, we created Zagreus, arguably one of the few high-performing small language models dedicated to the Italian language.
+
+In the spirit of open and reproducible research, we are releasing the full Zagreus and Nesso lineup: seven models in total—four base (pretrained) checkpoints for bilingual models and three post-trained variants. Notably, our post-trained models are designed to compete on standard benchmarks with state-of-the-art models of comparable size, demonstrating that carefully engineered small models can achieve near frontier-level performance within their parameter class.
+
+### Base models:
+
+* [zagreus-0.4B-base-ita]() English Italian bilingual model
+* [zagreus-0.4B-base-spa]() English Spanish bilingual model
+* [zagreus-0.4B-base-por]() English Portuguese bilingual model
+* [zagreus-0.4B-base-fra]() English French bilingual model
+
+### Post-trained models:
+* [nesso-0.4B-sft]() English Italian for conversational use cases
+* [agentic-nesso-0.4B-sft]() English Italian for agentic and function calling use cases
+* [open-zagreus-0.4B]() Fully open source data italian based data used to train this model
+
 
 We are releasing this detailed blog post, covering every step and data point required to reproduce the project, as we strongly believe in the importance of open source in reducing technological and geopolitical dependencies.
 
@@ -22,29 +53,21 @@ There are numerous frameworks available for creating an LLM from scratch. We con
 
 ### Framework Comparative Analysis
 
-**Megatron-LM:** Developed by NVIDIA, this is a powerful framework designed for training large transformer models with billions of parameters. While it is likely an optimal choice for large, well-resourced teams, we found it challenging to set up and deploy effectively on our specific cluster infrastructure.
+[**Megatron-LM:**](https://github.com/NVIDIA/Megatron-LM) Developed by NVIDIA, this is a powerful framework designed for training large transformer models with billions of parameters. While it is likely an optimal choice for large, well-resourced teams, we found it challenging to set up and deploy effectively on our specific cluster infrastructure.
 
-**Llama-Factory:** A versatile and user-friendly open-source framework that simplifies fine-tuning, training, and deployment of a wide range of LLMs. However, our evaluation suggests it is more specialized for fine-tuning than for pre-training from scratch.
+[**Llama-Factory:**](https://github.com/hiyouga/LLaMA-Factory) A versatile and user-friendly open-source framework that simplifies fine-tuning, training, and deployment of a wide range of LLMs. However, our evaluation suggests it is more specialized for fine-tuning than for pre-training from scratch.
 
 **nanoGPT and nanochat:** Both created by Andrej Karpathy, these projects prioritize simplicity and educational value.
 
-* **nanoGPT** is a minimalist, readable codebase designed as a learning tool, though it is now considered deprecated in favor of its successor.
-* **nanochat** is the evolution of nanoGPT, offering a full-stack, end-to-end pipeline for building a complete ChatGPT-like chatbot. It covers the entire lifecycle, from tokenization and pre-training to fine-tuning and a web interface, all within a compact and hackable codebase. Although nanochat had not yet been released when we commenced this project, we believe it has a promising future, especially given its recent integration into the Transformers library.
+[**nanoGPT**](https://github.com/karpathy/nanoGPT) is a minimalist, readable codebase designed as a learning tool, though it is now considered deprecated in favor of its successor.
+[**nanochat**](https://github.com/karpathy/nanochat) is the evolution of nanoGPT, offering a full-stack, end-to-end pipeline for building a complete ChatGPT-like chatbot. It covers the entire lifecycle, from tokenization and pre-training to fine-tuning and a web interface, all within a compact and hackable codebase. Although nanochat had not yet been released when we commenced this project, we believe it has a promising future, especially given its recent integration into the Transformers library.
 
 ### Our Choice: Hugging Face Nanotron
 
-Ultimately, we selected Hugging Face Nanotron. It is a minimalistic library focused on 3D parallelism (Data, Tensor, and Pipeline) specifically for pre-training transformer models. We value Hugging Face for its commitment to openness. We found the library well-suited for multi-node training; furthermore, it is natively integrated into the Hugging Face ecosystem (Accelerate, Datasets, hf-cli), ensuring that workflows—from data tokenization to model release—remain cohesive.
+Ultimately, we selected [Hugging Face Nanotron](https://github.com/huggingface/nanotron). It is a minimalistic library focused on 3D parallelism (Data, Tensor, and Pipeline) specifically for pre-training transformer models. We value Hugging Face for its commitment to openness. We found the library well-suited for multi-node training; furthermore, it is natively integrated into the Hugging Face ecosystem (Accelerate, Datasets, hf-cli), ensuring that workflows—from data tokenization to model release—remain cohesive.
 
-During the development cycle, we identified minor bugs and are actively contributing to the library via Pull Requests. We also established a fork of Nanotron optimized to run directly on a Slurm cluster.
+During the development cycle, we identified minor bugs and are actively contributing to the library via Pull Requests. We also established a [fork of Nanotron](https://github.com/mii-llm/nanotron) optimized to run directly on a Slurm cluster.
 
-Reference Links:
-hf nanotron: [https://github.com/huggingface/nanotron](https://github.com/huggingface/nanotron)
-llama-factory: [https://github.com/hiyouga/LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory)
-Megatron-LM: [https://github.com/NVIDIA/Megatron-LM](https://github.com/NVIDIA/Megatron-LM)
-nanoGPT: [https://github.com/karpathy/nanoGPT](https://github.com/karpathy/nanoGPT)
-nanochat: [https://github.com/karpathy/nanochat](https://github.com/karpathy/nanochat)
-
----
 
 ## 3. Data Engineering: The Tokenization Pipeline
 
@@ -52,39 +75,39 @@ Data is the *sine qua non* for creating an LLM. The volume of data required is c
 
 ### Dataset Sources
 
-We utilized exclusively open-source datasets released by the Hugging Face team. Below is the data distribution per model:
+We utilized exclusively open-source datasets by the Hugging Face team for creating our four bilingual foundational model released . Below is the data distribution per model:
 
 mii-llm/nesso-0.4B-ita:
-[https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT](https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT) (350 billion tokens)
-[https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/ita_Latn](https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/ita_Latn)
-[https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/ita_Latn](https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/ita_Latn)
-[https://huggingface.co/datasets/bigcode/starcoderdata](https://huggingface.co/datasets/bigcode/starcoderdata) (250 billion tokens)
+* [https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT](https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT) (350 billion tokens)
+* [https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/ita_Latn](https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/ita_Latn)
+* [https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/ita_Latn](https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/ita_Latn)
+* [https://huggingface.co/datasets/bigcode/starcoderdata](https://huggingface.co/datasets/bigcode/starcoderdata) (250 billion tokens)
 
 mii-llm/nesso-0.4B-fra:
-[https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT](https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT) (350 billion tokens)
-[https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/fra_Latn](https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/fra_Latn)
-[https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/fra_Latn](https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/fra_Latn)
-[https://huggingface.co/datasets/bigcode/starcoderdata](https://huggingface.co/datasets/bigcode/starcoderdata) (250 billion tokens)
+* [https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT](https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT) (350 billion tokens)
+* [https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/fra_Latn](https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/fra_Latn)
+* [https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/fra_Latn](https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/fra_Latn)
+* [https://huggingface.co/datasets/bigcode/starcoderdata](https://huggingface.co/datasets/bigcode/starcoderdata) (250 billion tokens)
 
 mii-llm/nesso-0.4B-por:
-[https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT](https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT) (350 billion tokens)
-[https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/por_Latn](https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/por_Latn)
-[https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/por_Latn](https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/por_Latn)
-[https://huggingface.co/datasets/bigcode/starcoderdata](https://huggingface.co/datasets/bigcode/starcoderdata) (250 billion tokens)
+* [https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT](https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT) (350 billion tokens)
+* [https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/por_Latn](https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/por_Latn)
+* [https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/por_Latn](https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/por_Latn)
+* [https://huggingface.co/datasets/bigcode/starcoderdata](https://huggingface.co/datasets/bigcode/starcoderdata) (250 billion tokens)
 
 mii-llm/nesso-0.4B-spa:
-[https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT](https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT) (350 billion tokens)
-[https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/spa_Latn](https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/spa_Latn)
-[https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/spa_Latn](https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/spa_Latn)
-[https://huggingface.co/datasets/bigcode/starcoderdata](https://huggingface.co/datasets/bigcode/starcoderdata) (250 billion tokens)
+* [https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT](https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT) (350 billion tokens)
+* [https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/spa_Latn](https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/spa_Latn)
+* [https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/spa_Latn](https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/spa_Latn)
+* [https://huggingface.co/datasets/bigcode/starcoderdata](https://huggingface.co/datasets/bigcode/starcoderdata) (250 billion tokens)
 
 ### The Tokenization Process
 
 Raw datasets are not ready for immediate training; they must first be tokenized. Tokenization is a CPU-intensive process that transforms text strings into token sequences (numerical IDs). As a rule of thumb for storage estimation, for every 1 GB of text, approximately 3 GB of tokenized outputs are generated. For ~1 trillion tokens, one typically requires at least 3 to 5 terabytes of disk space (depending on format, sharding strategy, and compression).
 
-We selected the Llama-3.2 tokenizer (from the Llama-3.2-1B model) because its multilingual tokenization capabilities are robust and widely adopted. Using the datatrove library, the process took over three weeks of continuous computation to generate ~1 trillion tokens, stratified as roughly 400B English, 400B Italian, and 200B Code.
+We selected the Llama-3.2 tokenizer (from the Llama-3.2-1B model) because its multilingual tokenization capabilities are robust and widely adopted. Using the [datatrove](https://github.com/huggingface/datatrove) library, the process took over three weeks of continuous computation to generate ~1 trillion tokens, stratified as roughly 400B English, 400B Italian, and 200B Code.
 
-Below is the Python script used for the Slurm pipeline execution:
+Below is the Python script as example used for Slurm pipeline execution:
 
 ```python
 import os
@@ -374,7 +397,7 @@ torchrun --nproc_per_node=1 -m examples.llama.convert_nanotron_to_hf \
 
 # 5. Post-Training: Shaping Behavior
 
-Creating a base model from scratch represents a major technical achievement, and we consider this work a contribution to the open community. However, a foundation model alone—even with a fully reproducible pipeline and transparent data distribution—is rarely sufficient for direct real-world deployment. The post-training phase is responsible for shaping the model’s behavior toward practical usability.
+Creating a base model from scratch represents a major technical achievement, and we consider this work a contribution to the open community. However, a foundation model alone — even with a fully reproducible pipeline and transparent data distribution is rarely sufficient for direct real-world deployment. The post-training phase is responsible for shaping the model’s behavior toward practical usability.
 
 This phase typically requires significantly fewer GPUs and a smaller data volume compared to pre-training. However, the *quality* and *curation strategy* of the data become substantially more important than raw scale.
 
@@ -384,7 +407,7 @@ We possess extensive experience in post-training language models. Over the past 
 
 This dataset collection, built with meticulous care and long-term iteration, constitutes a strategic asset for our research group. For this reason, we have decided not to publish it as open source, as we consider it a competitive advantage. Nevertheless, we believe that releasing the trained models and all evaluation results provides significant value to the broader community.
 
-Most importantly, we demonstrate that we are able to build and release a model that performs competitively—often head-to-head—with state-of-the-art models of similar parameter scale.
+Most importantly, we demonstrate that we are able to build and release a model that performs competitively head to head with state of the art models of similar parameter scale.
 
 We are releasing two primary post-trained models:
 
