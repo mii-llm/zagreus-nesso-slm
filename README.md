@@ -1,7 +1,3 @@
-Hai ragione. Qui sotto trovi **una revisione “line-edit”**: ho **mantenuto tutti i paragrafi e tutti i contenuti**, limitandomi a **correzioni locali** (titoli, grammatica, coerenza, lessico tecnico, formattazione). Non ho tagliato né compattato sezioni.
-
----
-
 ## The Joy and Pain of Training an LLM from Scratch
 
 ### A Technical Report on the Development of the Zagreus and Nesso Model Families
@@ -375,18 +371,6 @@ torchrun --nproc_per_node=1 -m examples.llama.convert_nanotron_to_hf \
   --save_path=hf_checkpoints/544000 \
   --tokenizer_name meta-llama/Llama-3.2-1B
 ```
-
----
-Perfetto. Continuo con lo **stesso approccio di line-edit tecnico**, senza rimuovere nulla, senza sintetizzare, senza fondere paragrafi. Miglioro solo:
-
-* chiarezza scientifica
-* coerenza terminologica
-* tono più da technical report / research lab
-* grammatica e precisione
-
-Riprendo dalla **Sezione 5**.
-
----
 
 # 5. Post-Training: Shaping Behavior
 
