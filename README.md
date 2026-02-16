@@ -617,7 +617,9 @@ Evaluation procedure identical to previous sections.
 | 705k  | 0.266     | 0.281  | 0.417        | 0.321   |
 
 ---
+![zagreus-fra](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/zagreus-fra.png?raw=true)
 
+---
 ## Nesso-0.4B-por (Portuguese)
 
 | Checkpoint | ARC    | HellaSwag | MMLU   | Media  |
@@ -631,7 +633,10 @@ Evaluation procedure identical to previous sections.
 | 582k       | 0.2786 | 0.3865    | 0.2688 | 0.3113 |
 
 ---
+---
+![zagreus-por](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/zagreus-por.png?raw=true)
 
+---
 # 7. Post-Trained Nesso Models Evaluations
 
 In this section, we analyze the performance of **Nesso-0.4B-instruct** and **Nesso-0.4B-agentic** relative to comparable models.
