@@ -1,45 +1,35 @@
-## The Joy and Pain of Training an LLM from Scratch
+# The Joy and Pain of Training an LLM from Scratch
 
 ### A Technical Report on the Development of the Zagreus and Nesso Model Families
+
 ---
-
-
 ## Table of Contents
 
-1. [The Joy and Pain of Training an LLM from Scratch](#the-joy-and-pain)
-2. [1. Motivation: The Vision of Sovereign Edge Intelligence](#motivation)
-3. [2. Technology Stack: Framework Selection](#technology-stack)
+1. [The Joy and Pain of Training an LLM from Scratch](#the-joy-and-pain-of-training-an-llm-from-scratch)
+2. [1. Motivation: The Vision of Sovereign Edge Intelligence](#1-motivation-the-vision-of-sovereign-edge-intelligence)
+3. [2. Technology Stack: Framework Selection](#2-technology-stack-framework-selection)
    - [Framework Comparative Analysis](#framework-comparative-analysis)
-   - [Our Choice: Hugging Face Nanotron](#our-choice-nanotron)
-4. [3. Data Engineering: The Tokenization Pipeline](#data-engineering)
+   - [Our Choice: Hugging Face Nanotron](#our-choice-hugging-face-nanotron)
+4. [3. Data Engineering: The Tokenization Pipeline](#3-data-engineering-the-tokenization-pipeline)
    - [Dataset Sources](#dataset-sources)
-   - [The Tokenization Process](#tokenization-process)
-5. [4. Pre-training: The Core Engine](#pre-training)
+   - [The Tokenization Process](#the-tokenization-process)
+5. [4. Pre-training: The Core Engine](#4-pre-training-the-core-engine)
    - [Nanotron Training Configuration](#nanotron-training-configuration)
    - [Slurm Execution](#slurm-execution)
    - [Model Conversion](#model-conversion)
-6. [5. Post-Training: Shaping Behavior](#post-training)
+6. [5. Post-Training: Shaping Behavior](#5-post-training-shaping-behavior)
    - [Post-Training Slurm Script](#post-training-slurm-script)
    - [Axolotl Configuration](#axolotl-configuration)
-7. [6. Pre-trained Foundational Models Evaluations](#foundational-evals)
-   - [Zagreus-0.4B-ita-base](#zagreus-ita)
-   - [Zagreus-0.4B-spa-base (Spanish)](#zagreus-spa)
-   - [Zagreus-0.4B-fra (French)](#zagreus-fra)
-   - [Zagreus-0.4B-por (Portuguese)](#zagreus-por)
+7. [6. Pre-trained Foundational Models Evaluations](#6-pre-trained-foundational-models-evaluations)
+   - [Zagreus-0.4B-ita-base](#zagreus-04b-ita-base)
+   - [Zagreus-0.4B-spa-base (Spanish)](#zagreus-04b-spa-base-spanish)
+   - [Zagreus-0.4B-fra (French)](#zagreus-04b-fra-french)
+   - [Zagreus-0.4B-por (Portuguese)](#zagreus-04b-por-portuguese)
    - [lm-evaluation-harness-pt](#lm-evaluation-harness-pt)
-8. [7. Post-Trained Nesso Models Evaluations](#nesso-evals)
-   - [Open-Nesso-0.4B Evaluation](#open-nesso)
-9. [8. Conclusion](#conclusion)
-
+8. [7. Post-Trained Nesso Models Evaluations](#7-post-trained-nesso-models-evaluations)
+   - [Open-Nesso-0.4B Evaluation](#open-nesso04b-evaluation)
+9. [8. Conclusion](#8-conclusion)
 ---
-
-<a id="the-joy-and-pain"></a>
-## The Joy and Pain of Training an LLM from Scratch
-
-### A Technical Report on the Development of the Zagreus and Nesso Model Families
-
----
-<a id="motivation"></a>
 ## 1. Motivation: The Vision of Sovereign Edge Intelligence
 
 Training a fully functional modern neural network, specifically a Large Language Model (LLM), from first principles has been a foundational ambition since the inception of our community [mii-llm](https://mii-llm.ai) that stands for Made in Italy - Large Language Model. In the current landscape, the convergence of distributed computing power and accessible knowledge has never been more potent; consequently, constructing an intelligent machine stands as one of the most exciting tasks a group of machine learning specialists can undertake.
@@ -67,12 +57,10 @@ We are releasing this detailed blog post, covering every step and data point req
 
 ---
 
-<a id="technology-stack"></a>
 ## 2. Technology Stack: Framework Selection
 
 There are numerous frameworks available for creating an LLM from scratch. We conducted a comparative analysis of several options. Below is a summary of our testing and the rationale behind our ultimate decision to utilize Nanotron by Hugging Face.
 
-<a id="framework-comparative-analysis"></a>
 ### Framework Comparative Analysis
 
 [**Megatron-LM:**](https://github.com/NVIDIA/Megatron-LM) Developed by NVIDIA, this is a powerful framework designed for training large transformer models with billions of parameters. While it is likely an optimal choice for large, well-resourced teams, we found it challenging to set up and deploy effectively on our specific cluster infrastructure.
