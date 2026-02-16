@@ -38,9 +38,9 @@ In the spirit of open and reproducible research, we are releasing the full Zagre
 * [zagreus-0.4B-base-fra]() English French bilingual model
 
 ### Post-trained models:
-* [nesso-0.4B-sft]() English Italian for conversational use cases
-* [agentic-nesso-0.4B-sft]() English Italian for agentic and function calling use cases
-* [open-zagreus-0.4B]() Fully open source data italian based data used to train this model
+* [Nesso-0.4B-instruct]() English Italian for conversational use cases
+* [Nesso-0.4B-agentic]() English Italian for agentic and function calling use cases
+* [Open-Zagreus-0.4B]() Fully open source data used to train this model
 
 
 We are releasing this detailed blog post, covering every step and data point required to reproduce the project, as we strongly believe in the importance of open source in reducing technological and geopolitical dependencies.
