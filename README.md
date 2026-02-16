@@ -712,7 +712,7 @@ lm-eval --model hf --model_args pretrained=LiquidAI/LFM2-350M \
 ![italian-nesso.png](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/italian-nesso.png?raw=true)
 ---
 ---
-![english-nesso.png](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/english-nesso.png?raw=true)
+![english-nesso.png](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/english_nesso.png?raw=true)
 ---
 
 ### Discussion
