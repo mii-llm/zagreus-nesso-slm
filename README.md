@@ -75,27 +75,27 @@ Data is the *sine qua non* for creating an LLM. The volume of data required is c
 
 ### Dataset Sources
 
-We utilized exclusively open-source datasets by the Hugging Face team for creating our four bilingual foundational model released . Below is the data distribution per model:
+We utilized exclusively open source datasets by the Hugging Face team for creating our four bilingual foundational model released . Below is the data distribution per model:
 
-mii-llm/nesso-0.4B-ita:
+**mii-llm/nesso-0.4B-ita:**
 * [https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT](https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT) (350 billion tokens)
 * [https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/ita_Latn](https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/ita_Latn)
 * [https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/ita_Latn](https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/ita_Latn)
 * [https://huggingface.co/datasets/bigcode/starcoderdata](https://huggingface.co/datasets/bigcode/starcoderdata) (250 billion tokens)
 
-mii-llm/nesso-0.4B-fra:
+**mii-llm/nesso-0.4B-fra:**
 * [https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT](https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT) (350 billion tokens)
 * [https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/fra_Latn](https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/fra_Latn)
 * [https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/fra_Latn](https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/fra_Latn)
 * [https://huggingface.co/datasets/bigcode/starcoderdata](https://huggingface.co/datasets/bigcode/starcoderdata) (250 billion tokens)
 
-mii-llm/nesso-0.4B-por:
+**mii-llm/nesso-0.4B-por:**
 * [https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT](https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT) (350 billion tokens)
 * [https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/por_Latn](https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/por_Latn)
 * [https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/por_Latn](https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/por_Latn)
 * [https://huggingface.co/datasets/bigcode/starcoderdata](https://huggingface.co/datasets/bigcode/starcoderdata) (250 billion tokens)
 
-mii-llm/nesso-0.4B-spa:
+**mii-llm/nesso-0.4B-spa:**
 * [https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT](https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT) (350 billion tokens)
 * [https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/spa_Latn](https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/spa_Latn)
 * [https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/spa_Latn](https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/spa_Latn)
@@ -103,7 +103,7 @@ mii-llm/nesso-0.4B-spa:
 
 ### The Tokenization Process
 
-Raw datasets are not ready for immediate training; they must first be tokenized. Tokenization is a CPU-intensive process that transforms text strings into token sequences (numerical IDs). As a rule of thumb for storage estimation, for every 1 GB of text, approximately 3 GB of tokenized outputs are generated. For ~1 trillion tokens, one typically requires at least 3 to 5 terabytes of disk space (depending on format, sharding strategy, and compression).
+Raw datasets are not ready for immediate training; they must first be tokenized. Tokenization is a CPU intensive process that transforms text strings into token sequences (numerical IDs). As a rule of thumb for storage estimation, for every 1 GB of text, approximately 3 GB of tokenized outputs are generated. For ~1 trillion tokens, one typically requires at least 3 to 5 terabytes of disk space (depending on format, sharding strategy, and compression).
 
 We selected the Llama-3.2 tokenizer (from the Llama-3.2-1B model) because its multilingual tokenization capabilities are robust and widely adopted. Using the [datatrove](https://github.com/huggingface/datatrove) library, the process took over three weeks of continuous computation to generate ~1 trillion tokens, stratified as roughly 400B English, 400B Italian, and 200B Code.
 
@@ -202,9 +202,9 @@ if __name__ == "__main__":
 
 ## 4. Pre-training: The Core Engine
 
-Pre-training is the foundational step in building an LLM, transforming raw tokenized data into a model capable of context-aware text completion. This is the most time-consuming and GPU-intensive phase. While massive models may require thousands of GPUs, our sub-1-billion parameter model was effectively trained on the 64-GPU cluster provided by Seeweb.
+Pre-training is the foundational step in building an LLM, transforming raw tokenized data into a model capable of context aware text completion. This is the most time consuming and GPU intensive phase. While massive models may require thousands of GPUs, our sub 1 billion parameter model was effectively trained on the 64 GPU cluster provided by Seeweb.
 
-We utilized Nanotron, which supports various architectures such as Llama-3.2, Qwen-2.5, and MoE variants. For this project, we selected a modified Llama-3.2 architecture, positing that “super-dense” models yield superior results for small language models compared to sparse architectures (e.g., MoE), given the tighter capacity constraints and routing overhead.
+We utilized Nanotron, which supports multiple architectures, including Llama-3.2, Qwen-2.5, and Mixture-of-Experts (MoE) variants. For this project, we adopted a modified Llama-3.2 fully dense architecture. Our design choice was motivated by the hypothesis that, in the small-parameter regime (~500M parameters), fully dense models provide better compute utilization and more stable training dynamics than sparse architectures such as MoE. In tightly constrained capacity settings, the routing overhead and expert under-utilization typical of MoE architectures may offset their theoretical efficiency advantages.
 
 Working with a GPU cluster is streamlined by HPC tools; we employed the Slurm scheduler. Slurm allows the cluster to be viewed as a unified Linux system where jobs can be executed across many GPUs in parallel, while handling checkpoints and logs in real time. The most challenging aspect remains ensuring the software stack—from drivers and CUDA/NCCL to Python libraries—functions harmoniously, often requiring resolution of version and ABI incompatibilities.
 
@@ -214,7 +214,7 @@ For out-of-the-box functionality, we recommend our fork: [https://github.com/mii
 
 ### Nanotron Training Configuration
 
-Below is the configuration used for the training run:
+Below is the configuration used for the pre-training run:
 
 ```yaml
 checkpoints:
@@ -407,9 +407,9 @@ We possess extensive experience in post-training language models. Over the past 
 
 This dataset collection, built with meticulous care and long-term iteration, constitutes a strategic asset for our research group. For this reason, we have decided not to publish it as open source, as we consider it a competitive advantage. Nevertheless, we believe that releasing the trained models and all evaluation results provides significant value to the broader community.
 
-Most importantly, we demonstrate that we are able to build and release a model that performs competitively head to head with state of the art models of similar parameter scale.
+Most importantly, we demonstrate that we have been able to build and release a model that performs competitively head to head with state of the art models of similar parameter scale.
 
-We are releasing two primary post-trained models:
+We are releasing three primary post-trained models:
 
 * **Nesso-0.4B-instruct**: optimized for conversational and instruction-following use cases.
 * **Nesso-0.4B-agentic**: optimized for function calling, structured outputs, and agentic execution patterns.
@@ -420,7 +420,7 @@ It is important to note that both models are currently at the **SFT (Supervised 
 
 We also released a third, fully open model: **Open-Nesso (Open-Zagreus)**.
 
-Thanks to the work of the Italian open-source community **mii-llm**, and in particular Michele Montebovi—who published the SFT dataset *OpenItalianData*—all data used and all training recipes for this model are fully open and reproducible.
+Thanks to the work of the Italian open-source community **mii-llm**, and in particular Michele Montebovi who published the SFT dataset *OpenItalianData*—all data used and all training recipes for this model are fully open and reproducible as a full open source model from data to weights.
 
 ---
 
@@ -477,13 +477,13 @@ srun torchrun \
 ## Axolotl Configuration
 
 ```yaml
-base_model: giux78/zagreus-test-202000  
+base_model: giux78/zagreus-0.4B-ita 
 strict: false
 output_dir: ./ale_outputs/opendata-zagreus-sft-final
 seed: 42
 chat_template_jinja: "{%- for message in messages -%}\n    {{- \"<|im_start|>\" + message.role + \"\\n\" + message.content + \"<|im_end|>\" + \"\\n\" -}}\n{%- endfor -%}\n{%- if add_generation_prompt -%}\n\t{{- \"<|im_start|>assistant\\n\" -}}\n{%- endif -%}"
 datasets:
-  - path: /leonardo_work/EUHPC_A04_045/training/openitaliandata
+  - path: /training/openitaliandata
     type: chat_template
     field_messages: conversation
     roles_to_train: ["assistant"]
@@ -532,16 +532,6 @@ fsdp_config:
 special_tokens:
   pad_token: <|im_end|>
   eos_token: <|im_end|>
-
-tokens:
-   - <|im_start|>
-   - <|im_end|>
-   - <tool_response>
-   - </tool_response>
-   - <tool_call>
-   - </tool_call>
-   - <code>
-   - </code>
 ```
 
 ---
@@ -552,7 +542,7 @@ This section presents quantitative evaluations of our pre-trained foundational m
 
 These results serve both as validation and as a reproducible baseline for future experiments.
 
-We are contributors to **lm-evaluation-harness** for multilingual benchmarks and relied extensively on this framework. For each benchmark, we provide the exact command used to ensure reproducibility.
+We are contributors to **lm-evaluation-harness** for multilingual benchmarks and relied extensively on this framework. For each benchmark, we provide the exact command used to ensure the evaluation reproducibility.
 
 ---
 
@@ -585,6 +575,8 @@ Checkpoint progression:
 | v2-680k    | 0.2538        | 0.3740                  | 0.2592            | 0.2957 |
 | v2-775k    | 0.2535        | 0.3750                  | 0.2583            | 0.2956 |
 
+![zagreus-ita](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/nesso-ita-base-checkpoint.png?raw=true)
+
 ---
 
 ## Nesso-0.4B-spa-base (Spanish)
@@ -608,7 +600,9 @@ lm-eval --model hf --model_args pretrained=LiquidAI/LFM2-350M \
 | 518k  | 0.255   | 0.280  | 0.429        | 0.321   |
 
 ---
+![zagreus-spa](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/nesso-ita-base-checkpoint.png?raw=true)
 
+---
 ## Nesso-0.4B-fra (French)
 
 Evaluation procedure identical to previous sections.
