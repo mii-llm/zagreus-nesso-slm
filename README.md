@@ -657,14 +657,18 @@ lm-eval --model hf --model_args pretrained=LiquidAI/LFM2-350M \
 ![zagreus-por](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/zagreus-por.png?raw=true)
 
 ## lm-evaluation-harness-pt
-For portuguese base model we also evaluate against the fantastic work of [Eduardo Garcia](https://github.com/eduagarcia) a [fork of lm-eval](https://github.com/eduagarcia/lm-evaluation-harness-pt) that has also an important [leaderboard](https://huggingface.co/spaces/eduagarcia/open_pt_llm_leaderboard) comparing many open source models. Below the results and comparing with Qwen3-0.6B-Base.  
+For portuguese base model we also evaluate against the fantastic work of [Eduardo Garcia](https://github.com/eduagarcia) a [fork of lm-eval](https://github.com/eduagarcia/lm-evaluation-harness-pt) that has also an important [leaderboard](https://huggingface.co/spaces/eduagarcia/open_pt_llm_leaderboard) comparing many open source models. Below the results and the comparison with Qwen3-0.6B-Base.  
+
+```bash
+lm_eval     --model huggingface     --model_args "pretrained=giux78/zagreus-3B-165000,revision=main"     --tasks enem_challenge,bluex,oab_exams,assin2_rte,assin2_sts,faquad_nli,hatebr_offensive,portuguese_hate_speech,tweetsentbr     --device cuda:0     --output_path "./"
+```
 
 ---
-| Checkpoint / Model  | RTE (F1) | STS (Pearson) | BLUEX  | ENEM   | FAQUAD NLI | HateBR | OAB Exams | PT Hate | TweetSent | **Media**  |
-| ------------------- | -------- | ------------- | ------ | ------ | ---------- | ------ | --------- | ------- | --------- | ---------- |
-| **Qwen3-0.6B-Base** | 0.3333   | 0.0726        | 0.1057 | 0.0077 | 0.4397     | 0.3333 | 0.0428    | 0.4123  | 0.5646    | **0.2569** |
-| **zagreus 483k**    | 0.4624   | 0.1650        | 0.2434 | 0.2071 | 0.4397     | 0.3327 | 0.2528    | 0.4817  | 0.3220    | **0.3230** |
-| **zagreus 582k**    | 0.3361   | 0.0449        | 0.2100 | 0.1903 | 0.4397     | 0.3825 | 0.2392    | 0.4444  | 0.1542    | **0.2713** |
+| Rank | Model / Checkpoint  | RTE    | STS    | BLUEX  | ENEM   | FAQUAD NLI | HateBR | OAB    | PT Hate | TweetSent | **Media**  |
+| ---- | ------------------- | ------ | ------ | ------ | ------ | ---------- | ------ | ------ | ------- | --------- | ---------- |
+| 🥇   | **zagreus 483k**    | 0.4624 | 0.1650 | 0.2434 | 0.2071 | 0.4397     | 0.3327 | 0.2528 | 0.4817  | 0.3220    | **0.3230** |
+| 🥈   | **zagreus 582k**    | 0.3361 | 0.0449 | 0.2100 | 0.1903 | 0.4397     | 0.3825 | 0.2392 | 0.4444  | 0.1542    | **0.2713** |
+| 🥉   | **Qwen3-0.6B-Base** | 0.3333 | 0.0726 | 0.1057 | 0.0077 | 0.4397     | 0.3333 | 0.0428 | 0.4123  | 0.5646    | **0.2569** |
 
 ---
 ![por-garcia](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/por-garcia.png?raw=true)
@@ -672,7 +676,27 @@ For portuguese base model we also evaluate against the fantastic work of [Eduard
 ---
 # 7. Post-Trained Nesso Models Evaluations
 
-In this section, we analyze the performance of **Nesso-0.4B-instruct** and **Nesso-0.4B-agentic** relative to comparable models.
+In this section, we analyze the performance of **Nesso-0.4B-instruct** and **Nesso-0.4B-agentic** relative to comparable models. Since these models are pre-trained in English Italian we evaluate the models on english and italian benchmark as in the commands below.
+
+```bash
+lm-eval --model hf --model_args pretrained=checkpoint \
+  --tasks m_mmlu_it --num_fewshot 5 --device cuda:0 --batch_size 1
+
+lm-eval --model hf --model_args pretrained=checkpoint \
+  --tasks mmlu --num_fewshot 5 --device cuda:0 --batch_size 1
+
+lm-eval --model hf --model_args pretrained=LiquidAI/LFM2-350M \
+  --tasks hellaswag_it,arc_it --device cuda:0 --batch_size 1
+
+lm-eval --model hf --model_args pretrained=LiquidAI/LFM2-350M \
+  --tasks hellaswag,arc --device cuda:0 --batch_size 1
+
+lm-eval --model hf --model_args pretrained=LiquidAI/LFM2-350M \
+  --tasks ifeval-ita --device cuda:0 --batch_size 1
+
+lm-eval --model hf --model_args pretrained=LiquidAI/LFM2-350M \
+  --tasks ifeval --device cuda:0 --batch_size 1
+```
 
 | Model               | IFEval EN | ARC_EN | HS_EN  | MMLU_EN | Media EN | IFEval IT | ARC_IT | HS_IT  | MMLU_IT | Media IT | Media Totale |
 | ------------------- | --------- | ------ | ------ | ------- | -------- | --------- | ------ | ------ | ------- | -------- | ------------ |
@@ -700,7 +724,7 @@ Download:
 | ---------------------------- | ------- | ------ | ------------ | ------ |
 | giux78/open-zagreus-350M-sft | 0.2530  | 0.3020 | 0.3608       | 0.3053 |
 
-The model and dataset demonstrate that it is possible to build competitive Italian language models using exclusively open-source resources.
+The model and dataset demonstrate that it is possible to build competitive English Italian language models using exclusively open-source resources.
 
 ---
 
