@@ -546,7 +546,7 @@ We are contributors to **lm-evaluation-harness** for multilingual benchmarks and
 
 ---
 
-## Nesso-0.4B-ita-base
+## Zagreus-0.4B-ita-base
 
 ### Evaluation Command
 
@@ -579,7 +579,7 @@ Checkpoint progression:
 
 ---
 
-## Nesso-0.4B-spa-base (Spanish)
+## Zagreus-0.4B-spa-base (Spanish)
 
 ### Evaluation Command
 
@@ -603,7 +603,17 @@ lm-eval --model hf --model_args pretrained=LiquidAI/LFM2-350M \
 ![zagreus-spa](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/zagreus-spa.png?raw=true)
 
 ---
-## Nesso-0.4B-fra (French)
+## Zagreus-0.4B-fra (French)
+
+### Evaluation Command
+
+```bash
+lm-eval --model hf --model_args pretrained=checkpoint \
+  --tasks m_mmlu_fr --num_fewshot 5 --device cuda:0 --batch_size 1
+
+lm-eval --model hf --model_args pretrained=LiquidAI/LFM2-350M \
+  --tasks hellaswag_fr,arc_fr --device cuda:0 --batch_size 1
+```
 
 Evaluation procedure identical to previous sections.
 
@@ -620,7 +630,17 @@ Evaluation procedure identical to previous sections.
 ![zagreus-fra](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/zagreus-fra.png?raw=true)
 
 ---
-## Nesso-0.4B-por (Portuguese)
+## Zagreus-0.4B-por (Portuguese)
+
+### Evaluation Command
+
+```bash
+lm-eval --model hf --model_args pretrained=checkpoint \
+  --tasks m_mmlu_pt --num_fewshot 5 --device cuda:0 --batch_size 1
+
+lm-eval --model hf --model_args pretrained=LiquidAI/LFM2-350M \
+  --tasks hellaswag_pt,arc_pt --device cuda:0 --batch_size 1
+```
 
 | Checkpoint | ARC    | HellaSwag | MMLU   | Media  |
 | ---------- | ------ | --------- | ------ | ------ |
@@ -636,7 +656,18 @@ Evaluation procedure identical to previous sections.
 ---
 ![zagreus-por](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/zagreus-por.png?raw=true)
 
+## lm-evaluation-harness-pt
+For portuguese base model we also evaluate against the fantastic work of [Eduardo Garcia](https://github.com/eduagarcia) a [fork of lm-eval](https://github.com/eduagarcia/lm-evaluation-harness-pt) that has also an important [leaderboard](https://huggingface.co/spaces/eduagarcia/open_pt_llm_leaderboard) comparing many open source models. Below the results and comparing with Qwen3-0.6B-Base.  
+
 ---
+| Checkpoint / Model  | RTE (F1) | STS (Pearson) | BLUEX  | ENEM   | FAQUAD NLI | HateBR | OAB Exams | PT Hate | TweetSent | **Media**  |
+| ------------------- | -------- | ------------- | ------ | ------ | ---------- | ------ | --------- | ------- | --------- | ---------- |
+| **Qwen3-0.6B-Base** | 0.3333   | 0.0726        | 0.1057 | 0.0077 | 0.4397     | 0.3333 | 0.0428    | 0.4123  | 0.5646    | **0.2569** |
+| **zagreus 483k**    | 0.4624   | 0.1650        | 0.2434 | 0.2071 | 0.4397     | 0.3327 | 0.2528    | 0.4817  | 0.3220    | **0.3230** |
+| **zagreus 582k**    | 0.3361   | 0.0449        | 0.2100 | 0.1903 | 0.4397     | 0.3825 | 0.2392    | 0.4444  | 0.1542    | **0.2713** |
+
+---
+
 # 7. Post-Trained Nesso Models Evaluations
 
 In this section, we analyze the performance of **Nesso-0.4B-instruct** and **Nesso-0.4B-agentic** relative to comparable models.
