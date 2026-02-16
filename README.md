@@ -667,7 +667,9 @@ For portuguese base model we also evaluate against the fantastic work of [Eduard
 | **zagreus 582k**    | 0.3361   | 0.0449        | 0.2100 | 0.1903 | 0.4397     | 0.3825 | 0.2392    | 0.4444  | 0.1542    | **0.2713** |
 
 ---
+![por-garcia](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/por-garcia.png?raw=true)
 
+---
 # 7. Post-Trained Nesso Models Evaluations
 
 In this section, we analyze the performance of **Nesso-0.4B-instruct** and **Nesso-0.4B-agentic** relative to comparable models.
