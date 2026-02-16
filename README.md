@@ -411,16 +411,16 @@ Most importantly, we demonstrate that we have been able to build and release a m
 
 We are releasing three primary post-trained models:
 
-* **Nesso-0.4B-instruct**: optimized for conversational and instruction-following use cases.
-* **Nesso-0.4B-agentic**: optimized for function calling, structured outputs, and agentic execution patterns.
+* [**Nesso-0.4B-instruct**](): optimized for conversational and instruction-following use cases.
+* [**Nesso-0.4B-agentic**](): optimized for function calling, structured outputs, and agentic execution patterns.
 
 Both models utilize **Nesso-0.4B-ita** as the base and are trained on a bilingual corpus (English/Italian).
 
 It is important to note that both models are currently at the **SFT (Supervised Fine-Tuning)** stage. In the coming weeks, we will execute the **DPO (Direct Preference Optimization)** stage and subsequently update both the models and their evaluation results.
 
-We also released a third, fully open model: **Open-Nesso (Open-Zagreus)**.
+We also released a third, fully open model: [**Open-Zagreus-0.4B**]().
 
-Thanks to the work of the Italian open-source community **mii-llm**, and in particular Michele Montebovi who published the SFT dataset *OpenItalianData*—all data used and all training recipes for this model are fully open and reproducible as a full open source model from data to weights.
+Thanks to the work of the Italian open-source community [**mii-llm**](), and in particular Michele Montebovi who published the SFT dataset *OpenItalianData*—all data used and all training recipes for this model are fully open and reproducible as a full open source model from data to weights.
 
 ---
 
@@ -707,6 +707,12 @@ lm-eval --model hf --model_args pretrained=LiquidAI/LFM2-350M \
 
 ---
 ![nesso-all.png](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/nesso-all.png?raw=true)
+---
+---
+![italian-nesso.png](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/italian-nesso.png?raw=true)
+---
+---
+![english-nesso.png](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/english-nesso.png?raw=true)
 ---
 
 ### Discussion
