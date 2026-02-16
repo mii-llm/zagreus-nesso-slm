@@ -1,7 +1,38 @@
 ## The Joy and Pain of Training an LLM from Scratch
 
 ### A Technical Report on the Development of the Zagreus and Nesso Model Families
+---
 
+## Table of Contents
+
+1. [Motivation: The Vision of Sovereign Edge Intelligence](#motivation-the-vision-of-sovereign-edge-intelligence)
+2. [Technology Stack: Framework Selection](#technology-stack-framework-selection)
+
+   * [Framework Comparative Analysis](#framework-comparative-analysis)
+   * [Our Choice: Hugging Face Nanotron](#our-choice-hugging-face-nanotron)
+3. [Data Engineering: The Tokenization Pipeline](#data-engineering-the-tokenization-pipeline)
+
+   * [Dataset Sources](#dataset-sources)
+   * [The Tokenization Process](#the-tokenization-process)
+4. [Pre-training: The Core Engine](#pre-training-the-core-engine)
+
+   * [Nanotron Training Configuration](#nanotron-training-configuration)
+   * [Slurm Execution](#slurm-execution)
+   * [Model Conversion](#model-conversion)
+5. [Post-Training: Shaping Behavior](#post-training-shaping-behavior)
+6. [Pre-trained Foundational Models Evaluations](#pre-trained-foundational-models-evaluations)
+
+   * [Zagreus-0.4B-ita-base Evaluation](#zagreus-04b-ita-base-evaluation)
+   * [Zagreus-0.4B-spa-base Evaluation](#zagreus-04b-spa-base-evaluation)
+   * [Zagreus-0.4B-fra-base Evaluation](#zagreus-04b-fra-base-evaluation)
+   * [Zagreus-0.4B-por-base Evaluation](#zagreus-04b-por-base-evaluation)
+   * [Additional Portuguese Evaluation](#additional-portuguese-evaluation)
+7. [Post-Trained Nesso Models Evaluations](#post-trained-nesso-models-evaluations)
+
+   * [Nesso-0.4B-instruct Evaluation](#nesso-04b-instruct-evaluation)
+   * [Nesso-0.4B-agentic Evaluation](#nesso-04b-agentic-evaluation)
+   * [Open-Nesso-0.4B Evaluation](#open-nesso-04b-evaluation)
+8. [Conclusion](#conclusion)
 ---
 
 ## 1. Motivation: The Vision of Sovereign Edge Intelligence
@@ -739,12 +770,6 @@ The model and dataset demonstrate that it is possible to build competitive Engli
 ---
 
 # 8. Conclusion
-
-Here’s a strong **conclusion in English** that highlights the significance of the *Zagreus–Nesso SLM* work based on the content of the README you linked — *without omitting or removing any part of the original text*:
-
----
-
-## **Conclusion**
 
 The *Zagreus and Nesso Model Families* project stands as a remarkable and highly important contribution to the field of language model research, particularly within the realm of **Small Language Models (SLMs)**. At a time when the community is largely focused on scaling models ever larger, this work demonstrates that **starting from scratch and engineering a small, efficient model can be both feasible and impactful**. The initiative directly addresses the critical need for models that are capable of **intelligent reasoning at the edge**, optimally suited for deployment on everyday devices with limited compute resources — a paradigm that will only grow in strategic importance as AI becomes more ubiquitous across hardware platforms.
 
