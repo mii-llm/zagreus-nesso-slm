@@ -575,7 +575,7 @@ Checkpoint progression:
 | v2-680k    | 0.2538        | 0.3740                  | 0.2592            | 0.2957 |
 | v2-775k    | 0.2535        | 0.3750                  | 0.2583            | 0.2956 |
 
-![zagreus-ita](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/nesso-ita-base-checkpoint.png?raw=true)
+![zagreus-ita](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/zagreus-ita.png?raw=true)
 
 ---
 
@@ -600,7 +600,7 @@ lm-eval --model hf --model_args pretrained=LiquidAI/LFM2-350M \
 | 518k  | 0.255   | 0.280  | 0.429        | 0.321   |
 
 ---
-![zagreus-spa](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/nesso-ita-base-checkpoint.png?raw=true)
+![zagreus-spa](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/zagreus-spa.png?raw=true)
 
 ---
 ## Nesso-0.4B-fra (French)
