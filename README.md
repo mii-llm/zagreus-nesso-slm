@@ -588,6 +588,26 @@ Checkpoint progression:
 ![zagreus-ita](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/zagreus-ita.png?raw=true)
 
 ---
+### Evalita eval from FBK
+
+```bash
+lm_eval --model hf --model_args pretrained=meta-llama/Llama-2-7b-hf --tasks evalita-mp --device cuda:0 --batch_size 1 
+```
+
+| Task                      | Metric | Value      |
+| ------------------------- | ------ | ---------- |
+| **Evalita-LLM (overall)** | acc    | **0.3226** |
+| admission-test            | acc    | 0.2137     |
+| faq                       | acc    | 0.2681     |
+| hate-speech-detection     | f1     | 0.6056     |
+| lexical-substitution      | f1     | 0.0000     |
+| evalita NER               | f1     | 0.1611     |
+| relation-extraction       | f1     | 0.1244     |
+| sentiment-analysis        | f1     | 0.3660     |
+| summarization-fanpage     | rouge1 | 0.1947     |
+| text-entailment           | acc    | 0.5133     |
+| word-in-context           | f1     | 0.4697     |
+---
 
 ## Zagreus-0.4B-spa-base (Spanish)
 
@@ -742,7 +762,29 @@ Download:
 
 | Model                        | mmlu_it | arc_it | hellaswag_it | Media  |
 | ---------------------------- | ------- | ------ | ------------ | ------ |
-| giux78/open-zagreus-350M-sft | 0.2530  | 0.3020 | 0.3608       | 0.3053 |
+| giux78/Open-Zagreus-0.4B | 0.2530  | 0.3020 | 0.3608       | 0.3053 |
+
+### Evalita comparison with base model
+
+```bash
+lm_eval --model hf --model_args pretrained=meta-llama/Llama-2-7b-hf --tasks evalita-mp --device cuda:0 --batch_size 1 
+```
+
+| Task                 | Metric | Zegreus-0.4B-ita | Open-Zagreus-0.4B | Δ (SFT - Base) |
+| -------------------- | ------ | ------------ | ------------- | -------------- |
+| **Overall**          | acc    | 0.3226       | **0.3313**    | +0.0087        |
+| admission-test       | acc    | **0.2137**   | 0.2083        | -0.0054        |
+| faq                  | acc    | **0.2681**   | 0.2672        | -0.0009        |
+| hate-speech          | f1     | **0.6056**   | 0.4340        | -0.1716        |
+| lexical-substitution | f1     | 0.0000       | 0.0000        | =              |
+| NER                  | f1     | **0.1611**   | 0.1357        | -0.0254        |
+| relation-extraction  | f1     | **0.1244**   | 0.0000        | -0.1244        |
+| sentiment            | f1     | 0.3660       | **0.3712**    | +0.0052        |
+| summarization        | rouge1 | 0.1947       | **0.2305**    | +0.0358        |
+| text-entailment      | acc    | 0.5133       | **0.5492**    | +0.0359        |
+| word-in-context      | f1     | 0.4697       | **0.4880**    | +0.0183        |
+
+
 
 The model and dataset demonstrate that it is possible to build competitive English Italian language models using exclusively open-source resources.
 
