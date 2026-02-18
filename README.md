@@ -36,9 +36,9 @@ Training a fully functional modern neural network, specifically a Large Language
 
 This vision materialized when Antonio Baldassarra (CEO of Seeweb) and Marco Cristofanilli (Head of AI at Seeweb) commissioned us to develop a Small Language Model (SLM) from scratch utilizing the Seeweb infrastructure. Seeweb, a cloud provider with a strategic focus on AI, granted us access to a cluster of on-demand nodes comprising a total of 64 NVIDIA A100 GPUs.
 
-Our primary objective was to experiment and deliver a state-of-the-art SLM with approximately 500 million parameters, built from the ground up and optimized for edge use cases within the Italian language ecosystem. We hypothesize that, in the coming years, intelligent devices—and virtually any hardware equipped with a chip—will be enhanced by neural architectures with embedded reasoning and language capabilities. Small, efficient models will be key to enabling automation at the edge. To address this need, we created Zagreus, arguably one of the few high-performing small language models dedicated to the Italian language.
+Our primary objective was to experiment and deliver a state-of-the-art SLM with approximately 500 million parameters, built from the ground up and optimized for edge use cases within some of the romance languages ecosystem, in particular Italian, Spanish, Portuguese and French. We hypothesize that, in the coming years, intelligent devices—and virtually any hardware equipped with a chip—will be enhanced by neural architectures with embedded reasoning and language capabilities. Small, efficient models will be key to enabling automation at the edge. To address this need, we created four foundation language models,  the  Zagreus family, and three different finetuned models, the Nesso family, arguably one of the few high-performing small language models dedicated to the European languages.
 
-In the spirit of open and reproducible research, we are releasing the full Zagreus and Nesso lineup: seven models in total—four base (pretrained) checkpoints for bilingual models and three post-trained variants. Notably, our post-trained models are designed to compete on standard benchmarks with state-of-the-art models of comparable size, demonstrating that carefully engineered small models can achieve near frontier-level performance within their parameter class.
+In the spirit of open and reproducible research, we are releasing the full Zagreus and Nesso lineup: seven models in total: four base (pretrained) checkpoints for bilingual models and three post-trained variants. Notably, our post-trained models are designed to compete on standard benchmarks with state of the art models of comparable size, demonstrating that carefully engineered small models can achieve near frontier-level performance within their parameter class.
 
 ### Base models:
 
@@ -63,9 +63,9 @@ There are numerous frameworks available for creating an LLM from scratch. We con
 
 ### Framework Comparative Analysis
 
-[**Megatron-LM:**](https://github.com/NVIDIA/Megatron-LM) Developed by NVIDIA, this is a powerful framework designed for training large transformer models with billions of parameters. While it is likely an optimal choice for large, well-resourced teams, we found it challenging to set up and deploy effectively on our specific cluster infrastructure.
+[**Megatron-LM:**](https://github.com/NVIDIA/Megatron-LM) Developed by NVIDIA, this is a powerful framework designed for training large transformer models with billions of parameters. While it is likely an optimal choice for large, well resourced teams, we found it challenging to set up and deploy effectively on our specific cluster infrastructure.
 
-[**Llama-Factory:**](https://github.com/hiyouga/LLaMA-Factory) A versatile and user-friendly open-source framework that simplifies fine-tuning, training, and deployment of a wide range of LLMs. However, our evaluation suggests it is more specialized for fine-tuning than for pre-training from scratch.
+[**Llama-Factory:**](https://github.com/hiyouga/LLaMA-Factory) A versatile and user friendly open-source framework that simplifies fine-tuning, training, and deployment of a wide range of LLMs. However, our evaluation suggests it is more specialized for fine-tuning than for pre-training from scratch.
 
 **nanoGPT and nanochat:** Both created by Andrej Karpathy, these projects prioritize simplicity and educational value.
 
@@ -784,7 +784,7 @@ lm_eval --model hf --model_args pretrained=meta-llama/Llama-2-7b-hf --tasks eval
 | text-entailment      | acc    | 0.5133       | **0.5492**    | +0.0359        |
 | word-in-context      | f1     | 0.4697       | **0.4880**    | +0.0183        |
 
-![english-nesso.png](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/evalita_comparison.png?raw=true)
+![evalita_comparison.png](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/evalita_comparison.png?raw=true)
 
 The model and dataset demonstrate that it is possible to build competitive English Italian language models using exclusively open-source resources.
 
