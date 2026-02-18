@@ -784,7 +784,7 @@ lm_eval --model hf --model_args pretrained=meta-llama/Llama-2-7b-hf --tasks eval
 | text-entailment      | acc    | 0.5133       | **0.5492**    | +0.0359        |
 | word-in-context      | f1     | 0.4697       | **0.4880**    | +0.0183        |
 
-
+![english-nesso.png](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/evalita_comparison.png?raw=true)
 
 The model and dataset demonstrate that it is possible to build competitive English Italian language models using exclusively open-source resources.
 
