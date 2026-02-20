@@ -53,7 +53,7 @@ In the spirit of open and reproducible research, we are releasing the full Zagre
 * [Open-Zagreus-0.4B]() Fully open source data used to train this model
 
 
-We are releasing this detailed blog post, covering every step and data point required to reproduce the project, as we strongly believe in the importance of open source in reducing technological and geopolitical dependencies.
+We are releasing this detailed blog post, covering every step and data point required to reproduce and evaluate the project, as we strongly believe in the importance of open source in reducing technological and geopolitical dependencies.
 
 ---
 
