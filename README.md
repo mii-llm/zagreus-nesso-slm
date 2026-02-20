@@ -36,7 +36,7 @@ Training a fully functional modern neural network, specifically a Large Language
 
 This vision materialized when Antonio Baldassarra (CEO of Seeweb) and Marco Cristofanilli (Head of AI at Seeweb) commissioned us to develop a Small Language Model (SLM) from scratch utilizing the Seeweb infrastructure. Seeweb, a cloud provider with a strategic focus on AI, granted us access to a cluster of on-demand nodes comprising a total of 64 NVIDIA A100 GPUs.
 
-Our primary objective was to experiment and deliver a state-of-the-art SLM with approximately 500 million parameters, built from the ground up and optimized for edge use cases within some of the romance languages ecosystem, in particular Italian, Spanish, Portuguese and French. We hypothesize that, in the coming years, intelligent devices—and virtually any hardware equipped with a chip—will be enhanced by neural architectures with embedded reasoning and language capabilities. Small, efficient models will be key to enabling automation at the edge. To address this need, we created four foundation language models,  the  Zagreus family, and three different finetuned models, the Nesso family, arguably one of the few high-performing small language models dedicated to the European languages.
+Our primary objective was to experiment and deliver a state-of-the-art SLM with approximately 500 million parameters, built from the ground up and optimized for edge use cases within some of the romance languages ecosystem, in particular Italian, Spanish, Portuguese and French. We hypothesize that, in the coming years, intelligent devices and virtually any hardware equipped with a chip will be enhanced by neural architectures with embedded reasoning and language capabilities. Small, efficient models will be key to enabling automation at the edge. To address this need, we created four foundation language models,  the  Zagreus family, and three different finetuned models, the Nesso family, arguably one of the few high-performing small language models dedicated to the European languages.
 
 In the spirit of open and reproducible research, we are releasing the full Zagreus and Nesso lineup: seven models in total: four base (pretrained) checkpoints for bilingual models and three post-trained variants. Notably, our post-trained models are designed to compete on standard benchmarks with state of the art models of comparable size, demonstrating that carefully engineered small models can achieve near frontier-level performance within their parameter class.
 
@@ -74,14 +74,14 @@ There are numerous frameworks available for creating an LLM from scratch. We con
 
 ### Our Choice: Hugging Face Nanotron
 
-Ultimately, we selected [Hugging Face Nanotron](https://github.com/huggingface/nanotron). It is a minimalistic library focused on 3D parallelism (Data, Tensor, and Pipeline) specifically for pre-training transformer models. We value Hugging Face for its commitment to openness. We found the library well-suited for multi-node training; furthermore, it is natively integrated into the Hugging Face ecosystem (Accelerate, Datasets, hf-cli), ensuring that workflows—from data tokenization to model release—remain cohesive.
+Ultimately, we selected [Hugging Face Nanotron](https://github.com/huggingface/nanotron). It is a minimalistic library focused on 3D parallelism (Data, Tensor, and Pipeline) specifically for pre-training transformer models. We value Hugging Face for its commitment to openness. We found the library well-suited for multi-node training; furthermore, it is natively integrated into the Hugging Face ecosystem (Accelerate, Datasets, hf-cli), ensuring that workflows from data tokenization to model release remain cohesive.
 
 During the development cycle, we identified minor bugs and are actively contributing to the library via Pull Requests. We also established a [fork of Nanotron](https://github.com/mii-llm/nanotron) optimized to run directly on a Slurm cluster.
 
 
 ## 3. Data Engineering: The Tokenization Pipeline
 
-Data is the *sine qua non* for creating an LLM. The volume of data required is contingent upon the target model size and the available compute budget. Operating as a GPU-constrained team—and thanks to the sponsorship from Seeweb—we chose to build a small language model of ~500 million parameters, trained on approximately 1 trillion tokens.
+Data is the *sine qua non* for creating an LLM. The volume of data required is contingent upon the target model size and the available compute budget. Operating as a GPU-constrained team and thanks to the sponsorship from Seeweb; we chose to build a small language model of ~500 million parameters, trained on approximately 1 trillion tokens.
 
 ### Dataset Sources
 
@@ -216,9 +216,9 @@ Pre-training is the foundational step in building an LLM, transforming raw token
 
 We utilized Nanotron, which supports multiple architectures, including Llama-3.2, Qwen-2.5, and Mixture-of-Experts (MoE) variants. For this project, we adopted a modified Llama-3.2 fully dense architecture. Our design choice was motivated by the hypothesis that, in the small-parameter regime (~500M parameters), fully dense models provide better compute utilization and more stable training dynamics than sparse architectures such as MoE. In tightly constrained capacity settings, the routing overhead and expert under-utilization typical of MoE architectures may offset their theoretical efficiency advantages.
 
-Working with a GPU cluster is streamlined by HPC tools; we employed the Slurm scheduler. Slurm allows the cluster to be viewed as a unified Linux system where jobs can be executed across many GPUs in parallel, while handling checkpoints and logs in real time. The most challenging aspect remains ensuring the software stack—from drivers and CUDA/NCCL to Python libraries—functions harmoniously, often requiring resolution of version and ABI incompatibilities.
+Working with a GPU cluster is streamlined by HPC tools; we employed the Slurm scheduler. Slurm allows the cluster to be viewed as a unified Linux system where jobs can be executed across many GPUs in parallel, while handling checkpoints and logs in real time. The most challenging aspect remains ensuring the software stack from drivers and CUDA/NCCL to Python libraries, functions harmoniously, often requiring resolution of version and ABI incompatibilities.
 
-Successfully running a distributed training job on the tokenized data was a profound milestone. Observing the loss curve decrease from raw data after days of waiting conveys the sense of operating at the edge of scientific and engineering capability—a genuinely intense moment for a researcher.
+Successfully running a distributed training job on the tokenized data was a profound milestone. Observing the loss curve decrease from raw data after days of waiting conveys the sense of operating at the edge of scientific and engineering capability a genuinely intense moment for a researcher.
 
 For out-of-the-box functionality, we recommend our fork: [https://github.com/mii-llm/nanotron](https://github.com/mii-llm/nanotron) (a fork of [https://github.com/huggingface/nanotron/](https://github.com/huggingface/nanotron/)), pending the merge of our Pull Request.
 
@@ -407,7 +407,7 @@ torchrun --nproc_per_node=1 -m examples.llama.convert_nanotron_to_hf \
 
 # 5. Post-Training: Shaping Behavior
 
-Creating a base model from scratch represents a major technical achievement, and we consider this work a contribution to the open community. However, a foundation model alone — even with a fully reproducible pipeline and transparent data distribution is rarely sufficient for direct real-world deployment. The post-training phase is responsible for shaping the model’s behavior toward practical usability.
+Creating a base model from scratch represents a major technical achievement, and we consider this work a contribution to the open community. However, a foundation model alone,  even with a fully reproducible pipeline and transparent data distribution is rarely sufficient for direct real-world deployment. The post-training phase is responsible for shaping the model’s behavior toward practical usability.
 
 This phase typically requires significantly fewer GPUs and a smaller data volume compared to pre-training. However, the *quality* and *curation strategy* of the data become substantially more important than raw scale.
 
@@ -430,7 +430,7 @@ It is important to note that both models are currently at the **SFT (Supervised 
 
 We also released a third, fully open model: [**Open-Zagreus-0.4B**]().
 
-Thanks to the work of the Italian open-source community [**mii-llm**](), and in particular Michele Montebovi who published the SFT dataset *OpenItalianData*—all data used and all training recipes for this model are fully open and reproducible as a full open source model from data to weights.
+Thanks to the work of the Italian open-source community [**mii-llm**](), and in particular Michele Montebovi who published the SFT dataset *OpenItalianData*, all data used and all training recipes for this model are fully open and reproducible as a full open source model from data to weights.
 
 ---
 
@@ -792,7 +792,7 @@ The model and dataset demonstrate that it is possible to build competitive Engli
 
 # 8. Conclusion
 
-The *Zagreus and Nesso Model Families* project stands as a remarkable and highly important contribution to the field of language model research, particularly within the realm of **Small Language Models (SLMs)**. At a time when the community is largely focused on scaling models ever larger, this work demonstrates that **starting from scratch and engineering a small, efficient model can be both feasible and impactful**. The initiative directly addresses the critical need for models that are capable of **intelligent reasoning at the edge**, optimally suited for deployment on everyday devices with limited compute resources — a paradigm that will only grow in strategic importance as AI becomes more ubiquitous across hardware platforms.
+The *Zagreus and Nesso Model Families* project stands as a remarkable and highly important contribution to the field of language model research, particularly within the realm of **Small Language Models (SLMs)**. At a time when the community is largely focused on scaling models ever larger, this work demonstrates that **starting from scratch and engineering a small, efficient model can be both feasible and impactful**. The initiative directly addresses the critical need for models that are capable of **intelligent reasoning at the edge**, optimally suited for deployment on everyday devices with limited compute resources,  a paradigm that will only grow in strategic importance as AI becomes more ubiquitous across hardware platforms.
 
 This report does not merely describe a model; it **documents the entire empirical journey** of developing SLMs from first principles, from motivation and data engineering to pre-training, validation, and deployment. By releasing **seven distinct models**, including multilingual foundational checkpoints and post-trained variants optimized for conversational and agentic use cases, the project sets a new standard for reproducibility and openness in LLM research. Importantly, the work emphasizes that **carefully engineered small models can match or approach the performance of much larger counterparts on standardized benchmarks**, underlining a strategic shift in how the community can think about computational efficiency without sacrificing capability.
 
