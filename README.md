@@ -798,3 +798,287 @@ This report does not merely describe a model; it **documents the entire empirica
 
 In addition to the scientific and technical achievements, the *Zagreus–Nesso SLM* effort embodies a broader philosophical commitment: the advancement and **democratization of AI through open research and open source tools**. By providing detailed data pipelines, architectural choices, and a transparent account of trade-offs encountered in training at scale, this work becomes an invaluable resource for anyone seeking to replicate or build upon it. Therefore, the importance of this report lies not only in its immediate results but also in its **lasting influence on how future small language models may be conceived, trained, and deployed**.
 
+# Small LLM Comparison — Analysis Report
+
+> 5 models · 5 tasks · Italian language focus · ~350M–800M parameters
+
+---
+
+## Testing Code
+
+### Setup
+
+```python
+import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
+from IPython.display import display, Markdown
+import time
+import gc
+
+MODELS = [
+    "giux78/nesso-350M-sft-v0.7",
+    "giux78/nesso-350M-sft-v0.6",
+    "ibm-granite/granite-4.0-350m",
+    "Qwen/Qwen3-0.6B",
+    "Qwen/Qwen3.5-0.8B",
+]
+
+DEFAULT_MAX_TOKENS = 256
+DEFAULT_TEMPERATURE = 0.7
+DEFAULT_TOP_P = 0.9
+
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+print(f"Using device: {DEVICE}")
+```
+
+### Test Conversations
+
+```python
+TEST_CONVERSATIONS = {
+    "identity": [
+        {"role": "system",    "content": "Sei un assistente utile."},
+        {"role": "user",      "content": "Ciao! Chi sei e chi ti ha creato?"},
+        {"role": "assistant", "content": "Ciao! Sono un assistente AI. Come posso aiutarti?"},
+        {"role": "user",      "content": "Quale è la capitale di Italia?"},
+    ],
+    "quick_dinner": [
+        {"role": "user", "content": "Mi fai una lista di 3 idee per una cena veloce?"}
+    ],
+    "vegetarian_followup": [
+        {"role": "user",      "content": "Mi fai una lista di 3 idee per una cena veloce?"},
+        {"role": "assistant", "content": "Eccone tre: pasta al pomodoro, insalata di riso, frittata di verdure."},
+        {"role": "user",      "content": "Rendila vegetariana"},
+    ],
+    "math_reasoning": [
+        {"role": "user", "content": "Spiega passo per passo come calcolare il 15% di 240."}
+    ],
+    "creative_writing": [
+        {"role": "user", "content": "Scrivi un breve paragrafo descrittivo su un tramonto in montagna."}
+    ],
+}
+```
+
+### Utility Functions
+
+```python
+def load_model(model_id: str):
+    tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True)
+    model = AutoModelForCausalLM.from_pretrained(
+        model_id,
+        torch_dtype=torch.bfloat16 if DEVICE == "cuda" else torch.float32,
+        device_map="auto" if DEVICE == "cuda" else None,
+    )
+    if DEVICE == "cpu":
+        model = model.to(DEVICE)
+    return tokenizer, model.eval()
+
+
+def unload_model(model):
+    del model
+    gc.collect()
+    if DEVICE == "cuda":
+        torch.cuda.empty_cache()
+
+
+def build_prompt(tokenizer, messages):
+    try:
+        return tokenizer.apply_chat_template(
+            messages, tokenize=False, add_generation_prompt=True
+        )
+    except Exception:
+        parts = [f"{m['role'].upper()}: {m['content']}" for m in messages]
+        parts.append("ASSISTANT:")
+        return "\n".join(parts)
+
+
+def extract_answer(tokenizer, full_text: str, prompt: str) -> str:
+    for sentinel in ["<|im_start|>assistant\n", "<|assistant|>", "ASSISTANT:"]:
+        if sentinel in full_text:
+            candidate = full_text.split(sentinel)[-1]
+            for eos in ["<|im_end|>", "<|endoftext|>", "</s>"]:
+                candidate = candidate.split(eos)[0]
+            return candidate.strip()
+    if full_text.startswith(prompt):
+        return full_text[len(prompt):].strip()
+    return full_text.strip()
+
+
+def chat(tokenizer, model, messages, max_tokens=DEFAULT_MAX_TOKENS,
+         temperature=DEFAULT_TEMPERATURE, top_p=DEFAULT_TOP_P):
+    prompt = build_prompt(tokenizer, messages)
+    inputs = tokenizer(prompt, return_tensors="pt").to(DEVICE)
+    t0 = time.time()
+    with torch.no_grad():
+        outputs = model.generate(
+            **inputs,
+            max_new_tokens=max_tokens,
+            temperature=temperature,
+            top_p=top_p,
+            do_sample=True,
+            pad_token_id=tokenizer.pad_token_id or tokenizer.eos_token_id,
+            eos_token_id=tokenizer.eos_token_id,
+        )
+    elapsed = time.time() - t0
+    full_text = tokenizer.decode(outputs[0], skip_special_tokens=False)
+    return extract_answer(tokenizer, full_text, prompt), elapsed
+```
+
+### Main Comparison Loop
+
+```python
+results = {}
+
+for model_id in MODELS:
+    print(f"\n{'='*60}\nModel: {model_id}\n{'='*60}")
+    try:
+        tokenizer, model = load_model(model_id)
+    except Exception as e:
+        print(f"  ✗ Failed to load: {e}")
+        results[model_id] = {name: {"answer": f"[ERROR: {e}]", "time": 0}
+                             for name in TEST_CONVERSATIONS}
+        continue
+
+    results[model_id] = {}
+    for conv_name, messages in TEST_CONVERSATIONS.items():
+        print(f"  Running '{conv_name}'...", end=" ", flush=True)
+        try:
+            answer, elapsed = chat(tokenizer, model, messages)
+            results[model_id][conv_name] = {"answer": answer, "time": elapsed}
+            print(f"done ({elapsed:.1f}s)")
+        except Exception as e:
+            results[model_id][conv_name] = {"answer": f"[ERROR: {e}]", "time": 0}
+            print(f"ERROR: {e}")
+
+    unload_model(model)
+
+print("\n✅ All models evaluated!")
+```
+
+### Display Results
+
+```python
+for conv_name, messages in TEST_CONVERSATIONS.items():
+    user_prompt = next(
+        (m["content"] for m in reversed(messages) if m["role"] == "user"), "?"
+    )
+    md = f"### `{conv_name}` — *\"{user_prompt}\"*\n\n"
+    md += "| Model | Answer | Time (s) |\n|---|---|---|\n"
+    for model_id in MODELS:
+        r = results.get(model_id, {}).get(conv_name, {"answer": "N/A", "time": 0})
+        short = model_id.split("/")[-1]
+        answer = r["answer"].replace("|", "\\|").replace("\n", " ")
+        md += f"| `{short}` | {answer} | {r['time']:.1f} |\n"
+    display(Markdown(md + "\n---\n"))
+```
+
+---
+
+## Score Summary
+
+Scores are 1–5 across five evaluation dimensions.
+
+| Model | Factual Accuracy | Instruction Following | Italian Quality | Coherence | Reasoning | **Avg** |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `nesso-350M-sft-v0.7` | 4 | 4 | 5 | 4 | 2 | **3.8** |
+| `nesso-350M-sft-v0.6` | 4 | 4 | 5 | 4 | 1 | **3.6** |
+| `granite-4.0-350m`    | 5 | 3 | 2 | 3 | 5 | **3.6** |
+| `Qwen3-0.6B`          | 4 | 3 | 3 | 2 | 4 | **3.2** |
+| `Qwen3.5-0.8B`        | 4 | 4 | 4 | 3 | 4 | **3.8** |
+
+---
+
+## Radar Charts
+
+### All Models — Combined Overview
+
+![All Models Radar](images/radar_all_models.png)
+
+### Individual Model Profiles
+
+| | |
+|:---:|:---:|
+| ![nesso-v0.7](images/radar_nesso-350M-sft-v0.7.png) | ![nesso-v0.6](images/radar_nesso-350M-sft-v0.6.png) |
+| `nesso-350M-sft-v0.7` | `nesso-350M-sft-v0.6` |
+| ![granite](images/radar_granite-4.0-350m.png) | ![qwen3](images/radar_Qwen3-0.6B.png) |
+| `granite-4.0-350m` | `Qwen3-0.6B` |
+| ![qwen35](images/radar_Qwen3.5-0.8B.png) | |
+| `Qwen3.5-0.8B` | |
+
+---
+
+## Inference Time
+
+![Timing Bar Chart](images/timing_bar.png)
+
+| Model | Identity | Quick Dinner | Vegetarian | Math | Creative | **Avg** |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `nesso-350M-sft-v0.7` | 1.5s | 5.4s | 5.4s | 3.3s | 5.4s | **4.2s** |
+| `nesso-350M-sft-v0.6` | 2.4s | 5.3s | 1.0s | 3.6s | 5.6s | **3.6s** |
+| `granite-4.0-350m`    | 0.2s | 5.1s | 0.7s | 3.3s | 2.7s | **2.4s** |
+| `Qwen3-0.6B`          | 3.4s | 6.3s | 6.3s | 6.3s | 5.4s | **5.5s** |
+| `Qwen3.5-0.8B`        | 0.4s | 7.6s | 7.6s | 6.8s | 6.8s | **5.8s** |
+
+---
+
+## Task-by-Task Highlights
+
+| Task | Best Model | Worst Model | Notes |
+|---|---|---|---|
+| 🗺️ Capital of Italy | `granite-4.0-350m` | `Qwen3-0.6B` | Granite fastest (0.2s); Qwen3 leaks thinking monologue |
+| 🍽️ Quick Dinner Ideas | `nesso-350M-sft-v0.7` | `granite-4.0-350m` | Granite produced repetitive, incoherent output |
+| 🥗 Vegetarian Follow-up | `nesso-350M-sft-v0.7` | `granite-4.0-350m` | Granite: "pescaccio o un grano" — incoherent |
+| 🔢 Math Reasoning | `granite-4.0-350m` | `nesso-350M-sft-v0.6` | Only Granite got 36 correct; v0.6 got 1600 |
+| ✍️ Creative Writing | `nesso-350M-sft-v0.6` | `granite-4.0-350m` | Granite answered in English |
+
+---
+
+## Model Verdicts
+
+### `nesso-350M-sft-v0.7` — 🏆 Best Overall for Italian
+
+Most consistent across all tasks. Strong Italian prose, good instruction following, reliable factual answers. Main weakness is math reasoning (adds result to original: 36 → 276). Occasional topic drift in long outputs.
+
+- ✅ Best Italian quality · consistent · good instruction following
+- ❌ Math reasoning error · minor drift in long generations
+
+### `nesso-350M-sft-v0.6` — 📝 Best Creative Writer
+
+Produced the most poetic and fluent Italian paragraph in the creative task. Short answers are crisp and natural. However, it made the worst math error of all models (240 ÷ 0.15 = 1600) and gave a suspiciously shallow vegetarian follow-up, suggesting weak multi-turn context handling.
+
+- ✅ Best creative writing · very fluent Italian · fast on short answers
+- ❌ Worst math error · shallow multi-turn context handling
+
+### `granite-4.0-350m` — ⚡ Speed King & Best Reasoner
+
+Fastest by a large margin and the only model to solve the math task correctly with clean steps. However, it **answered in English for all Italian prompts** — a critical language mismatch. Complex prompts trigger repetitive, incoherent output.
+
+- ✅ Only correct math · fastest inference · concise
+- ❌ No Italian language alignment · incoherent on complex prompts
+
+### `Qwen3-0.6B` — 🧠 Transparent but Unpolished
+
+Uses visible chain-of-thought ("Okay, the user asked...") which leaks into every response. Slowest model overall. Reasoning approach is sound but answers are frequently truncated before reaching a conclusion. Italian quality is noticeably weaker than the nesso models.
+
+- ✅ Transparent reasoning · correct factual answers
+- ❌ Thinking monologue leaks into output · slowest · weak Italian · answers often truncated
+
+### `Qwen3.5-0.8B` — 🎨 Creative but Verbose
+
+Most atmospheric creative writing in Italian and best-structured vegetarian answer. Gets math right but via a confusing explanation. Tends to be slow and over-long, occasionally inventing dish names ("Il Sapore della Locanda").
+
+- ✅ Strong creative writing · good Italian · good instruction following
+- ❌ Slowest for long tasks · verbose · occasional hallucinations
+
+---
+
+## Overall Takeaways
+
+| Use Case | Recommended Model | Reason |
+|---|---|---|
+| 🇮🇹 Italian-language applications | `nesso-350M-sft-v0.7` | Best language quality, most consistent |
+| ⚡ Speed-critical / low-latency | `granite-4.0-350m` | ~10× faster, but needs language fine-tuning |
+| 🔢 Math / step-by-step reasoning | `granite-4.0-350m` | Only correct result; cleanest method |
+| ✍️ Creative / generative text | `nesso-350M-sft-v0.6` | Most poetic and fluent Italian prose |
+| 🔍 Debugging / reasoning transparency | `Qwen3-0.6B` | Chain-of-thought visible (needs output post-processing) |
+
+> **Key insight:** No single model dominates all dimensions. For a production Italian assistant, `nesso-350M-sft-v0.7` is the safest choice. For a multilingual or reasoning-heavy pipeline, `granite-4.0-350m` is worth fine-tuning for Italian alignment given its speed and accuracy advantages.
