@@ -1082,3 +1082,133 @@ Most atmospheric creative writing in Italian and best-structured vegetarian answ
 | 🔍 Debugging / reasoning transparency | `Qwen3-0.6B` | Chain-of-thought visible (needs output post-processing) |
 
 > **Key insight:** No single model dominates all dimensions. For a production Italian assistant, `nesso-350M-sft-v0.7` is the safest choice. For a multilingual or reasoning-heavy pipeline, `granite-4.0-350m` is worth fine-tuning for Italian alignment given its speed and accuracy advantages.
+
+# Small LLM Comparison — English Output Analysis
+
+> 5 models · 5 tasks · **English language** · ~350M–800M parameters
+
+---
+
+## Score Summary
+
+Scores are 1–5 across five evaluation dimensions.
+
+| Model | Factual Accuracy | Instruction Following | English Quality | Coherence | Reasoning | **Avg** |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `nesso-350M-sft-v0.7` | 4 | 4 | 4 | 4 | 3 | **3.8** |
+| `nesso-350M-sft-v0.6` | 2 | 3 | 3 | 2 | 1 | **2.2** |
+| `granite-4.0-350m`    | 5 | 4 | 5 | 5 | 5 | **4.8** |
+| `Qwen3-0.6B`          | 4 | 3 | 3 | 2 | 3 | **3.0** |
+| `Qwen3.5-0.8B`        | 4 | 4 | 5 | 3 | 4 | **4.0** |
+
+---
+
+## Radar Charts
+
+### All Models — Combined Overview
+
+![All Models Radar](images/eng_radar_all_models.png)
+
+### Individual Model Profiles
+
+| | |
+|:---:|:---:|
+| ![nesso-v0.7](images/eng_radar_nesso-350M-sft-v0.7.png) | ![nesso-v0.6](images/eng_radar_nesso-350M-sft-v0.6.png) |
+| `nesso-350M-sft-v0.7` | `nesso-350M-sft-v0.6` |
+| ![granite](images/eng_radar_granite-4.0-350m.png) | ![qwen3](images/eng_radar_Qwen3-0.6B.png) |
+| `granite-4.0-350m` | `Qwen3-0.6B` |
+| ![qwen35](images/eng_radar_Qwen3.5-0.8B.png) | |
+| `Qwen3.5-0.8B` | |
+
+---
+
+## Inference Time
+
+![Timing Bar Chart](images/eng_timing_bar.png)
+
+| Model | Identity | Quick Dinner | Vegetarian | Math | Creative | **Avg** |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `nesso-350M-sft-v0.7` | 0.2s | 3.9s | 0.6s | 2.3s | 4.3s | **2.3s** |
+| `nesso-350M-sft-v0.6` | 2.2s | 3.5s | 1.4s | 4.7s | 5.9s | **3.5s** |
+| `granite-4.0-350m`    | 0.2s | 4.1s | 0.6s | 3.3s | 2.0s | **2.0s** |
+| `Qwen3-0.6B`          | 2.0s | 6.6s | 6.4s | 6.3s | 6.2s | **5.5s** |
+| `Qwen3.5-0.8B`        | 1.4s | 7.5s | 7.3s | 7.5s | 5.9s | **5.9s** |
+
+---
+
+## Task-by-Task Highlights
+
+| Task | Best Model | Worst Model | Notes |
+|---|---|---|---|
+| 🗺️ Capital of Italy | `granite-4.0-350m` | `nesso-350M-sft-v0.6` | v0.6 hallucinated "L'Italia" as an alias for Rome |
+| 🍽️ Quick Dinner Ideas | `granite-4.0-350m` | `Qwen3-0.6B` | Granite gave 3 structured, realistic recipes; Qwen3 truncated mid-sentence |
+| 🥗 Vegetarian Follow-up | `granite-4.0-350m` / `Qwen3.5-0.8B` | `nesso-350M-sft-v0.6` | v0.6 added an unsolicited "what if you want to be more creative?" digression |
+| 🔢 Math Reasoning | `granite-4.0-350m` | `nesso-350M-sft-v0.6` | Only Granite got 36 correct again; v0.6 computed 0.1; v0.7 got 33 (rounding error) |
+| ✍️ Creative Writing | `Qwen3.5-0.8B` | `nesso-350M-sft-v0.6` | Qwen3.5 produced the most vivid, original prose; v0.6 was repetitive and looping |
+
+---
+
+## Model Verdicts
+
+### `nesso-350M-sft-v0.7` — 🟡 Decent but Misses Its Home Turf
+
+Competent English output — clear, well-structured answers on dinner ideas and creative writing — but shows cracks compared to its Italian performance. The math task produced 33.0 instead of 36 (a rounding/multiplication error). Overall the most balanced of the nesso family in English, but neither a language specialist nor a reasoning leader here.
+
+- ✅ Readable English · good instruction following · coherent across tasks
+- ❌ Math error (33 instead of 36) · less impressive than its Italian output
+
+### `nesso-350M-sft-v0.6` — 🔴 Significant Drop in English
+
+This model degrades noticeably in English. The identity task introduced a factual hallucination ("Rome, also known as L'Italia"), the math task is completely wrong (answer: 0.1), and the creative writing output is highly repetitive — reusing the word "breathtaking" five times in the same paragraph. Multi-turn coherence remains weak, adding unsolicited suggestions in the vegetarian follow-up. Clearly fine-tuned primarily for Italian.
+
+- ✅ Attempts to follow instructions · produces long outputs
+- ❌ Factual hallucination · worst math error · repetitive prose · low coherence
+
+### `granite-4.0-350m` — 🏆 Dominant in English
+
+Granite is the clear winner in English across every dimension. Correct math (36), clean step-by-step reasoning, well-structured recipes with realistic details, and the best factual accuracy. Creative writing is atmospheric and concise. This confirms that Granite is fundamentally an English-first model — the language mismatch seen in Italian tests was not a capability gap, just an alignment gap.
+
+- ✅ Only correct math · best English prose · fast · coherent · structured answers
+- ❌ Still occasionally verbose on dinner prompts
+
+### `Qwen3-0.6B` — 🟠 Same Issues, Different Language
+
+The chain-of-thought leakage problem persists in English: every answer begins with "Okay, the user is asking..." and the internal monologue runs for 3–5 sentences before the actual response. Answers are frequently truncated mid-sentence. That said, the reasoning approach is sound and the English is grammatically correct. The model is simply not production-ready without output post-processing to strip the thinking tokens.
+
+- ✅ Correct factual answers · sound reasoning approach · grammatical English
+- ❌ Thinking monologue always visible · answers truncated · slowest model
+
+### `Qwen3.5-0.8B` — 🥈 Best Creative Writer in English
+
+Produces the most vivid and original creative writing of all models — the mountain sunset paragraph is genuinely impressive. Vegetarian follow-up is well-structured with named dish concepts. Math reasoning is correct but gets lost in LaTeX-style formatting that breaks mid-expression. The main trade-off is speed: consistently the slowest for longer tasks.
+
+- ✅ Best English creative writing · good structure · correct math approach
+- ❌ Slowest overall · broken LaTeX in math output · occasionally over-formatted
+
+---
+
+## Italian vs English Comparison
+
+This table shows how each model's average score shifted between the two language tests.
+
+| Model | Italian Avg | English Avg | Delta | Verdict |
+|---|:---:|:---:|:---:|---|
+| `nesso-350M-sft-v0.7` | 3.8 | 3.8 | `=` | Stable across both languages |
+| `nesso-350M-sft-v0.6` | 3.6 | 2.2 | `↓ -1.4` | Strong Italian drop in English |
+| `granite-4.0-350m`    | 3.6 | 4.8 | `↑ +1.2` | English-first model, confirmed |
+| `Qwen3-0.6B`          | 3.2 | 3.0 | `↓ -0.2` | Consistent (consistently mediocre) |
+| `Qwen3.5-0.8B`        | 3.8 | 4.0 | `↑ +0.2` | Slight improvement in English |
+
+---
+
+## Overall Takeaways
+
+| Use Case | Best Model (EN) | Best Model (IT) |
+|---|---|---|
+| 🏆 Best overall | `granite-4.0-350m` | `nesso-350M-sft-v0.7` |
+| ⚡ Fastest | `granite-4.0-350m` | `granite-4.0-350m` |
+| 🔢 Math reasoning | `granite-4.0-350m` | `granite-4.0-350m` |
+| ✍️ Creative writing | `Qwen3.5-0.8B` | `nesso-350M-sft-v0.6` |
+| 🧠 Most transparent | `Qwen3-0.6B` | `Qwen3-0.6B` |
+
+> **Key insight:** Language matters enormously at this scale. `nesso-350M-sft-v0.6` loses over 1.4 points average when switching to English, while `granite-4.0-350m` gains 1.2 — confirming these models are language-specialized rather than truly multilingual. If you need a model that handles both Italian and English well, `nesso-350M-sft-v0.7` is the most balanced choice, while a two-model pipeline (Granite for English, nesso-v0.7 for Italian) would give the best per-language results.
