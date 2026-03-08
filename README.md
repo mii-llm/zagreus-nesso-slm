@@ -798,797 +798,490 @@ This report does not merely describe a model; it **documents the entire empirica
 
 In addition to the scientific and technical achievements, the *Zagreus–Nesso SLM* effort embodies a broader philosophical commitment: the advancement and **democratization of AI through open research and open source tools**. By providing detailed data pipelines, architectural choices, and a transparent account of trade-offs encountered in training at scale, this work becomes an invaluable resource for anyone seeking to replicate or build upon it. Therefore, the importance of this report lies not only in its immediate results but also in its **lasting influence on how future small language models may be conceived, trained, and deployed**.
 
-# Small LLM Comparison — Analysis Report
+# SLM Benchmark — Italian & English Combined Report
 
-> 5 models · 5 tasks · Italian language focus · ~350M–800M parameters
-
----
-
-## Testing Code
-
-### Setup
-
-```python
-import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM
-from IPython.display import display, Markdown
-import time
-import gc
-
-MODELS = [
-    "giux78/nesso-350M-sft-v0.7",
-    "giux78/nesso-350M-sft-v0.6",
-    "ibm-granite/granite-4.0-350m",
-    "Qwen/Qwen3-0.6B",
-    "Qwen/Qwen3.5-0.8B",
-]
-
-DEFAULT_MAX_TOKENS = 256
-DEFAULT_TEMPERATURE = 0.7
-DEFAULT_TOP_P = 0.9
-
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-print(f"Using device: {DEVICE}")
-```
-
-### Test Conversations
-
-```python
-TEST_CONVERSATIONS = {
-    "identity": [
-        {"role": "system",    "content": "Sei un assistente utile."},
-        {"role": "user",      "content": "Ciao! Chi sei e chi ti ha creato?"},
-        {"role": "assistant", "content": "Ciao! Sono un assistente AI. Come posso aiutarti?"},
-        {"role": "user",      "content": "Quale è la capitale di Italia?"},
-    ],
-    "quick_dinner": [
-        {"role": "user", "content": "Mi fai una lista di 3 idee per una cena veloce?"}
-    ],
-    "vegetarian_followup": [
-        {"role": "user",      "content": "Mi fai una lista di 3 idee per una cena veloce?"},
-        {"role": "assistant", "content": "Eccone tre: pasta al pomodoro, insalata di riso, frittata di verdure."},
-        {"role": "user",      "content": "Rendila vegetariana"},
-    ],
-    "math_reasoning": [
-        {"role": "user", "content": "Spiega passo per passo come calcolare il 15% di 240."}
-    ],
-    "creative_writing": [
-        {"role": "user", "content": "Scrivi un breve paragrafo descrittivo su un tramonto in montagna."}
-    ],
-}
-```
-
-### Utility Functions
-
-```python
-def load_model(model_id: str):
-    tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True)
-    model = AutoModelForCausalLM.from_pretrained(
-        model_id,
-        torch_dtype=torch.bfloat16 if DEVICE == "cuda" else torch.float32,
-        device_map="auto" if DEVICE == "cuda" else None,
-    )
-    if DEVICE == "cpu":
-        model = model.to(DEVICE)
-    return tokenizer, model.eval()
-
-
-def unload_model(model):
-    del model
-    gc.collect()
-    if DEVICE == "cuda":
-        torch.cuda.empty_cache()
-
-
-def build_prompt(tokenizer, messages):
-    try:
-        return tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True
-        )
-    except Exception:
-        parts = [f"{m['role'].upper()}: {m['content']}" for m in messages]
-        parts.append("ASSISTANT:")
-        return "\n".join(parts)
-
-
-def extract_answer(tokenizer, full_text: str, prompt: str) -> str:
-    for sentinel in ["<|im_start|>assistant\n", "<|assistant|>", "ASSISTANT:"]:
-        if sentinel in full_text:
-            candidate = full_text.split(sentinel)[-1]
-            for eos in ["<|im_end|>", "<|endoftext|>", "</s>"]:
-                candidate = candidate.split(eos)[0]
-            return candidate.strip()
-    if full_text.startswith(prompt):
-        return full_text[len(prompt):].strip()
-    return full_text.strip()
-
-
-def chat(tokenizer, model, messages, max_tokens=DEFAULT_MAX_TOKENS,
-         temperature=DEFAULT_TEMPERATURE, top_p=DEFAULT_TOP_P):
-    prompt = build_prompt(tokenizer, messages)
-    inputs = tokenizer(prompt, return_tensors="pt").to(DEVICE)
-    t0 = time.time()
-    with torch.no_grad():
-        outputs = model.generate(
-            **inputs,
-            max_new_tokens=max_tokens,
-            temperature=temperature,
-            top_p=top_p,
-            do_sample=True,
-            pad_token_id=tokenizer.pad_token_id or tokenizer.eos_token_id,
-            eos_token_id=tokenizer.eos_token_id,
-        )
-    elapsed = time.time() - t0
-    full_text = tokenizer.decode(outputs[0], skip_special_tokens=False)
-    return extract_answer(tokenizer, full_text, prompt), elapsed
-```
-
-### Main Comparison Loop
-
-```python
-results = {}
-
-for model_id in MODELS:
-    print(f"\n{'='*60}\nModel: {model_id}\n{'='*60}")
-    try:
-        tokenizer, model = load_model(model_id)
-    except Exception as e:
-        print(f"  ✗ Failed to load: {e}")
-        results[model_id] = {name: {"answer": f"[ERROR: {e}]", "time": 0}
-                             for name in TEST_CONVERSATIONS}
-        continue
-
-    results[model_id] = {}
-    for conv_name, messages in TEST_CONVERSATIONS.items():
-        print(f"  Running '{conv_name}'...", end=" ", flush=True)
-        try:
-            answer, elapsed = chat(tokenizer, model, messages)
-            results[model_id][conv_name] = {"answer": answer, "time": elapsed}
-            print(f"done ({elapsed:.1f}s)")
-        except Exception as e:
-            results[model_id][conv_name] = {"answer": f"[ERROR: {e}]", "time": 0}
-            print(f"ERROR: {e}")
-
-    unload_model(model)
-
-print("\n✅ All models evaluated!")
-```
-
-### Display Results
-
-```python
-for conv_name, messages in TEST_CONVERSATIONS.items():
-    user_prompt = next(
-        (m["content"] for m in reversed(messages) if m["role"] == "user"), "?"
-    )
-    md = f"### `{conv_name}` — *\"{user_prompt}\"*\n\n"
-    md += "| Model | Answer | Time (s) |\n|---|---|---|\n"
-    for model_id in MODELS:
-        r = results.get(model_id, {}).get(conv_name, {"answer": "N/A", "time": 0})
-        short = model_id.split("/")[-1]
-        answer = r["answer"].replace("|", "\\|").replace("\n", " ")
-        md += f"| `{short}` | {answer} | {r['time']:.1f} |\n"
-    display(Markdown(md + "\n---\n"))
-```
+> **Models evaluated:** nesso-0.4B-agentic · nesso-0.4B-instruct · open-zagreus-0.4B · Qwen3-0.6B · Qwen3.5-0.8B  
+> **Tasks:** 20 per language · **Scoring:** 0–5 per task (max 100) · **Version:** v3 — updated model names + increased max\_tokens  
+> **Note on Qwen3-0.6B:** `<think>` block = internal reasoning only; visible answer scored.  
+> **Note on zagreus:** excluded from English benchmark — produces Italian output regardless of prompt language.
 
 ---
 
-## Score Summary
+## Part I — Italian Benchmark
 
-Scores are 1–5 across five evaluation dimensions.
-
-| Model | Factual Accuracy | Instruction Following | Italian Quality | Coherence | Reasoning | **Avg** |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|
-| `nesso-350M-sft-v0.7` | 4 | 4 | 5 | 4 | 2 | **3.8** |
-| `nesso-350M-sft-v0.6` | 4 | 4 | 5 | 4 | 1 | **3.6** |
-| `granite-4.0-350m`    | 5 | 3 | 2 | 3 | 5 | **3.6** |
-| `Qwen3-0.6B`          | 4 | 3 | 3 | 2 | 4 | **3.2** |
-| `Qwen3.5-0.8B`        | 4 | 4 | 4 | 3 | 4 | **3.8** |
+*5 models · 20 Italian-language tasks · March 2026*
 
 ---
 
-## Radar Charts
+### 1. Italian Leaderboard
 
-### All Models — Combined Overview
+| Rank | Model | Score / 100 | Avg / task |
+|------|-------|-------------|------------|
+| 🥇 | **nesso-0.4B-agentic** | **73** | 3.65 |
+| 🥈 | nesso-0.4B-instruct | 56 | 2.80 |
+| 🥉 | Qwen3.5-0.8B | 55 | 2.75 |
+| 4. | Qwen3-0.6B\* | 52 | 2.60 |
+| 5. | open-zagreus-0.4B | 40 | 2.00 |
 
-![All Models Radar](images/radar_all_models.png)
-
-### Individual Model Profiles
-
-| | |
-|:---:|:---:|
-| ![nesso-v0.7](images/radar_nesso-350M-sft-v0.7.png) | ![nesso-v0.6](images/radar_nesso-350M-sft-v0.6.png) |
-| `nesso-350M-sft-v0.7` | `nesso-350M-sft-v0.6` |
-| ![granite](images/radar_granite-4.0-350m.png) | ![qwen3](images/radar_Qwen3-0.6B.png) |
-| `granite-4.0-350m` | `Qwen3-0.6B` |
-| ![qwen35](images/radar_Qwen3.5-0.8B.png) | |
-| `Qwen3.5-0.8B` | |
+![Italian & English Leaderboard](images/01_leaderboard.png)
 
 ---
 
-## Inference Time
+### 2. Italian Per-Task Scores
 
-![Timing Bar Chart](images/timing_bar.png)
+| Task | Description | nesso-agentic | nesso-instruct | zagreus | Qwen3\* | Qwen3.5 |
+|------|-------------|:---:|:---:|:---:|:---:|:---:|
+| identity | Identity / capital | **4** | **4** | **5** | 3 | 2 |
+| quick\_dinner | Quick dinner ideas | **4** | **5** | 1 | 2 | 1 |
+| vegetarian\_followup | Vegetarian follow-up | **5** | 2 | 1 | 4 | 3 |
+| math\_reasoning | Math reasoning (15% of 240) | 1 | 3 | 1 | **5** | **5** |
+| creative\_writing | Mountain sunset paragraph | **4** | **4** | **4** | 2 | **4** |
+| translation | Translation IT→EN | **5** | 1 | **5** | 2 | **5** |
+| summarization | Summarisation (photosynthesis) | **4** | **4** | 2 | **4** | **4** |
+| code\_generation | Code — factorial function | **5** | 1 | 1 | 2 | 1 |
+| grammar\_correction | Grammar correction (freschi→fresche) | **3** | 2 | 2 | 1 | 1 |
+| opinion\_pros\_cons | Pros & cons (remote work) | **5** | 4 | 4 | 3 | **5** |
+| roleplay\_tour\_guide | Roleplay — Rome in 1 day | 2 | **3** | 1 | **3** | 1 |
+| classification | Classification (6 words) | 2 | 2 | 1 | **5** | **5** |
+| logical\_reasoning | Logical reasoning (syllogism) | **3** | 1 | 2 | **3** | 1 |
+| recipe\_request | Recipe — traditional carbonara | **3** | 1 | 1 | 1 | 1 |
+| recipe\_followup | Calorie follow-up | **5** | 4 | 1 | 3 | 2 |
+| explain\_concept | Explain AI (ELI10) | **4** | 1 | 1 | 1 | 3 |
+| list\_generation | 5 Italian classic books | **2** | 1 | 1 | 1 | 1 |
+| email\_writing | Formal email request | 4 | **5** | 3 | 3 | 4 |
+| trivia | Trivia — Sistine Chapel | **4** | **4** | 1 | 1 | 1 |
+| multi\_turn\_advice | Stretching for back pain | 4 | 4 | 2 | 3 | **5** |
+| **TOTAL** | **/100** | **73** | **56** | **40** | **52** | **55** |
 
-| Model | Identity | Quick Dinner | Vegetarian | Math | Creative | **Avg** |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|
-| `nesso-350M-sft-v0.7` | 1.5s | 5.4s | 5.4s | 3.3s | 5.4s | **4.2s** |
-| `nesso-350M-sft-v0.6` | 2.4s | 5.3s | 1.0s | 3.6s | 5.6s | **3.6s** |
-| `granite-4.0-350m`    | 0.2s | 5.1s | 0.7s | 3.3s | 2.7s | **2.4s** |
-| `Qwen3-0.6B`          | 3.4s | 6.3s | 6.3s | 6.3s | 5.4s | **5.5s** |
-| `Qwen3.5-0.8B`        | 0.4s | 7.6s | 7.6s | 6.8s | 6.8s | **5.8s** |
-
----
-
-## Task-by-Task Highlights
-
-| Task | Best Model | Worst Model | Notes |
-|---|---|---|---|
-| 🗺️ Capital of Italy | `granite-4.0-350m` | `Qwen3-0.6B` | Granite fastest (0.2s); Qwen3 leaks thinking monologue |
-| 🍽️ Quick Dinner Ideas | `nesso-350M-sft-v0.7` | `granite-4.0-350m` | Granite produced repetitive, incoherent output |
-| 🥗 Vegetarian Follow-up | `nesso-350M-sft-v0.7` | `granite-4.0-350m` | Granite: "pescaccio o un grano" — incoherent |
-| 🔢 Math Reasoning | `granite-4.0-350m` | `nesso-350M-sft-v0.6` | Only Granite got 36 correct; v0.6 got 1600 |
-| ✍️ Creative Writing | `nesso-350M-sft-v0.6` | `granite-4.0-350m` | Granite answered in English |
-
----
-
-## Model Verdicts
-
-### `nesso-350M-sft-v0.7` — 🏆 Best Overall for Italian
-
-Most consistent across all tasks. Strong Italian prose, good instruction following, reliable factual answers. Main weakness is math reasoning (adds result to original: 36 → 276). Occasional topic drift in long outputs.
-
-- ✅ Best Italian quality · consistent · good instruction following
-- ❌ Math reasoning error · minor drift in long generations
-
-### `nesso-350M-sft-v0.6` — 📝 Best Creative Writer
-
-Produced the most poetic and fluent Italian paragraph in the creative task. Short answers are crisp and natural. However, it made the worst math error of all models (240 ÷ 0.15 = 1600) and gave a suspiciously shallow vegetarian follow-up, suggesting weak multi-turn context handling.
-
-- ✅ Best creative writing · very fluent Italian · fast on short answers
-- ❌ Worst math error · shallow multi-turn context handling
-
-### `granite-4.0-350m` — ⚡ Speed King & Best Reasoner
-
-Fastest by a large margin and the only model to solve the math task correctly with clean steps. However, it **answered in English for all Italian prompts** — a critical language mismatch. Complex prompts trigger repetitive, incoherent output.
-
-- ✅ Only correct math · fastest inference · concise
-- ❌ No Italian language alignment · incoherent on complex prompts
-
-### `Qwen3-0.6B` — 🧠 Transparent but Unpolished
-
-Uses visible chain-of-thought ("Okay, the user asked...") which leaks into every response. Slowest model overall. Reasoning approach is sound but answers are frequently truncated before reaching a conclusion. Italian quality is noticeably weaker than the nesso models.
-
-- ✅ Transparent reasoning · correct factual answers
-- ❌ Thinking monologue leaks into output · slowest · weak Italian · answers often truncated
-
-### `Qwen3.5-0.8B` — 🎨 Creative but Verbose
-
-Most atmospheric creative writing in Italian and best-structured vegetarian answer. Gets math right but via a confusing explanation. Tends to be slow and over-long, occasionally inventing dish names ("Il Sapore della Locanda").
-
-- ✅ Strong creative writing · good Italian · good instruction following
-- ❌ Slowest for long tasks · verbose · occasional hallucinations
+![Italian Per-Task Heatmap](images/05_heatmap_it.png)
 
 ---
 
-## Overall Takeaways
+### 3. Italian Per-Model Analysis
 
-| Use Case | Recommended Model | Reason |
-|---|---|---|
-| 🇮🇹 Italian-language applications | `nesso-350M-sft-v0.7` | Best language quality, most consistent |
-| ⚡ Speed-critical / low-latency | `granite-4.0-350m` | ~10× faster, but needs language fine-tuning |
-| 🔢 Math / step-by-step reasoning | `granite-4.0-350m` | Only correct result; cleanest method |
-| ✍️ Creative / generative text | `nesso-350M-sft-v0.6` | Most poetic and fluent Italian prose |
-| 🔍 Debugging / reasoning transparency | `Qwen3-0.6B` | Chain-of-thought visible (needs output post-processing) |
+![Italian Benchmark Radar — Task Groups per Model](images/03_radar_it.png)
 
-> **Key insight:** No single model dominates all dimensions. For a production Italian assistant, `nesso-350M-sft-v0.7` is the safest choice. For a multilingual or reasoning-heavy pipeline, `granite-4.0-350m` is worth fine-tuning for Italian alignment given its speed and accuracy advantages.
+#### nesso-0.4B-agentic — 73/100
 
-# Small LLM Comparison — English Output Analysis
+Most consistent model with no catastrophic failures. Leads on code, vegetarian follow-up, calorie estimation, translation, and trivia.
 
-> 5 models · 5 tasks · **English language** · ~350M–800M parameters
+**Strengths**
+- Most consistent: no catastrophic failures across any task
+- Best code: correct iterative factorial with edge case handling
+- Best vegetarian follow-up: 3 clean correct replacements
+- Best calorie estimate: realistic 320–500 kcal range with reasoning
+- Correct trivia (Michelangelo, 1508–1512, Papa Giulio II)
+- Perfect translation (0.2s — fastest in benchmark)
+- Best pros/cons: 5+6 points with nuanced 'disparità di reddito'
 
----
-
-## Score Summary
-
-Scores are 1–5 across five evaluation dimensions.
-
-| Model | Factual Accuracy | Instruction Following | English Quality | Coherence | Reasoning | **Avg** |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|
-| `nesso-350M-sft-v0.7` | 4 | 4 | 4 | 4 | 3 | **3.8** |
-| `nesso-350M-sft-v0.6` | 2 | 3 | 3 | 2 | 1 | **2.2** |
-| `granite-4.0-350m`    | 5 | 4 | 5 | 5 | 5 | **4.8** |
-| `Qwen3-0.6B`          | 4 | 3 | 3 | 2 | 3 | **3.0** |
-| `Qwen3.5-0.8B`        | 4 | 4 | 5 | 3 | 4 | **4.0** |
+**Weaknesses**
+- Math: subtracts 15% instead of computing it → 186.4. Fundamental error.
+- Carbonara: correct ingredients but bakes in oven at 180°C for 35 min — wrong technique
+- Grammar: correct fix but blames wrong verb instead of gender agreement
+- Italian classics: only 2/5 are actually Italian (Cent'anni di solitudine and La strada are not)
+- Roleplay: invents 'Palazzo dei Prussi', 'Museo Picasso' in Rome, lists Piazza Navona twice
+- Classification: puts colours under Animale, misses banana and gatto
 
 ---
 
-## Radar Charts
+#### nesso-0.4B-instruct — 56/100
 
-### All Models — Combined Overview
+Strong on short language tasks (email, quick lists) but shows a consistent repetition loop problem — increased max\_tokens made this much more visible. Code generation is unreliable.
 
-![All Models Radar](images/eng_radar_all_models.png)
+> ⚠️ **Repetition loop detected in multiple tasks** — add `repetition_penalty` before deployment
 
-### Individual Model Profiles
+**Strengths**
+- Best email: complete with Oggetto line, professional body, all placeholders
+- Correct trivia (Michelangelo, 1508–1512)
+- Best quick dinner: 3 ideas in one clean concise line each
+- Good creative writing: literary paragraph with strong imagery
+- Good pros/cons response (6 pros + 8 cons)
 
-| | |
-|:---:|:---:|
-| ![nesso-v0.7](images/eng_radar_nesso-350M-sft-v0.7.png) | ![nesso-v0.6](images/eng_radar_nesso-350M-sft-v0.6.png) |
-| `nesso-350M-sft-v0.7` | `nesso-350M-sft-v0.6` |
-| ![granite](images/eng_radar_granite-4.0-350m.png) | ![qwen3](images/eng_radar_Qwen3-0.6B.png) |
-| `granite-4.0-350m` | `Qwen3-0.6B` |
-| ![qwen35](images/eng_radar_Qwen3.5-0.8B.png) | |
-| `Qwen3.5-0.8B` | |
-
----
-
-## Inference Time
-
-![Timing Bar Chart](images/eng_timing_bar.png)
-
-| Model | Identity | Quick Dinner | Vegetarian | Math | Creative | **Avg** |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|
-| `nesso-350M-sft-v0.7` | 0.2s | 3.9s | 0.6s | 2.3s | 4.3s | **2.3s** |
-| `nesso-350M-sft-v0.6` | 2.2s | 3.5s | 1.4s | 4.7s | 5.9s | **3.5s** |
-| `granite-4.0-350m`    | 0.2s | 4.1s | 0.6s | 3.3s | 2.0s | **2.0s** |
-| `Qwen3-0.6B`          | 2.0s | 6.6s | 6.4s | 6.3s | 6.2s | **5.5s** |
-| `Qwen3.5-0.8B`        | 1.4s | 7.5s | 7.3s | 7.5s | 5.9s | **5.9s** |
+**Weaknesses**
+- Code: wrong formula; loops 'Buona giornata!' ~12 times at end
+- Translation: correct answer then appends fake German glossary (Tedesse, Gesäß, Wunder…)
+- Vegetarian follow-up: lists 'pollo al forno' (chicken) as vegetarian option
+- Grammar: correct fix then contradicts itself and loops corrected sentence ~15 times
+- Explain AI: starts well then degrades to '^))))))))' and rocket emoji spam
+- Italian classics: only 2/5 correct (La Divina Commedia, Promessi Sposi)
 
 ---
 
-## Task-by-Task Highlights
+#### open-zagreus-0.4B — 40/100
 
-| Task | Best Model | Worst Model | Notes |
-|---|---|---|---|
-| 🗺️ Capital of Italy | `granite-4.0-350m` | `nesso-350M-sft-v0.6` | v0.6 hallucinated "L'Italia" as an alias for Rome |
-| 🍽️ Quick Dinner Ideas | `granite-4.0-350m` | `Qwen3-0.6B` | Granite gave 3 structured, realistic recipes; Qwen3 truncated mid-sentence |
-| 🥗 Vegetarian Follow-up | `granite-4.0-350m` / `Qwen3.5-0.8B` | `nesso-350M-sft-v0.6` | v0.6 added an unsolicited "what if you want to be more creative?" digression |
-| 🔢 Math Reasoning | `granite-4.0-350m` | `nesso-350M-sft-v0.6` | Only Granite got 36 correct again; v0.6 computed 0.1; v0.7 got 33 (rounding error) |
-| ✍️ Creative Writing | `Qwen3.5-0.8B` | `nesso-350M-sft-v0.6` | Qwen3.5 produced the most vivid, original prose; v0.6 was repetitive and looping |
+Speed champion (0.2–0.3s for translation) but deeply unreliable. Looping problem is severe. Reliable only for translation and very simple factual questions.
 
----
+**Strengths**
+- Fastest model: translation in 0.2–0.3s, classification in ~3s
+- Perfect translation on both attempts
+- Good creative writing: poetic and atmospheric
+- Reasonable pros/cons response
+- Reasonable email structure
 
-## Model Verdicts
-
-### `nesso-350M-sft-v0.7` — 🟡 Decent but Misses Its Home Turf
-
-Competent English output — clear, well-structured answers on dinner ideas and creative writing — but shows cracks compared to its Italian performance. The math task produced 33.0 instead of 36 (a rounding/multiplication error). Overall the most balanced of the nesso family in English, but neither a language specialist nor a reasoning leader here.
-
-- ✅ Readable English · good instruction following · coherent across tasks
-- ❌ Math error (33 instead of 36) · less impressive than its Italian output
-
-### `nesso-350M-sft-v0.6` — 🔴 Significant Drop in English
-
-This model degrades noticeably in English. The identity task introduced a factual hallucination ("Rome, also known as L'Italia"), the math task is completely wrong (answer: 0.1), and the creative writing output is highly repetitive — reusing the word "breathtaking" five times in the same paragraph. Multi-turn coherence remains weak, adding unsolicited suggestions in the vegetarian follow-up. Clearly fine-tuned primarily for Italian.
-
-- ✅ Attempts to follow instructions · produces long outputs
-- ❌ Factual hallucination · worst math error · repetitive prose · low coherence
-
-### `granite-4.0-350m` — 🏆 Dominant in English
-
-Granite is the clear winner in English across every dimension. Correct math (36), clean step-by-step reasoning, well-structured recipes with realistic details, and the best factual accuracy. Creative writing is atmospheric and concise. This confirms that Granite is fundamentally an English-first model — the language mismatch seen in Italian tests was not a capability gap, just an alignment gap.
-
-- ✅ Only correct math · best English prose · fast · coherent · structured answers
-- ❌ Still occasionally verbose on dinner prompts
-
-### `Qwen3-0.6B` — 🟠 Same Issues, Different Language
-
-The chain-of-thought leakage problem persists in English: every answer begins with "Okay, the user is asking..." and the internal monologue runs for 3–5 sentences before the actual response. Answers are frequently truncated mid-sentence. That said, the reasoning approach is sound and the English is grammatically correct. The model is simply not production-ready without output post-processing to strip the thinking tokens.
-
-- ✅ Correct factual answers · sound reasoning approach · grammatical English
-- ❌ Thinking monologue always visible · answers truncated · slowest model
-
-### `Qwen3.5-0.8B` — 🥈 Best Creative Writer in English
-
-Produces the most vivid and original creative writing of all models — the mountain sunset paragraph is genuinely impressive. Vegetarian follow-up is well-structured with named dish concepts. Math reasoning is correct but gets lost in LaTeX-style formatting that breaks mid-expression. The main trade-off is speed: consistently the slowest for longer tasks.
-
-- ✅ Best English creative writing · good structure · correct math approach
-- ❌ Slowest overall · broken LaTeX in math output · occasionally over-formatted
+**Weaknesses**
+- Quick dinner: single giant ingredient dump — not 3 dinner ideas
+- Vegetarian follow-up: outputs looping advertising copy instead of dish list (~10 repetitions)
+- Math: '240 × 0.15 = 0.15'. Boxes '15%' as final answer.
+- Code: fattoriale(n) = fattoriale(n-1) + fattoriale(n-1). Neither factorial nor valid recursion.
+- Summarisation: releases CO₂ instead of O₂ — critical factual error
+- Classification: all 6 words are 'colori'. Completely wrong.
+- Roleplay: explains why you cannot visit Rome instead of recommending attractions
+- Trivia: invents 6 artists (Arrhenius, Tiepolo, Hayez, Vivaldi, Piacentini, Mazzini) — none correct
+- Carbonara: uses veal, panna acida, aceto di mele
 
 ---
 
-## Italian vs English Comparison
+#### Qwen3-0.6B\* — 52/100
 
-This table shows how each model's average score shifted between the two language tests.
+The think block is a genuine reasoning asset — best analytical engine for math and logic. However the user only sees the visible answer, which is still truncated or incomplete on ~40% of tasks. Fix: increase token budget or use `/no_think` for simple tasks.
 
-| Model | Italian Avg | English Avg | Delta | Verdict |
-|---|:---:|:---:|:---:|---|
-| `nesso-350M-sft-v0.7` | 3.8 | 3.8 | `=` | Stable across both languages |
-| `nesso-350M-sft-v0.6` | 3.6 | 2.2 | `↓ -1.4` | Strong Italian drop in English |
-| `granite-4.0-350m`    | 3.6 | 4.8 | `↑ +1.2` | English-first model, confirmed |
-| `Qwen3-0.6B`          | 3.2 | 3.0 | `↓ -0.2` | Consistent (consistently mediocre) |
-| `Qwen3.5-0.8B`        | 3.8 | 4.0 | `↑ +0.2` | Slight improvement in English |
+**Strengths**
+- THINK: strongest math reasoning — three methods all correctly give 36
+- THINK: correct set-theory syllogism analysis
+- THINK: correct classification planning for all 6 words
+- Visible: perfect classification output
+- Visible: correct vegetarian follow-up (3 good options)
 
----
-
-## Overall Takeaways
-
-| Use Case | Best Model (EN) | Best Model (IT) |
-|---|---|---|
-| 🏆 Best overall | `granite-4.0-350m` | `nesso-350M-sft-v0.7` |
-| ⚡ Fastest | `granite-4.0-350m` | `granite-4.0-350m` |
-| 🔢 Math reasoning | `granite-4.0-350m` | `granite-4.0-350m` |
-| ✍️ Creative writing | `Qwen3.5-0.8B` | `nesso-350M-sft-v0.6` |
-| 🧠 Most transparent | `Qwen3-0.6B` | `Qwen3-0.6B` |
-
-> **Key insight:** Language matters enormously at this scale. `nesso-350M-sft-v0.6` loses over 1.4 points average when switching to English, while `granite-4.0-350m` gains 1.2 — confirming these models are language-specialized rather than truly multilingual. If you need a model that handles both Italian and English well, `nesso-350M-sft-v0.7` is the most balanced choice, while a two-model pipeline (Granite for English, nesso-v0.7 for Italian) would give the best per-language results.
-
-# Small LLM Comparison — Italian Output Analysis
-
-> 5 models · 5 tasks · **Italian language** · ~350M–800M parameters
->
-> ⚠️ **Note on `Qwen3-0.6B`:** This model uses a `<think></think>` reasoning block before every answer. The internal monologue is excluded from evaluation — only the final answer after the thinking block is scored.
+**Weaknesses**
+- Visible answers still truncate on complex tasks despite increased max\_tokens
+- Translation: 'terso' → 'soft' — wrong even in think block
+- Grammar: concludes sentence is correct — misses freschi→fresche entirely
+- Trivia: think block converges on Verrocchio — wrong even during reasoning
+- Carbonara: thinks carbonara is tomato-based — wrong even in think block
+- Latency: 6–12s per task — slowest overall
 
 ---
 
-## Score Summary
+#### Qwen3.5-0.8B — 55/100
 
-Scores are 1–5 across five evaluation dimensions.
+High variance model. Excellent on structured tasks (math, pros/cons, stretching) but produces confident, detailed hallucinations on factual and cultural tasks. Longer wrong answers are more dangerous.
 
-| Model | Factual Accuracy | Instruction Following | Italian Quality | Coherence | Reasoning | **Avg** |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|
-| `nesso-350M-sft-v0.7` | 4 | 4 | 5 | 4 | 2 | **3.8** |
-| `nesso-350M-sft-v0.6` | 4 | 4 | 5 | 4 | 1 | **3.6** |
-| `granite-4.0-350m`    | 5 | 3 | 2 | 3 | 5 | **3.6** |
-| `Qwen3-0.6B` ¹        | 4 | 4 | 4 | 4 | 4 | **4.0** |
-| `Qwen3.5-0.8B`        | 4 | 4 | 4 | 3 | 4 | **3.8** |
+**Strengths**
+- Best stretching advice: detailed, structured, with clear hold times and medical disclaimer
+- Best pros/cons: most detailed and well-structured response in benchmark
+- Correct math: 36 via clear step-by-step
+- Perfect translation
+- Good creative writing
+- Correct classification (all 6 words)
 
-> ¹ Re-evaluated excluding `<think>` block. Actual answers are factually correct, well-structured, and in fluent Italian.
-
----
-
-## Radar Charts
-
-### All Models — Combined Overview
-
-![All Models Radar](images/ita_radar_all_models.png)
-
-### Individual Model Profiles
-
-| | |
-|:---:|:---:|
-| ![nesso-v0.7](images/ita_radar_nesso-350M-sft-v0.7.png) | ![nesso-v0.6](images/ita_radar_nesso-350M-sft-v0.6.png) |
-| `nesso-350M-sft-v0.7` | `nesso-350M-sft-v0.6` |
-| ![granite](images/ita_radar_granite-4.0-350m.png) | ![qwen3](images/ita_radar_Qwen3-0.6B.png) |
-| `granite-4.0-350m` | `Qwen3-0.6B` |
-| ![qwen35](images/ita_radar_Qwen3.5-0.8B.png) | |
-| `Qwen3.5-0.8B` | |
+**Weaknesses**
+- Identity: 'Roma è la città più popolosa del mondo con 1,4 milioni' — factually wrong
+- Quick dinner: invents fake restaurant events (Caffè della Memoria, Fondue & Faccialetta)
+- Trivia: Giorgio Vasari, X secolo, 1501 — completely wrong
+- Code: Fibonacci algorithm presented as factorial. Wrong algorithm.
+- Carbonara: mele di soia, aceto balsamico — not remotely carbonara
+- Grammar: suggests 'meglio mele freschi' as correction — doubles the error
+- Logical reasoning: concludes 'sì, necessariamente vero' — incorrect, then lists macachi eating fish
+- Italian classics: 0/5 correct (all invented or wrong titles/authors)
 
 ---
 
-## Inference Time
+### 4. Italian Benchmark — Key Cross-Model Insights
 
-![Timing Bar Chart](images/ita_timing_bar.png)
+**Effect of increased max\_tokens:** Revealed both strengths and failure modes. nesso-instruct now completes emails but loops 'Buona giornata!' 12+ times. zagreus loops vegetarian advertising copy ~10 times. Qwen3.5 produces longer but more confidently wrong responses.
 
-| Model | Identity | Quick Dinner | Vegetarian | Math | Creative | **Avg** |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|
-| `nesso-350M-sft-v0.7` | 1.5s | 5.4s | 5.4s | 3.3s | 5.4s | **4.2s** |
-| `nesso-350M-sft-v0.6` | 2.4s | 5.3s | 1.0s | 3.6s | 5.6s | **3.6s** |
-| `granite-4.0-350m`    | 0.2s | 5.1s | 0.7s | 3.3s | 2.7s | **2.4s** |
-| `Qwen3-0.6B`          | 3.4s | 6.3s | 6.3s | 6.3s | 5.4s | **5.5s** |
-| `Qwen3.5-0.8B`        | 0.4s | 7.6s | 7.6s | 6.8s | 6.8s | **5.8s** |
+**Trivia:** Only nesso models correctly identify Michelangelo (1508–1512, Pope Julius II). zagreus hallucinates 6 unrelated artists. Qwen3's think block converges on Verrocchio. Qwen3.5 gives Vasari with date 1501. Sub-1B Qwen models have unreliable access to specific art history facts.
 
-> ⚠️ `Qwen3-0.6B` times include the `<think>` block generation. Actual answer generation is faster.
+**Math improvement vs. previous run:** nesso-instruct and Qwen3.5 both correct (36). Qwen3 think block gives 36 via three methods. Only nesso-agentic (computes 186.4) and zagreus ('15%') fail.
 
----
+**Carbonara — universal failure:** Not one model produced a correct traditional carbonara. nesso-agentic is closest (right ingredients, wrong technique). All others use veal, soy milk, pesto, balsamic vinegar, or béchamel.
 
-## Task-by-Task Highlights
+**Grammar — systematic blind spot:** The error (freschi→fresche, gender agreement) is either missed entirely or explained incorrectly by every model. Italian morphological agreement is a shared weakness.
 
-| Task | Best Model | Worst Model | Notes |
-|---|---|---|---|
-| 🗺️ Capital of Italy | `granite-4.0-350m` | `granite-4.0-350m` *(lang)* | Granite fastest (0.2s) but answered in English |
-| 🍽️ Quick Dinner Ideas | `nesso-350M-sft-v0.7` | `granite-4.0-350m` | Granite repetitive/incoherent in Italian |
-| 🥗 Vegetarian Follow-up | `nesso-350M-sft-v0.7` | `granite-4.0-350m` | Granite: "pescaccio o un grano" — incoherent |
-| 🔢 Math Reasoning | `granite-4.0-350m` | `nesso-350M-sft-v0.6` | Only Granite got 36 correct; v0.6 computed 1600 |
-| ✍️ Creative Writing | `nesso-350M-sft-v0.6` | `granite-4.0-350m` | Granite answered in English |
+**Italian literature — all models fail:** nesso-agentic scores 2/5. All others score 0–2/5, listing García Márquez, McCarthy, or invented titles.
 
 ---
 
-## Raw Outputs
+### 5. Italian Task Winners
 
-### 🗺️ Identity — *"Quale è la capitale di Italia?"*
-
-| Model | Answer | Time (s) |
-|---|---|:---:|
-| `nesso-350M-sft-v0.7` | La capitale d'Italia è Roma. È situata nella parte centrale del paese e ospita il Campidoglio, il Palazzo dei Quiriti e molti altri importanti monumenti storici e architettonici. | 1.5 |
-| `nesso-350M-sft-v0.6` | La capitale dell'Italia è Roma. Roma è una città antica che ha conosciuto diversi periodi di potere, ma è considerata la capitale del paese da secoli. Roma è famosa per la sua storia, la sua architettura, la sua cultura e il suo patrimonio artistico e architettonico. È anche un importante centro politico e culturale, sede di molti dei principali organi decisionali della Repubblica Italiana. | 2.4 |
-| `granite-4.0-350m` | La capitale di Italia è Roma. *(in English despite Italian prompt)* | 0.2 |
-| `Qwen3-0.6B` | ~~[think: Okay, the user asked for the capital of Italy...]~~ La capitale di Italia è Roma. | 3.4 |
-| `Qwen3.5-0.8B` | La capitale d'Italia è Roma. | 0.4 |
-
----
-
-### 🍽️ Quick Dinner — *"Mi fai una lista di 3 idee per una cena veloce?"*
-
-| Model | Answer | Time (s) |
-|---|---|:---:|
-| `nesso-350M-sft-v0.7` | 1. Insalata di quinoa e verdure — con quinoa, zucchine, peperoni, pomodori, cetrioli, olio EVO, limone. 2. Pasta al pesto con pomodorini e basilico — pasta al dente con pesto fresco. 3. Zuppa di l… *[truncated]* | 5.4 |
-| `nesso-350M-sft-v0.6` | 1. Pasta al pomodoro con mozzarella e basilico. 2. Ravioli al forno con prosciutto, formaggio e miele. 3. Insalata di quinoa con tonno, pomodorini e avocado. | 5.3 |
-| `granite-4.0-350m` | 1. Bruschetta con pepe e tomate: una frutta fresca come uova, gherkin e meloni… 2. Pasta e riso con pollo… 3. Pizza di frutta… *[repetitive, incoherent]* | 5.1 |
-| `Qwen3-0.6B` | ~~[think: Okay, the user wants 3 quick dinner ideas...]~~ 1. Pasta al pomodoro con un dolce di pesce e un po di burro. 2. Pasta fritta e pesto… *[truncated]* | 6.3 |
-| `Qwen3.5-0.8B` | 1. Il "Taste Test" — pizza, bistecca e pasta. 2. Il "Sapore della Locanda" — carne e salumi con salsa di frittelle. 3. Il "Sicuro" con il "Tutto"… *[creative but odd dish names]* | 7.6 |
-
----
-
-### 🥗 Vegetarian Follow-up — *"Rendila vegetariana"*
-
-| Model | Answer | Time (s) |
-|---|---|:---:|
-| `nesso-350M-sft-v0.7` | 1. Pasta al pomodoro con sugo di lenticchie e verdure. 2. Insalata di farro con lenticchie e verdure. 3. Zuppa di verdure con legumi — zucca, carote, patate, fagioli. | 5.4 |
-| `nesso-350M-sft-v0.6` | Ecco tre idee vegetariane: tofu saltato, zuppa di zucca, burger di fagioli. Sono tutte ottime alternative senza carne. Buon appetito! | 1.0 |
-| `granite-4.0-350m` | 1. Riserva di fagioli, fagioli e verdure al pomodoro, ognuno di cui un pescaccio o un grano. *[incoherent]* | 0.7 |
-| `Qwen3-0.6B` | ~~[think: Okay, the user asked for vegetarian ideas...]~~ Ecco tre idee vegetariane per una cena veloce: 1. **… *[truncated after think block]* | 6.3 |
-| `Qwen3.5-0.8B` | 1. Pasta alla Tomatina — zucchine, cavoli, basilico, peperoni, salsa di pomodoro. 2. Insalata di Riso al Forno con avocado e mandorle. 3. Frittata di Verdure — spinaci, broccoli, cavoli. | 7.6 |
+| Task | Best Score | Winner(s) |
+|------|:---:|-----------|
+| Identity / capital | 5 | zagreus |
+| Quick dinner ideas | 5 | nesso-instruct |
+| Vegetarian follow-up | 5 | nesso-agentic |
+| Math reasoning | 5 | Qwen3\*, Qwen3.5 |
+| Creative writing | 4 | nesso-agentic, nesso-instruct, zagreus, Qwen3.5 |
+| Translation IT→EN | 5 | nesso-agentic, zagreus, Qwen3.5 |
+| Summarisation | 4 | nesso-agentic, nesso-instruct, Qwen3\*, Qwen3.5 |
+| Code — factorial | 5 | nesso-agentic |
+| Grammar correction | 3 | nesso-agentic |
+| Pros & cons | 5 | nesso-agentic, Qwen3.5 |
+| Roleplay — Rome | 3 | nesso-instruct, Qwen3\* |
+| Classification | 5 | Qwen3\*, Qwen3.5 |
+| Logical reasoning | 3 | nesso-agentic, Qwen3\* |
+| Carbonara recipe | 3 | nesso-agentic |
+| Calorie follow-up | 5 | nesso-agentic |
+| Explain AI (ELI10) | 4 | nesso-agentic |
+| 5 Italian classic books | 2 | nesso-agentic |
+| Formal email | 5 | nesso-instruct |
+| Trivia — Sistine Chapel | 4 | nesso-agentic, nesso-instruct |
+| Stretching for back pain | 5 | Qwen3.5 |
 
 ---
 
-### 🔢 Math Reasoning — *"Spiega passo per passo come calcolare il 15% di 240."*
+## Part II — English Benchmark
 
-| Model | Answer | Time (s) |
-|---|---|:---:|
-| `nesso-350M-sft-v0.7` | 1. 240 ÷ 100 = 2.4. 2. 2.4 × 15 = 33.0. Quindi 15% di 240 è **33.0** ❌ *(correct: 36)* | 3.3 |
-| `nesso-350M-sft-v0.6` | 1. Dividi 15% per 100 → 0.15. 2. 240 ÷ 0.15 = **1600** ❌ *(correct: 36)* | 3.6 |
-| `granite-4.0-350m` | 1. 15% = 15/100 = 0.15. 2. 0.15 × 240 = **36** ✅ | 3.3 |
-| `Qwen3-0.6B` | ~~[think: Okay, so I need to figure out 15% of 240...]~~ La capitale di Italia è Roma. *(answer correct in think block: 1% = 2.4 → 15% = 36, but output truncated)* | 6.3 |
-| `Qwen3.5-0.8B` | Esponenzia il numero per il valore percentuale… prodotto diviso 100 → **36** ✅ *(correct but confusing method)* | 6.8 |
+*4 models · 20 English-language tasks · zagreus excluded (Italian-only output)*
+
+> **Language compliance note:** The English benchmark outputs appear to have been generated on the same prompts as the Italian run (identical answers and timestamps). This section therefore also measures language-switching ability — i.e. whether models successfully respond in English when prompted in English.
 
 ---
 
-### ✍️ Creative Writing — *"Scrivi un breve paragrafo descrittivo su un tramonto in montagna."*
+### 6. English Leaderboard
 
-| Model | Answer | Time (s) |
-|---|---|:---:|
-| `nesso-350M-sft-v0.7` | In una calda serata d'estate, il sole si tuffa dolcemente nel cielo azzurro, tingendo il paesaggio di sfumature calde e avvolgenti… *(vivid but drifts to "onde del mare" — off-topic at end)* | 5.4 |
-| `nesso-350M-sft-v0.6` | In cima alla montagna, il tramonto dipinge il cielo di sfumature calde e avvolgenti… la luna piena emerge dalla tundra… *(most poetic and coherent Italian paragraph)* | 5.6 |
-| `granite-4.0-350m` | The sun, a warm orb of yellow and orange, casts a golden glow over the snow-capped mountains… *[answered in English]* | 2.7 |
-| `Qwen3-0.6B` | ~~[think: Okay, the user wants a short descriptive paragraph...]~~ Il tramonto si unisce al cielo di montagna con colori di rose e giallo… *(broken Italian, awkward phrasing)* | 5.4 |
-| `Qwen3.5-0.8B` | Un tramonto in montagna è spesso il momento più drammatico… il vento si arresta creando un silenzio assoluto… *(long, atmospheric Italian — slightly melodramatic)* | 6.8 |
+| Rank | Model | Score / 100 |
+|------|-------|:-----------:|
+| 🥇 | **Qwen3.5-0.8B** | **71** |
+| 🥈 | Qwen3-0.6B\* | **67** |
+| 🥉 | nesso-0.4B-agentic | **66** |
+| 4. | nesso-0.4B-instruct | **52** |
 
----
-
-## Model Verdicts
-
-### `nesso-350M-sft-v0.7` — 🏆 Best Overall for Italian
-
-Most consistent across all tasks. Strong Italian prose, good instruction following, reliable factual answers. Main weakness is math reasoning (incorrectly multiplies: 2.4 × 15 = 33 instead of 36). Occasional topic drift in long outputs.
-
-- ✅ Best Italian quality · consistent · good instruction following
-- ❌ Minor math error · topic drift in long generations
-
-### `nesso-350M-sft-v0.6` — 📝 Best Creative Writer
-
-Produced the most poetic and fluent Italian paragraph in the creative task. However, it made the worst math error of all models (240 ÷ 0.15 = 1600). The vegetarian follow-up was suspiciously short, suggesting weak multi-turn context handling.
-
-- ✅ Best creative writing · very fluent Italian · fast on short answers
-- ❌ Worst math error · shallow multi-turn context handling
-
-### `granite-4.0-350m` — ⚡ Speed King & Best Reasoner (Wrong Language)
-
-Fastest by far and the only model to solve math correctly. However, it **answered in English for all Italian prompts** — a critical language mismatch. Complex Italian prompts trigger repetitive, incoherent output.
-
-- ✅ Only correct math · fastest inference · concise
-- ❌ No Italian language alignment · incoherent on complex prompts
-
-### `Qwen3-0.6B` — 🧠 Strong Reasoner with Thinking Mode
-
-Re-evaluated excluding the `<think>` block: actual answers are factually correct, well-structured, and in appropriate Italian. The thinking monologue needs to be stripped in production via post-processing (split on `</think>` token). Slower due to think token generation, but genuinely capable.
-
-- ✅ Correct factual answers · good reasoning · appropriate Italian in final output
-- ❌ Requires output post-processing · inference slower due to think tokens · occasional truncation
-
-### `Qwen3.5-0.8B` — 🎨 Creative but Verbose
-
-Most atmospheric creative writing and best-structured vegetarian answer. Gets math right. Tends to be slow and over-long, occasionally inventing dish names. Strong for Italian generation.
-
-- ✅ Strong creative writing · good Italian · correct math
-- ❌ Slowest for long tasks · verbose · occasional hallucinations in food names
+![English Benchmark — Per-Task Heatmap](images/06_heatmap_en.png)
 
 ---
 
-## Overall Takeaways
+### 7. English Per-Task Scores
 
-| Use Case | Recommended Model | Reason |
-|---|---|---|
-| 🇮🇹 Italian-language applications | `nesso-350M-sft-v0.7` | Best language quality, most consistent |
-| ⚡ Speed-critical / low-latency | `granite-4.0-350m` | ~10× faster, needs Italian fine-tuning |
-| 🔢 Math / step-by-step reasoning | `granite-4.0-350m` | Only fully correct result |
-| ✍️ Creative / generative Italian | `nesso-350M-sft-v0.6` | Most poetic and fluent Italian prose |
-| 🧠 Reasoning transparency | `Qwen3-0.6B` | Chain-of-thought inspectable; strip `</think>` in production |
-
-> **Key insight:** `Qwen3-0.6B` was previously underrated due to the visible thinking block. Once evaluated on its actual output only, it scores 4.0/5 — the highest average in the Italian test. The `<think>` block is a feature, not a flaw, but requires output post-processing for production use.
-
-# Small LLM Comparison — English Output Analysis
-
-> 5 models · 5 tasks · **English language** · ~350M–800M parameters
->
-> ⚠️ **Note on `Qwen3-0.6B`:** This model uses a `<think></think>` reasoning block before every answer. The internal monologue is excluded from evaluation — only the final answer after the thinking block is scored.
-
----
-
-## Score Summary
-
-Scores are 1–5 across five evaluation dimensions.
-
-| Model | Factual Accuracy | Instruction Following | English Quality | Coherence | Reasoning | **Avg** |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|
-| `nesso-350M-sft-v0.7` | 4 | 4 | 4 | 4 | 3 | **3.8** |
-| `nesso-350M-sft-v0.6` | 2 | 3 | 3 | 2 | 1 | **2.2** |
-| `granite-4.0-350m`    | 5 | 4 | 5 | 5 | 5 | **4.8** |
-| `Qwen3-0.6B` ¹        | 4 | 4 | 4 | 4 | 4 | **4.0** |
-| `Qwen3.5-0.8B`        | 4 | 4 | 5 | 3 | 4 | **4.0** |
-
-> ¹ Re-evaluated excluding `<think>` block. Actual answers are factually correct, well-structured English.
+| Task | nesso-agentic | nesso-instruct | Qwen3\* | Qwen3.5 |
+|------|:---:|:---:|:---:|:---:|
+| Identity | 3 | 3 | **4** | 3 |
+| Quick Dinner | **4** | **4** | 3 | 3 |
+| Vegetarian Follow-up | **5** | 1 | 4 | 4 |
+| Math Reasoning | **5** | 4 | **5** | **5** |
+| Creative Writing | 4 | 1 | 4 | **5** |
+| Translation (EN→IT) | **4** | 1 | 1 | 3 |
+| Summarization | 4 | 3 | **5** | 3 |
+| Code Generation | 4 | 4 | 4 | **5** |
+| Grammar Correction | 2 | **4** | 3 | 3 |
+| Pros & Cons | 4 | 4 | 3 | **5** |
+| Rome Tour Guide | 3 | **4** | 3 | 1 |
+| Classification | 2 | 1 | **5** | **5** |
+| Logical Reasoning | 1 | 1 | **5** | 2 |
+| Carbonara Recipe | 2 | 2 | 1 | 1 |
+| Calorie Estimate | 3 | 3 | 2 | **4** |
+| Explain AI (age 10) | **4** | 3 | 3 | **4** |
+| Italian Books List | 1 | 1 | 2 | 1 |
+| Email Writing | 4 | 4 | 4 | **5** |
+| Trivia (Sistine) | **4** | 1 | 3 | **4** |
+| Back Pain Stretches | 3 | 3 | 3 | **5** |
+| **TOTAL** | **66** | **52** | **67** | **71** |
 
 ---
 
-## Radar Charts
+### 8. English Per-Model Analysis
 
-### All Models — Combined Overview
+![English Benchmark Radar — Task Groups per Model](images/04_radar_en.png)
 
-![All Models Radar](images/eng_radar_all_models.png)
+#### nesso-0.4B-agentic — 66/100
 
-### Individual Model Profiles
+Consistent across all categories. Best at vegetarian follow-up, math, and email. Main weaknesses: logic, Italian literature list, grammar correction.
 
-| | |
-|:---:|:---:|
-| ![nesso-v0.7](images/eng_radar_nesso-350M-sft-v0.7.png) | ![nesso-v0.6](images/eng_radar_nesso-350M-sft-v0.6.png) |
-| `nesso-350M-sft-v0.7` | `nesso-350M-sft-v0.6` |
-| ![granite](images/eng_radar_granite-4.0-350m.png) | ![qwen3](images/eng_radar_Qwen3-0.6B.png) |
-| `granite-4.0-350m` | `Qwen3-0.6B` |
-| ![qwen35](images/eng_radar_Qwen3.5-0.8B.png) | |
-| `Qwen3.5-0.8B` | |
+**Strengths**
+- Vegetarian follow-up: correctly identifies 3 vegetarian options (5/5)
+- Math reasoning: correct formula with clear breakdown (5/5)
+- Code generation: correct recursive factorial (4/5)
+- Email writing: professional structure (4/5)
 
----
-
-## Inference Time
-
-![Timing Bar Chart](images/eng_timing_bar.png)
-
-| Model | Identity | Quick Dinner | Vegetarian | Math | Creative | **Avg** |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|
-| `nesso-350M-sft-v0.7` | 0.2s | 3.9s | 0.6s | 2.3s | 4.3s | **2.3s** |
-| `nesso-350M-sft-v0.6` | 2.2s | 3.5s | 1.4s | 4.7s | 5.9s | **3.5s** |
-| `granite-4.0-350m`    | 0.2s | 4.1s | 0.6s | 3.3s | 2.0s | **2.0s** |
-| `Qwen3-0.6B`          | 2.0s | 6.6s | 6.4s | 6.3s | 6.2s | **5.5s** |
-| `Qwen3.5-0.8B`        | 1.4s | 7.5s | 7.3s | 7.5s | 5.9s | **5.9s** |
-
-> ⚠️ `Qwen3-0.6B` times include the `<think>` block generation. Actual answer generation is faster.
+**Weaknesses**
+- Logical reasoning: concludes premises are 'false' — fundamentally misreads question (1/5)
+- Italian books: lists Gatsby, Catcher in the Rye ×3, Mockingbird — zero Italian books (1/5)
+- Grammar: introduces new error ('didn't know nothing', double negative retained) (2/5)
+- Carbonara recipe: adds mozzarella, red wine vinegar, tomatoes — not traditional (2/5)
 
 ---
 
-## Task-by-Task Highlights
+#### nesso-0.4B-instruct — 52/100
 
-| Task | Best Model | Worst Model | Notes |
-|---|---|---|---|
-| 🗺️ Capital of Italy | `granite-4.0-350m` | `nesso-350M-sft-v0.6` | v0.6 hallucinated "Rome, also known as L'Italia" |
-| 🍽️ Quick Dinner Ideas | `granite-4.0-350m` | `Qwen3-0.6B` | Granite gave 3 structured realistic recipes; Qwen3 truncated |
-| 🥗 Vegetarian Follow-up | `Qwen3.5-0.8B` | `nesso-350M-sft-v0.6` | v0.6 added unsolicited "what if you want to be creative?" digression |
-| 🔢 Math Reasoning | `granite-4.0-350m` | `nesso-350M-sft-v0.6` | Only Granite got 36 correct; v0.6 computed 0.1 |
-| ✍️ Creative Writing | `Qwen3.5-0.8B` | `nesso-350M-sft-v0.6` | Qwen3.5 most vivid; v0.6 repeated "breathtaking" 5 times |
+Good instruct-following in simple tasks. Severely penalised by repetition loops in creative\_writing, classification, trivia, and logical\_reasoning. Vegetarian failure (chicken and beef as 'vegetarian') is a notable accuracy issue.
 
----
+> ⚠️ **Repetition loop detected in multiple tasks** — add `repetition_penalty ≥ 1.3` before EN deployment
 
-## Raw Outputs
+**Strengths**
+- Math reasoning: correct with adequate step-by-step (4/5)
+- Code generation: correct recursive factorial with usage examples (4/5)
+- Grammar correction: correctly fixes both verb errors (4/5)
+- Quick dinner: 3 practical ideas (4/5)
 
-### 🗺️ Identity — *"What is the capital of Italy?"*
-
-| Model | Answer | Time (s) |
-|---|---|:---:|
-| `nesso-350M-sft-v0.7` | The capital of Italy is Rome. | 0.2 |
-| `nesso-350M-sft-v0.6` | Rome, also known as L'Italia, is the capital and largest city of Italy. It is located in the north-central part of the country and is the political, administrative, and cultural center of the country. Rome has a rich history dating back to ancient times and has been the capital of many empires, including the Roman Empire and the Byzantine Empire. ❌ *("L'Italia" is a hallucination)* | 2.2 |
-| `granite-4.0-350m` | The capital of Italy is Rome. | 0.2 |
-| `Qwen3-0.6B` | ~~[think: Okay, the user is asking for the capital of Italy...]~~ The capital of Italy is Rome. | 2.0 |
-| `Qwen3.5-0.8B` | The capital of Italy is Rome. Located in the center of the country, Rome is the most famous city in the world and has served as Italy's capital for over 2,000 years. | 1.4 |
+**Weaknesses**
+- Vegetarian follow-up: includes chicken, turkey, beef stew (1/5)
+- Creative writing: severe repetition loop, same sentence 8+ times (1/5)
+- Translation: does not translate; invents fake vocabulary ('clar', 'sofri') (1/5)
+- Classification: lists words without categories, then 17+ repetition lines (1/5)
+- Logical reasoning: concludes 'necessarily true' — wrong (1/5)
+- Trivia: correct first sentence then 20+ identical location repeats (1/5)
 
 ---
 
-### 🍽️ Quick Dinner — *"Can you give me a list of 3 ideas for a quick dinner?"*
+#### Qwen3-0.6B\* — 67/100
 
-| Model | Answer | Time (s) |
-|---|---|:---:|
-| `nesso-350M-sft-v0.7` | 1. Stir-fry with veggies and protein — broccoli, bell peppers, carrots, chicken or tofu with soy sauce and garlic. 2. Grilled chicken salad — cherry tomatoes, cucumber, bell peppers, olive oil and lemon juice. 3. Stuffed bell peppers — rice, black beans, corn, chili powder. *(Note: recipe 3 describes a burrito, not stuffed peppers)* | 3.9 |
-| `nesso-350M-sft-v0.6` | 1. Grilled Chicken with Veggies — chicken breast with mixed greens, bell peppers, quinoa or brown rice. 2. Turkey Meatballs — meatballs with flour, water and oil. 3. Veggie Quesadilla — shredded cheese, salsa, spinach, tomatoes. | 3.5 |
-| `granite-4.0-350m` | 1. Grilled Chicken Salad — mixed greens, cherry tomatoes, cucumbers, light vinaigrette. 2. Baked Salmon with Quinoa and Steamed Vegetables — baked at moderate heat to 165°F. 3. Veggie Stir-fry — bell peppers, broccoli, carrots, snap peas with olive oil and garlic. | 4.1 |
-| `Qwen3-0.6B` | ~~[think: Okay, the user is asking for three quick dinner ideas...]~~ 1. Pasta with Tomato and Cheese. 2. Vegetable Wrap — roasted vegetables, cheese, and a protein. *[truncated]* | 6.6 |
-| `Qwen3.5-0.8B` | 1. "Taste of Home" Stuffed Peppers — sear peppers, stuff with mozzarella, bake at 350°F 20–25 min. 2. "Dish of Three" Sautéed Carrots & Mushrooms — sauté with broth and spices, simmer 15–20 min. *[truncated]* | 7.5 |
+Strong logical reasoning — only model to get it right in both languages. Good at classification, math, and code. Think block costs ~8–12s latency. Translation is poor.
 
----
+**Strengths**
+- Logical reasoning: correct syllogistic analysis using set notation (5/5)
+- Math reasoning: triple cross-verification (5/5)
+- Classification: perfect with reasoning (5/5)
+- Summarization: best two-sentence compression (5/5)
 
-### 🥗 Vegetarian Follow-up — *"Make it vegetarian"*
-
-| Model | Answer | Time (s) |
-|---|---|:---:|
-| `nesso-350M-sft-v0.7` | Sure, here are three vegetarian dinner ideas: tofu stir-fry, lentil and vegetable curry, and vegetable omelette. | 0.6 |
-| `nesso-350M-sft-v0.6` | Here are three: lentil frittata, vegetable stir-fry, chickpea salad. Also, what if you want to be more creative with the dishes, like using a different type of pasta or adding spices to the sauce. Would you like to proceed with any of these ideas? *(unsolicited digression)* | 1.4 |
-| `granite-4.0-350m` | Here are three vegetarian ideas for quick dinner: stir-fry with tofu and vegetables, quinoa salad, stir-fried vegetables with tofu. | 0.6 |
-| `Qwen3-0.6B` | ~~[think: Okay, the user wants me to make vegetarian options...]~~ 1. Tomato Pasta — olive oil, garlic, tomato sauce. 2. Rice Salad — rice, cherry tomatoes, cucumbers, herbs. 3. Vegetable Frittata — vegetables, cheese, and a sauce. *[truncated]* | 6.4 |
-| `Qwen3.5-0.8B` | 1. Mediterranean Quinoa Bowl — quinoa, chickpeas, roasted carrots, cucumber, olive oil, spinach, feta cheese. 2. Green Bean and Spinach Salad — light lemon vinaigrette, parmesan, capers. 3. Caesar Salad with Quinoa — romaine, Caesar dressing, cooked quinoa. | 7.3 |
+**Weaknesses**
+- Translation: 'L'aspetto cielo' and 'scende calmi' both incorrect (1/5)
+- Italian books: 2/5 Italian (Decameron, Divine Comedy) but includes Russian and English novels (2/5)
+- Carbonara recipe: thinks carbonara uses béchamel sauce (1/5)
+- Many answers truncated mid-sentence due to think block consuming tokens
 
 ---
 
-### 🔢 Math Reasoning — *"Explain step by step how to calculate 15% of 240."*
+#### Qwen3.5-0.8B — 71/100
 
-| Model | Answer | Time (s) |
-|---|---|:---:|
-| `nesso-350M-sft-v0.7` | 1. Divide 240 by 100 → 2.4. 2. Multiply 2.4 by 15 → **33.0** ❌ *(correct: 36; rounding error in multiplication)* | 2.3 |
-| `nesso-350M-sft-v0.6` | 1. Divide 240 by 15 → 16. 2. Add 0.1 → 16.1. 3. Subtract 16 → **0.1** ❌ *(correct: 36; completely wrong method)* | 4.7 |
-| `granite-4.0-350m` | 1. Convert 15% to decimal: 15/100 = 0.15. 2. Multiply: 0.15 × 240 = **36** ✅ | 3.3 |
-| `Qwen3-0.6B` | ~~[think: If 1% of 240 is 2.4, then 15% = 15 × 2.4 = 24 + 12 = 36...]~~ *[answer truncated before stating result, but reasoning in think block is correct → **36** ✅]* | 6.3 |
-| `Qwen3.5-0.8B` | Step 1: Identify numbers (Base: 240, Rate: 15%). Step 2: Convert to decimal → 0.15. Step 3: 240 × 0.15 = **36** ✅ *(LaTeX expression truncated mid-render)* | 7.5 |
+Highest English score. Excellent on creative writing, pros/cons, back-pain advice, email, and code. Hallucination rate is high on factual tasks.
 
----
+**Strengths**
+- Creative writing: richest imagery, multi-sensory (5/5)
+- Back pain advice: detailed with setup, reps, and safety tips (5/5)
+- Pros & cons: most comprehensive with concrete tools (5/5)
+- Email writing: most realistic with specific date/project (5/5)
+- Math reasoning: correct with two methods (5/5)
 
-### ✍️ Creative Writing — *"Write a short descriptive paragraph about a mountain sunset."*
-
-| Model | Answer | Time (s) |
-|---|---|:---:|
-| `nesso-350M-sft-v0.7` | A mountain sunset is a breathtaking sight that captures the essence of nature's beauty in all its grandeur. As the sun descends towards the horizon, the sky transforms from a vibrant orange and red to a cool shade of gray… The sunset is a reminder of the beauty and majesty of the natural world, a moment to pause and appreciate the world around us. | 4.3 |
-| `nesso-350M-sft-v0.6` | A massive mountain, towering above the plains, stretches in the distance. The view is breathtaking, a breathtaking mountain sunset that paints the sky in vibrant hues of orange, pink, and purple… *("breathtaking" repeated 5 times; paragraph loops and self-repeats)* | 5.9 |
-| `granite-4.0-350m` | As the sun dips below the horizon, painting the sky in a palette of deep oranges, pinks, and purples, the majestic peaks of the mountain cast their silhouettes against the tranquil backdrop. The sun's celestial embrace envelops the earth, creating a mesmerizing spectacle that leaves the viewer in awe. | 2.0 |
-| `Qwen3-0.6B` | ~~[think: Okay, the user wants a short descriptive paragraph...]~~ A mountain sunset paints the sky in a tapestry of gold and crimson, as the sun dips below the horizon, casting long shadows that dance across the rugged terrain. The colors shift from deep oranges to fiery purples and golds, each hue glowing with warmth. The air hums with a gentle peace, as the world seems to hold its breath in the beauty of twilight. | 6.2 |
-| `Qwen3.5-0.8B` | The sky above the jagged peaks has transformed into a tapestry of deep indigo and burnt orange, where the clouds have been pulled away by the relentless pull of the setting sun. As the last rays of light finally pierce through the haze, the silhouette of the mountain transforms into a majestic, living giant of rock and stone, bathed in a warm, golden glow. The valley below becomes a shimmering mirror, reflecting the vibrant colors of the sky in hues of violet and turquoise, while the mist hangs low, softening the sharp edges of the cliffs and creating a dreamlike, ethereal atmosphere. | 5.9 |
+**Weaknesses**
+- Rome tour guide: invents Golden Horn, harbor, glass ceiling on Colosseum (1/5)
+- Logical reasoning: invalid deduction 'every cat IS that animal' (2/5)
+- Carbonara recipe: heavy cream + cheddar, no guanciale (1/5)
+- Italian books list: zero Italian books (1/5)
+- Identity: Rome as '2nd most populous city in world' — major hallucination
 
 ---
 
-## Model Verdicts
+### 9. English Benchmark — Key Findings
 
-### `nesso-350M-sft-v0.7` — 🟡 Solid but Not at Home
+**Language compliance failure (zagreus):** open-zagreus-0.4B produces Italian output regardless of prompt language. Unsuitable for any bilingual or English deployment scenario.
 
-Competent English output — clear, well-structured answers — but shows cracks compared to its Italian performance. The math task produced 33.0 instead of 36 (multiplication error). Most balanced of the nesso family in English.
+**Repetition loops persist in English:** nesso-0.4B-instruct exhibits the same runaway repetition in English as in Italian, affecting creative\_writing, classification, trivia, and logical\_reasoning.
 
-- ✅ Readable English · good instruction following · coherent across tasks
-- ❌ Math error (33 instead of 36) · less impressive than Italian output
+**Logic task is language-neutral:** Qwen3-0.6B is the only model to correctly solve the syllogism in both languages. The think block provides genuine reasoning benefit here.
 
-### `nesso-350M-sft-v0.6` — 🔴 Significant Degradation in English
+**Italian literature is a universal blind spot:** All 4 models fail to list 5 actual Italian books in English. Zero models score above 2/5.
 
-This model degrades notably in English. Hallucinated "Rome, also known as L'Italia", produced the worst math error (answer: 0.1), and repeated "breathtaking" five times in creative writing. Clearly fine-tuned primarily for Italian.
+**Carbonara recipe fails universally:** No model produces a correct traditional carbonara in English. Qwen3 proposes béchamel; Qwen3.5 uses heavy cream and cheddar; agentic adds red wine vinegar and tomatoes.
 
-- ✅ Attempts to follow instructions · produces long outputs
-- ❌ Factual hallucination · worst math error · repetitive prose · low coherence
-
-### `granite-4.0-350m` — 🏆 Dominant in English
-
-Clear winner across every dimension: correct math, clean reasoning, well-structured recipes, best factual accuracy. Confirms Granite is an English-first model — the language mismatch in Italian tests was not a capability gap, just an alignment gap.
-
-- ✅ Only correct math · best English prose · fast · coherent · structured
-- ❌ Slightly verbose on dinner prompts
-
-### `Qwen3-0.6B` — 🧠 Strong Reasoner with Thinking Mode
-
-Re-evaluated excluding `<think>` block: actual answers are factually correct and well-structured. Math reasoning inside the think block correctly derives 36 (1% = 2.4, 15% = 36), though the final output was truncated. Needs output post-processing in production.
-
-- ✅ Correct factual answers · sound reasoning · good English in final output
-- ❌ Requires `</think>` post-processing · inference slower · occasional truncation
-
-### `Qwen3.5-0.8B` — 🥈 Best Creative Writer in English
-
-Produces the most vivid and original creative writing. Vegetarian follow-up is well-structured with named concepts. Math reasoning is correct though LaTeX formatting breaks mid-expression. Main trade-off is speed.
-
-- ✅ Best English creative writing · good structure · correct math
-- ❌ Slowest overall · broken LaTeX in math · occasionally over-formatted
+**Logical reasoning gap persists:** Only Qwen3 answers correctly. All other models answer 'yes, necessarily' or call the premises false — a fundamental reasoning gap independent of language.
 
 ---
 
-## Italian vs English Comparison
+## Part III — Cross-Language Comparison
 
-| Model | Italian Avg | English Avg | Delta | Verdict |
-|---|:---:|:---:|:---:|---|
-| `nesso-350M-sft-v0.7` | 3.8 | 3.8 | `=` | Stable across both languages |
-| `nesso-350M-sft-v0.6` | 3.6 | 2.2 | `↓ −1.4` | Strong drop in English — Italian-specialized |
-| `granite-4.0-350m`    | 3.6 | 4.8 | `↑ +1.2` | English-first model confirmed |
-| `Qwen3-0.6B`          | 4.0 | 4.0 | `=` | Consistent in both — truly multilingual |
-| `Qwen3.5-0.8B`        | 3.8 | 4.0 | `↑ +0.2` | Slight improvement in English |
+### 10. IT vs EN Score Delta
+
+![Italian vs English Score Comparison](images/02_it_vs_en.png)
+
+| Model | IT Score | EN Score | Δ | Notes |
+|-------|:---:|:---:|:---:|-------|
+| nesso-0.4B-agentic | 73 | 66 | **−7** | Drops in EN: logic avoidance costs more in English |
+| nesso-0.4B-instruct | 56 | 52 | **−4** | Looping more destructive in EN (longer tokens before EOS) |
+| Qwen3-0.6B\* | 52 | 67 | **+15** | Huge gain: logic task 1→5; translation degrades |
+| Qwen3.5-0.8B | 55 | 71 | **+16** | Generative tasks favour larger model more in English |
 
 ---
 
-## Overall Takeaways
+### 11. Task-Level IT vs EN Comparison
 
-| Use Case | Best Model (EN) | Best Model (IT) |
-|---|---|---|
-| 🏆 Best overall | `granite-4.0-350m` | `Qwen3-0.6B` *(re-eval)* |
-| ⚡ Fastest | `granite-4.0-350m` | `granite-4.0-350m` |
-| 🔢 Math reasoning | `granite-4.0-350m` | `granite-4.0-350m` |
-| ✍️ Creative writing | `Qwen3.5-0.8B` | `nesso-350M-sft-v0.6` |
-| 🌍 Most multilingual | `Qwen3-0.6B` | `Qwen3-0.6B` |
+| Task | Agentic IT/EN | Instruct IT/EN | Qwen3 IT/EN | Qwen3.5 IT/EN |
+|------|:---:|:---:|:---:|:---:|
+| Identity | 4 / 3 | 4 / 3 | 3 / 4 | 2 / 3 |
+| Quick Dinner | 4 / 4 | 5 / 4 | 2 / 3 | 1 / 3 |
+| Vegetarian Follow-up | 5 / 5 | 2 / 1 | 4 / 4 | 3 / 4 |
+| Math Reasoning | 1 / 5 | 3 / 4 | 5 / 5 | 5 / 5 |
+| Creative Writing | 4 / 4 | 4 / 1 | 2 / 4 | 4 / 5 |
+| Translation | 5 / 4 | 1 / 1 | 2 / 1 | 5 / 3 |
+| Summarization | 4 / 4 | 4 / 3 | 4 / 5 | 4 / 3 |
+| Code Generation | 5 / 4 | 1 / 4 | 2 / 4 | 1 / 5 |
+| Grammar Correction | 3 / 2 | 2 / 4 | 1 / 3 | 1 / 3 |
+| Pros & Cons | 5 / 4 | 4 / 4 | 3 / 3 | 5 / 5 |
+| Roleplay — Rome | 2 / 3 | 3 / 4 | 3 / 3 | 1 / 1 |
+| Classification | 2 / 2 | 2 / 1 | 5 / 5 | 5 / 5 |
+| Logical Reasoning | 3 / 1 | 1 / 1 | 3 / 5 | 1 / 2 |
+| Carbonara Recipe | 3 / 2 | 1 / 2 | 1 / 1 | 1 / 1 |
+| Calorie Estimate | 5 / 3 | 4 / 3 | 3 / 2 | 2 / 4 |
+| Explain AI (ELI10) | 4 / 4 | 1 / 3 | 1 / 3 | 3 / 4 |
+| Italian Books List | 2 / 1 | 1 / 1 | 1 / 2 | 1 / 1 |
+| Email Writing | 4 / 4 | 5 / 4 | 3 / 4 | 4 / 5 |
+| Trivia — Sistine | 4 / 4 | 4 / 1 | 1 / 3 | 1 / 4 |
+| Stretches | 4 / 3 | 4 / 3 | 3 / 3 | 5 / 5 |
+| **TOTAL** | **73 / 66** | **56 / 52** | **52 / 67** | **55 / 71** |
 
-> **Key insight:** Once the `<think>` block is properly excluded, `Qwen3-0.6B` emerges as the most consistently capable model across both languages (4.0/5 in both), making it the best choice for multilingual deployments. `granite-4.0-350m` dominates English but needs Italian fine-tuning. `nesso-350M-sft-v0.7` remains the safest Italian-only choice without requiring output post-processing.
+![IT vs EN Per-Task Scores — All 4 Models](images/07_pertask_it_vs_en.png)
+
+---
+
+### 12. Universal Failures (Both Languages, All Models)
+
+| Task | Failure pattern |
+|------|----------------|
+| **Carbonara recipe** | No model produces guanciale + eggs + pecorino + pasta. Additions include: béchamel, heavy cream, cheddar, veal, soy milk, balsamic vinegar, red wine vinegar, tomatoes. |
+| **Italian books list** | No model lists 5 actual Italian books in either language. Common hallucinations: Gatsby, Catcher in the Rye, Brothers Karamazov, García Márquez, invented titles. Max score achieved: 2/5 (nesso-agentic, IT only). |
+| **Logical reasoning** | Only Qwen3's think block solves the syllogism correctly in both languages. All other models conclude 'yes, necessarily' or misread the question entirely. |
+| **Grammar correction** | The English error (double negative + subject-verb agreement) is partially fixed by nesso-instruct only. The Italian error (gender agreement freschi→fresche) is never fully explained correctly by any model. |
+
+![Universal Failure Tasks — IT & EN](images/08_universal_failures.png)
+
+---
+
+### 13. Model Profiles — Cross-Language Summary
+
+#### nesso-0.4B-agentic
+- **Best for:** Italian production assistant, code, translation, factual recall
+- **Language:** Strong in Italian (73); solid in English (66)
+- **Watch out for:** Math errors, proper noun hallucinations, classification mistakes
+- **Fix:** Tool augmentation for arithmetic; factual grounding for cultural tasks
+
+#### nesso-0.4B-instruct
+- **Best for:** Email writing, concise lists — once looping is fixed
+- **Language:** Performs similarly in both (IT 56, EN 52)
+- **Critical issue:** Repetition loops in 4+ tasks per language; vegetarian/code failures
+- **Fix:** `repetition_penalty ≥ 1.3`, EOS token monitoring — **do not deploy without this**
+
+#### open-zagreus-0.4B *(Italian only)*
+- **Best for:** Fast Italian translation; Italian factual Q&A under max\_tokens=256
+- **Language:** Italian only — completely fails English prompts
+- **Critical issue:** Looping is severe with increased max\_tokens
+- **Fix:** Hard cap at max\_tokens=256; route only Italian prompts; not suitable for bilingual apps
+
+#### Qwen3-0.6B\*
+- **Best for:** Math, logic, classification — tasks where think mode adds real value
+- **Language:** Significantly better in English (67 vs 52 IT) due to logic task score
+- **Watch out for:** Translation (poor in both languages); truncated visible answers
+- **Fix:** Use `/no_think` for simple tasks; increase token budget for think-mode tasks
+
+#### Qwen3.5-0.8B
+- **Best for:** English generative tasks — creative writing, structured advice, emails
+- **Language:** Much stronger in English (71 vs 55 IT); hallucinations more costly in Italian
+- **Watch out for:** Confident factual hallucinations — long wrong answers on Vasari/Sistine, carbonara, Rome population
+- **Fix:** RAG for factual tasks; domain fine-tuning for Italian culinary and cultural knowledge
+
+---
+
+## Part IV — Recommendations
+
+### 14. Action Items
+
+1. **Exclude zagreus from English pipelines.** The model cannot produce English output. Use only for Italian-only contexts, capped at max\_tokens=256 to avoid looping.
+
+2. **Fix nesso-instruct repetition loops urgently.** Set `repetition_penalty ≥ 1.3` and add EOS token monitoring. Affects 4+ tasks in both languages. Do not deploy without this fix.
+
+3. **Use Qwen3 think mode selectively.** Enable `/think` only for math, logic, and code. Disable for classification, summarization, email, and translation to save 8–12s latency per call.
+
+4. **Fine-tune all models on Italian canonical literature.** A small SFT dataset covering I Promessi Sposi, La Divina Commedia, Il nome della rosa, Se questo è un uomo, and Decameron would fix the list\_generation task across both languages.
+
+5. **Fine-tune all models on Italian culinary knowledge.** The carbonara failure is consistent, cross-lingual, and affects all 5 models. A recipe corpus covering traditional Italian cuisine is a high-priority fine-tuning target.
+
+6. **Production Italian assistant: nesso-0.4B-agentic.** No catastrophic failures, correct trivia, best code, fastest translation. Augment with tool use for arithmetic tasks.
+
+7. **Production English assistant: Qwen3.5-0.8B.** Highest English score (71/100). Best for generative/subjective tasks. Pair with RAG for factual tasks to address hallucinations (Rome population, Sistine Chapel details).
+
+8. **Implement language-gating.** Detect prompt language before routing. zagreus → Italian only. For bilingual apps, nesso-agentic is the most reliable cross-language choice. Qwen3.5 preferred for English-first deployments.
+
+9. **Increase Qwen3 token budget.** Visible answers truncate on ~40% of tasks. Increase max\_tokens for think-mode tasks or the useful reasoning in the think block never reaches the user.
+
+10. **Benchmark with a true English-only run.** The current English data is identical to the Italian run. A proper English-prompt inference pass is needed to isolate language effects from task-capability effects.
+
+---
+
+*Report generated from v3 benchmark data — nesso-0.4B-agentic · nesso-0.4B-instruct · open-zagreus-0.4B · Qwen3-0.6B · Qwen3.5-0.8B*
