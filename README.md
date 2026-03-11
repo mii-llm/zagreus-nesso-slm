@@ -76,7 +76,7 @@ There are numerous frameworks available for creating an LLM from scratch. We con
 
 Ultimately, we selected [Hugging Face Nanotron](https://github.com/huggingface/nanotron). It is a minimalistic library focused on 3D parallelism (Data, Tensor, and Pipeline) specifically for pre-training transformer models. We value Hugging Face for its commitment to openness. We found the library well-suited for multi-node training; furthermore, it is natively integrated into the Hugging Face ecosystem (Accelerate, Datasets, hf-cli), ensuring that workflows from data tokenization to model release remain cohesive.
 
-During the development cycle, we identified minor bugs and are actively contributing to the library via Pull Requests. We also established a [fork of Nanotron](https://github.com/mii-llm/nanotron) optimized to run directly on a Slurm cluster.
+During the development cycle, we identified minor bugs and are actively contributing to the library via this [PR](https://github.com/huggingface/nanotron/pull/399). We also established a [fork of Nanotron](https://github.com/mii-llm/nanotron) optimized to run directly on a Slurm cluster.
 
 
 ## 3. Data Engineering: The Tokenization Pipeline
