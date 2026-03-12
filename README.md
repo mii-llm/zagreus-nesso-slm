@@ -42,15 +42,15 @@ In the spirit of open and reproducible research, we are releasing the full Zagre
 
 ### Base models:
 
-* [zagreus-0.4B-base-ita]() English Italian bilingual model
-* [zagreus-0.4B-base-spa]() English Spanish bilingual model
-* [zagreus-0.4B-base-por]() English Portuguese bilingual model
-* [zagreus-0.4B-base-fra]() English French bilingual model
+* [zagreus-0.4B-ita](https://huggingface.co/mii-llm/zagreus-0.4B-ita) English Italian bilingual model
+* [zagreus-0.4B-spa](https://huggingface.co/mii-llm/zagreus-0.4B-spa) English Spanish bilingual model
+* [zagreus-0.4B-por](https://huggingface.co/mii-llm/zagreus-0.4B-por) English Portuguese bilingual model
+* [zagreus-0.4B-fra](https://huggingface.co/mii-llm/zagreus-0.4B-fra) English French bilingual model
 
 ### Post-trained models:
-* [Nesso-0.4B-instruct]() English Italian for conversational use cases
-* [Nesso-0.4B-agentic]() English Italian for agentic and function calling use cases
-* [Open-Zagreus-0.4B]() Fully open source data used to train this model
+* [Nesso-0.4B-instruct](https://huggingface.co/mii-llm/nesso-0.4B-instruct) English Italian for conversational use cases
+* [Nesso-0.4B-agentic](https://huggingface.co/mii-llm/nesso-0.4B-agentic) English Italian for agentic and function calling use cases
+* [Open-Zagreus-0.4B](https://huggingface.co/mii-llm/open-zagreus-0.4B) Fully open source data used to train this model
 
 
 We are releasing this detailed blog post, covering every step and data point required to reproduce and evaluate the project, as we strongly believe in the importance of open source in reducing technological and geopolitical dependencies.
@@ -87,25 +87,25 @@ Data is the *sine qua non* for creating an LLM. The volume of data required is c
 
 We utilized exclusively open source datasets by the Hugging Face team for creating our four bilingual foundational model released . Below is the data distribution per model:
 
-**mii-llm/nesso-0.4B-ita:**
+**[mii-llm/zagreus-0.4B-ita](https://huggingface.co/mii-llm/zagreus-0.4B-ita):**
 * [https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT](https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT) (350 billion tokens)
 * [https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/ita_Latn](https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/ita_Latn)
 * [https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/ita_Latn](https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/ita_Latn)
 * [https://huggingface.co/datasets/bigcode/starcoderdata](https://huggingface.co/datasets/bigcode/starcoderdata) (250 billion tokens)
 
-**mii-llm/nesso-0.4B-fra:**
+**[mii-llm/zagreus-0.4B-fra](https://huggingface.co/mii-llm/zagreus-0.4B-fra):**
 * [https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT](https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT) (350 billion tokens)
 * [https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/fra_Latn](https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/fra_Latn)
 * [https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/fra_Latn](https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/fra_Latn)
 * [https://huggingface.co/datasets/bigcode/starcoderdata](https://huggingface.co/datasets/bigcode/starcoderdata) (250 billion tokens)
 
-**mii-llm/nesso-0.4B-por:**
+**[mii-llm/zagreus-0.4B-por](https://huggingface.co/mii-llm/zagreus-0.4B-por):**
 * [https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT](https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT) (350 billion tokens)
 * [https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/por_Latn](https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/por_Latn)
 * [https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/por_Latn](https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/por_Latn)
 * [https://huggingface.co/datasets/bigcode/starcoderdata](https://huggingface.co/datasets/bigcode/starcoderdata) (250 billion tokens)
 
-**mii-llm/nesso-0.4B-spa:**
+**[mii-llm/nesso-0.4B-spa](https://huggingface.co/mii-llm/zagreus-0.4B-spa):**
 * [https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT](https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/sample-350BT) (350 billion tokens)
 * [https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/spa_Latn](https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/viewer/spa_Latn)
 * [https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/spa_Latn](https://huggingface.co/datasets/HuggingFaceFW/finepdfs/viewer/spa_Latn)
