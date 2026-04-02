@@ -823,7 +823,7 @@ In addition to the scientific and technical achievements, the *Zagreus–Nesso S
 | 4. | Qwen3-0.6B\* | 52 | 2.60 |
 | 5. | open-zagreus-0.4B | 40 | 2.00 |
 
-![Italian & English Leaderboard](images/01_leaderboard.png)
+![Italian & English Leaderboard](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/01_leaderboard.png?raw=true)
 
 ---
 
@@ -853,13 +853,13 @@ In addition to the scientific and technical achievements, the *Zagreus–Nesso S
 | multi\_turn\_advice | Stretching for back pain | 4 | 4 | 2 | 3 | **5** |
 | **TOTAL** | **/100** | **73** | **56** | **40** | **52** | **55** |
 
-![Italian Per-Task Heatmap](images/05_heatmap_it.png)
+![Italian Per-Task Heatmap](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/05_heatmap_it.png?raw=true)
 
 ---
 
 ### 3. Italian Per-Model Analysis
 
-![Italian Benchmark Radar — Task Groups per Model](images/03_radar_it.png)
+![Italian Benchmark Radar — Task Groups per Model](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/03_radar_it.png?raw=true)
 
 #### nesso-0.4B-agentic — 73/100
 
@@ -1036,7 +1036,7 @@ High variance model. Excellent on structured tasks (math, pros/cons, stretching)
 | 🥉 | nesso-0.4B-agentic | **66** |
 | 4. | nesso-0.4B-instruct | **52** |
 
-![English Benchmark — Per-Task Heatmap](images/06_heatmap_en.png)
+![English Benchmark — Per-Task Heatmap](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/06_heatmap_en.png?raw=true)
 
 ---
 
@@ -1070,7 +1070,7 @@ High variance model. Excellent on structured tasks (math, pros/cons, stretching)
 
 ### 8. English Per-Model Analysis
 
-![English Benchmark Radar — Task Groups per Model](images/04_radar_en.png)
+![English Benchmark Radar — Task Groups per Model](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/04_radar_en.png?raw=true)
 
 #### nesso-0.4B-agentic — 66/100
 
@@ -1170,7 +1170,7 @@ Highest English score. Excellent on creative writing, pros/cons, back-pain advic
 
 ### 10. IT vs EN Score Delta
 
-![Italian vs English Score Comparison](images/02_it_vs_en.png)
+![Italian vs English Score Comparison](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/02_it_vs_en.png?raw=true)
 
 | Model | IT Score | EN Score | Δ | Notes |
 |-------|:---:|:---:|:---:|-------|
@@ -1207,7 +1207,7 @@ Highest English score. Excellent on creative writing, pros/cons, back-pain advic
 | Stretches | 4 / 3 | 4 / 3 | 3 / 3 | 5 / 5 |
 | **TOTAL** | **73 / 66** | **56 / 52** | **52 / 67** | **55 / 71** |
 
-![IT vs EN Per-Task Scores — All 4 Models](images/07_pertask_it_vs_en.png)
+![IT vs EN Per-Task Scores — All 4 Models](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/07_pertask_it_vs_en.png?raw=true)
 
 ---
 
@@ -1220,7 +1220,7 @@ Highest English score. Excellent on creative writing, pros/cons, back-pain advic
 | **Logical reasoning** | Only Qwen3's think block solves the syllogism correctly in both languages. All other models conclude 'yes, necessarily' or misread the question entirely. |
 | **Grammar correction** | The English error (double negative + subject-verb agreement) is partially fixed by nesso-instruct only. The Italian error (gender agreement freschi→fresche) is never fully explained correctly by any model. |
 
-![Universal Failure Tasks — IT & EN](images/08_universal_failures.png)
+![Universal Failure Tasks — IT & EN](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/images/08_universal_failures.png?raw=true)
 
 ---
 
