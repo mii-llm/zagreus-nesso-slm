@@ -3,6 +3,7 @@
 **A ~0.4B bilingual (Italian/English) small language model built for function calling and agentic execution — and, to our knowledge, the strongest open model for Italian agentic tool use in the sub-billion-parameter class.**
 
 - 🤗 Model: [`mii-llm/nesso2-0.4B-agentic`](https://huggingface.co/mii-llm/nesso2-0.4B-agentic) *(release name)*
+- ✍️ Blog post — the experiments, hypotheses & conclusions: [`BLOG.md`](BLOG.md)
 - 📄 Full visual report: [`report.html`](report.html)
 - 🧬 Base: [`mii-llm/zagreus-0.4B-ita`](https://huggingface.co/mii-llm/zagreus-0.4B-ita) → knowledge-CPT → 32k context → agentic SFT
 
