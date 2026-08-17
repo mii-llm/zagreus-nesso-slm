@@ -267,25 +267,41 @@
   </section>
 
   <section>
-    <div class="sec-head"><span class="idx">02</span><div class="col"><span class="eyebrow">The model</span><h2>Four stages, not one fine-tune</h2></div></div>
-    <div class="col"><p class="lead">A tiny model earns both knowledge and agentic skill only if the pipeline gives it each on purpose. Nesso2 is the tip of a four-stage build.</p></div>
+    <div class="sec-head"><span class="idx">02</span><div class="col"><span class="eyebrow">The build</span><h2>Five phases, not one fine-tune</h2></div></div>
+    <div class="col"><p class="lead">A tiny model earns both knowledge and agentic skill only if the pipeline gives it each on purpose. The pivotal work happened <em>before</em> the agentic tuning — in continued pre-training — and it is the part usually left out.</p></div>
     <div class="steps">
       <div class="step">
-        <div class="marker">STAGE 1</div>
-        <div><h3>Pre-training from scratch — ~1T tokens</h3><p>The Zagreus-0.4B-ita foundation, trained on a trilingual-plus-code mix (~400B English, ~400B Italian, ~200B code) from FineWeb, FineWeb-2, FinePDFs and StarCoder.</p><div class="meta">64× A100 · Seeweb HPC · Nanotron (mii-llm fork)</div></div>
+        <div class="marker">PHASE 0</div>
+        <div><h3>The base — and the wall</h3><p>Zagreus-0.4B-ita: ~350M parameters, pre-trained from scratch on ~1T tokens (≈400B English, 400B Italian, 200B code). One fact set the whole agenda — across all ~775k pre-training steps, <strong>MMLU never left chance (~0.25).</strong> A small model trained on web text does not acquire exam knowledge. That is the wall.</p><div class="meta">64× A100 · Seeweb HPC · Nanotron</div></div>
       </div>
       <div class="step">
-        <div class="marker">STAGE 2</div>
-        <div><h3>Knowledge CPT — breaking the MMLU ceiling</h3><p>Continued pre-training on a curated knowledge corpus (Italian/English Wikipedia + model-augmented QA) to lift factual capability that a small base cannot reach from web text alone. This is the stage that later lets Italian MMLU/ARC hold up under heavy agentic specialization.</p><div class="meta">Seeweb HPC · Nanotron</div></div>
+        <div class="marker">PHASE 1</div>
+        <div><h3>Proving it is a <em>pretraining</em> wall</h3><p><strong>Hypothesis:</strong> post-training can supply the missing knowledge. <strong>Experiment:</strong> SFT, then mixed on-policy distillation from a nesso-3B teacher, then a focused MMLU-only run. <strong>Result:</strong> a wash — Italian MMLU 0.258 → 0.264; even the focused run bought only +2. But it exposed the key fact: the <em>entire</em> gap to Qwen was MMLU (we already beat it on Italian HellaSwag/ARC). Post-training reweights; it cannot install facts. CPT is the only lever.</p><div class="meta">A100 · palingenesis · on-policy distillation</div></div>
       </div>
       <div class="step">
-        <div class="marker">STAGE 3</div>
-        <div><h3>32k context extension</h3><p>Long-context adaptation (RoPE θ raised to 1e6) so the model can hold real tool schemas, observations and multi-step trajectories in-context.</p><div class="meta">Seeweb HPC · RoPE θ = 1e6</div></div>
+        <div class="marker">PHASE 2</div>
+        <div><h3>Breaking the wall — the CPT program</h3><p><strong>Hypothesis:</strong> CPT on knowledge-dense, <em>extractable</em> data can install the facts, with replay to prevent forgetting. <strong>Experiment:</strong> a two-tier corpus — ~52M tokens of ready-made QA, plus ~2B tokens from <strong>2.47M Wikipedia passages QA-augmented by Qwen3.6-35B</strong> (grounded QA + a multiple-choice + a summary each). Resume the base, re-warm the LR, train a 50/50 knowledge/replay blend — a 1.5B-token probe, then a 4.46B-token definitive run. <strong>Result:</strong> the wall came down (below).</p><div class="meta">Seeweb HPC · Nanotron · 50/50 knowledge/replay</div></div>
       </div>
       <div class="step">
-        <div class="marker">STAGE 4</div>
-        <div><h3>Agentic SFT (this model)</h3><p>Supervised fine-tuning on a bilingual instruction mixture plus a synthetic function-calling corpus with randomized tool schemas — covering single/parallel calls, argument disambiguation, missing-argument handling, unavailable-tool refusal, observation grounding, multi-step trajectories, and no-tool discrimination.</p><div class="meta">TRL SFTTrainer + FSDP · Llama-3 template · 3 epochs · LR 1e-3 cosine</div></div>
+        <div class="marker">PHASE 3</div>
+        <div><h3>32k context — without losing the knowledge</h3><p><strong>Hypothesis:</strong> an agent must hold tool schemas, observations and trajectories in context. <strong>Experiment:</strong> attention-scaling — raise RoPE θ 10k → 1e6, adapt on 1.44B long-document tokens with 15% knowledge replay as a guard. <strong>Result:</strong> retention held — MMLU dropped only 0.9–1.6 points, commonsense flat-to-up. 32k came essentially free.</p><div class="meta">Seeweb HPC · RoPE θ = 1e6</div></div>
       </div>
+      <div class="step">
+        <div class="marker">PHASE 4</div>
+        <div><h3>Agentic SFT — five iterations (this model)</h3><p>Supervised fine-tuning on the 32k knowledge base: bilingual instruction data plus a synthetic function-calling corpus with randomized tool schemas (single/parallel calls, disambiguation, missing-argument, unavailable-tool refusal, observation grounding, multi-step, and no-tool discrimination). It took five iterations, v3 → v8, to balance — the full story is in <em>The iteration</em> below.</p><div class="meta">TRL SFTTrainer + FSDP · Llama-3 · 3 epochs · LR 1e-3 cosine</div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title"><h3>Continued pre-training breaks the MMLU wall</h3><span class="tag">Italian MMLU · 5-shot acc</span></div>
+      <div class="bars">
+        <div class="bar dim"><div class="bar-label">Base</div><div class="track"><div class="fill" style="width:50.6%"></div></div><div class="bar-val">.253</div></div>
+        <div class="bar"><div class="bar-label">CPT probe</div><div class="track"><div class="fill" style="width:68%"></div></div><div class="bar-val">.340</div></div>
+        <div class="bar win"><div class="bar-label">CPT-full</div><div class="track"><div class="fill" style="width:74.4%"></div></div><div class="bar-val">.372</div></div>
+        <div class="bar rival"><div class="bar-label">Qwen3-0.6B</div><div class="track"><div class="fill" style="width:80.8%"></div></div><div class="bar-val">.404</div></div>
+      </div>
+      <div class="axis"><span>0</span><span>.25 — chance</span><span>.50</span></div>
+      <p class="cap">The base sat at chance (0.25) for all 775k pre-training steps; CPT lifted Italian MMLU <strong>+12 points</strong> — and as a <em>base model, before any SFT</em>, the CPT checkpoint already edges Qwen on the Italian average (0.351 vs 0.346), beating it on Italian HellaSwag and ARC. English MMLU moved in step: 0.246 → 0.394. The knowledge tax on the later agentic tuning was zero.</p>
     </div>
   </section>
 
