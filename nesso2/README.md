@@ -25,16 +25,62 @@ Measured across **six models** on three independent evaluation families.
 
 ---
 
-## How it was built — four stages
+## The road to Nesso2 — the phases and their experiments
 
-| Stage | What | Where |
-|---|---|---|
-| 1 · Pre-training | ~1T tokens (~400B EN / ~400B IT / ~200B code) from FineWeb, FineWeb-2, FinePDFs, StarCoder | 64× A100 · Seeweb · Nanotron |
-| 2 · Knowledge CPT | Continued pre-training on curated Wikipedia + augmented QA to lift factual/MMLU capability | Seeweb · Nanotron |
-| 3 · 32k context | Long-context extension, RoPE θ = 1e6 | Seeweb |
-| 4 · Agentic SFT | Bilingual instruction + synthetic function-calling corpus (randomized tool schemas) | TRL SFTTrainer + FSDP · Llama-3 template · 3 ep · LR 1e-3 cosine |
+Nesso2 is not a single fine-tune. It is the end of a chain of phases, each with its own hypothesis, experiments, and evaluation. The pivotal work happened *before* the agentic tuning — in continued pre-training — and this is the part usually left out. Here it is in full.
 
-The **knowledge CPT (stage 2)** is what separates Nesso2 from a plain SFT on the same base — it is why Italian MMLU/ARC survive the agentic specialization (Nesso2 beats its no-CPT sibling `nesso-0.4B-agentic` on MMLU in both languages).
+### Phase 0 — The base, and the wall
+
+The foundation is [Zagreus-0.4B-ita](https://huggingface.co/mii-llm/zagreus-0.4B-ita): ~350M parameters, pre-trained from scratch on ~1T tokens (≈400B English / 400B Italian / 200B code from FineWeb, FineWeb-2, FinePDFs, StarCoder) on 64× A100 with Nanotron.
+
+One fact organized everything that followed: **across all ~775k pre-training steps, MMLU stayed flat at chance (~0.25).** A small model trained on web text simply does not acquire enough world knowledge to answer MMLU. That is the wall.
+
+### Phase 1 — Proving the wall is a *pretraining* wall (the OPD experiments)
+
+**Hypothesis.** Maybe post-training can supply the missing knowledge — supervised fine-tuning, or on-policy distillation (OPD) from a larger teacher.
+
+**Experiment.** On A100s (via our [palingenesis](https://github.com/mii-llm/palingenesis) framework) we ran SFT followed by **Mixed On-Policy Distillation** with a nesso-3B teacher, then a second, *focused* MMLU-only OPD run.
+
+**Result.** Mixed OPD was a **wash** on every academic benchmark (Italian MMLU 0.258 → 0.264). Even the focused MMLU-only run moved it just **+2 points** (0.283 → 0.302). But the same runs revealed something crucial: on Italian HellaSwag and ARC we already *beat* Qwen3-0.6B — **the entire gap to Qwen was MMLU alone.**
+
+**Conclusion.** MMLU is a **pretraining-knowledge wall**. Post-training reweights what the model already knows; it cannot inject facts that were never learned. **Continued pre-training (CPT) is the only lever.** This negative result set the whole strategy.
+
+### Phase 2 — Breaking the wall (the CPT program)
+
+**Hypothesis.** CPT on knowledge-dense, *extractable* data can inject the facts MMLU needs — if we prevent catastrophic forgetting with replay.
+
+**The knowledge corpus** (built in two tiers, on LUMI):
+- **Tier 1 (~52M tokens)** — ready-made QA turned into text: MMLU auxiliary-train, SciQ, OpenBookQA, ARC, and the Italian *pinocchio* set.
+- **Tier 2 (~2.0B tokens)** — Italian + English **Wikipedia (2.47M passages), QA-augmented by Qwen3.6-35B**: for each passage, 3–5 grounded question–answer pairs, one multiple-choice item, and a summary, all self-contained and in-language. This is the *extractability* trick — knowledge the model can actually retrieve, not just tokens it has seen. (Augmentation ran at ~97.5% yield; a strict grounding filter kept answers inside the source passage.)
+
+**Experiment.** Resume the base checkpoint, re-warm the learning rate, and train a **50/50 blend of knowledge and replay** (old pretraining data) so reasoning isn't forgotten. We validated with a 1.5B-token probe, then committed to a definitive 4.46B-token run.
+
+**Result** (lm-eval; MMLU 5-shot `acc`, HellaSwag/ARC 0-shot `acc_norm`):
+
+| task | base | probe (1.5B, 3e-4) | **CPT-full (4.46B, 5e-4)** | Qwen3-0.6B |
+|---|---|---|---|---|
+| MMLU-it | 0.253 | 0.340 | **0.372** | 0.404 |
+| MMLU-en | 0.246 | 0.366 | **0.394** | 0.474 |
+| HellaSwag-it | — | — | **0.393** | 0.362 |
+| ARC-it | — | — | **0.287** | 0.273 |
+
+**Conclusion.** CPT broke the wall — **+12 points of Italian MMLU over the base**, from chance to genuinely-above-chance. And as a *base model, before any SFT*, the CPT checkpoint already **edges Qwen3-0.6B on the Italian average** (0.351 vs 0.346), beating it on Italian commonsense (HellaSwag) and reasoning (ARC). The 50/50 replay worked: reasoning was not sacrificed for knowledge.
+
+*(Methodological note: following the project's convention we did not decontaminate the corpus — Qwen's own training data is contaminated too, so decontaminating only ours would handicap the comparison. The Italian MMLU/ARC figures therefore include some memorization on both sides.)*
+
+### Phase 3 — 32k context, without losing the knowledge
+
+**Hypothesis.** An agent must hold tool schemas, observations, and multi-step trajectories in context — so extend to 32k tokens, but without eroding the hard-won knowledge.
+
+**Experiment.** Attention-scaling (ABF): raise RoPE θ from 10,000 to 1e6 and `max_position_embeddings` to 32,768, then adapt on 1.44B tokens of long documents, keeping 15% knowledge replay as a guard.
+
+**Result.** Retention held: MMLU dropped only **0.9–1.6 points**, while HellaSwag/ARC were flat-to-up. **32k context came essentially for free.**
+
+### Phase 4 — Agentic SFT (v3 → v8 = Nesso2)
+
+Supervised fine-tuning on the 32k knowledge base, with **TRL** (`SFTTrainer`) + **FSDP**, Llama-3 template, 3 epochs, LR 1e-3 cosine. The mixture is bilingual instruction data plus a synthetic function-calling corpus with randomized tool schemas. This is the phase that took five iterations to get right — the full story is below, in **[The iteration — from 61 to 68](#the-iteration--from-61-to-68)**.
+
+> Every stage ran on the **Seeweb** HPC infrastructure. The knowledge CPT (Phase 2) is what separates Nesso2 from a plain SFT on the same base — it is why Italian MMLU/ARC survive the agentic specialization, and why Nesso2 beats its no-CPT sibling `nesso-0.4B-agentic` on MMLU in both languages (Italian 0.326 vs 0.282).
 
 ---
 
