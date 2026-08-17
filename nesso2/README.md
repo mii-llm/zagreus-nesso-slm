@@ -133,9 +133,27 @@ We read three families **together**, because at 0.4B they disagree and the disag
 
 ### Family B2 — conversation quality
 
+**Why an LLM judge.** The academic suite (Family A) scores knowledge and format; it says nothing about whether the model is a *good conversationalist* — coherent, factually correct, in the right language, actually useful. Those qualities need a judgement call, so we make one explicitly: `Qwen3.6-35B-A3B` grades every answer 1–10 on three axes — **correctness** (rewards facts/arithmetic, penalizes hallucination), **language fidelity** (penalizes answering in the wrong language), and **helpfulness** — across 20 multi-turn tasks per language, on greedy generations.
+
+**Results** (mean score, out of 10):
+
+| model | Italian | English | Both | correctness | helpfulness |
+|---|---|---|---|---|---|
+| nesso-0.4B-agentic *(reference)* | 4.40 | **6.40** | **5.40** | 4.78 | 5.38 |
+| v3 | 4.30 | 4.60 | 4.45 | 4.25 | 4.67 |
+| Qwen3-0.6B | 2.80 | 5.80 | 4.30 | 4.15 | 4.22 |
+| **Nesso2 (v8)** | **4.40** | 3.80 | 4.10 | 3.92 | 4.40 |
+| v6.1 | 4.15 | 3.85 | 4.00 | 3.62 | 4.05 |
+
 ![Italian conversation quality — 35B judge](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/nesso2/images/conversation_it.png?raw=true)
 
-Despite its agentic specialization, Nesso2 delivers the **best Italian conversation of its lineage** — tied with the reference `nesso-0.4B-agentic` and far above Qwen3-0.6B. The no-tool knowledge data helped correctness rather than hurting chat.
+**The Italian result.** Nesso2 scores **4.40 on Italian conversation — the highest of the entire Zagreus line, tied with the reference `nesso-0.4B-agentic`** — while Qwen3-0.6B manages only **2.80** (it frequently answers Italian prompts in English, or in weaker Italian). That 1.6-point margin is the largest and most consistent lead we hold over Qwen anywhere in this report, and it comes from the same source as the knowledge win: the CPT stage plus Italian-first data.
+
+**The finding that validated the v8 bet.** The risk going into v8 was that adding a large amount of no-tool "answer directly" data would erode conversation. The opposite happened: from v6.1 to v8, **correctness rose 3.62 → 3.92 and helpfulness 4.05 → 4.40**. Because the no-tool data is *natural, complete* answers (capitals, currencies, definitions, general facts), it actually *taught the model to answer factual questions better*. This is the conversational proof that no-tool discrimination is **chat-safe** — unlike the terse abstention data of earlier rounds, which had hurt chat. The v8 bet paid off on both the agentic axis *and* the conversational one.
+
+**The honest caveat — English chat.** English is Nesso2's clear soft spot: **3.80**, below Qwen (5.80) and the reference (6.40). On the English-weighted "Both" average it therefore trails both `v3` (4.45, carried by its stronger English) and the reference (5.40). The Italian-first mixture and the agentic specialization cost English register — a deliberate trade, but a real one. For open-ended *English* conversation, Nesso2 is not the model to reach for.
+
+**Cross-check — the failed DPO runs.** The same judge independently caught our unsuccessful preference-tuning experiments: `v3-dpo` scored **3.42** and the earlier `llama3-dpo` **3.70**, both *below* their SFT baselines. That is separate confirmation that DPO toward "more detailed" answers backfires at 0.4B — the negative result recorded under *What didn't work*.
 
 ---
 
