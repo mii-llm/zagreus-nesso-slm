@@ -24,11 +24,23 @@ Hold that distinction. It explains all six models.
 
 ## Experiment 1 — Put knowledge in pretraining, not in the fine-tune
 
-**Hypothesis.** A small model cannot absorb facts from a few thousand supervised examples. If we want it to retain knowledge *and* specialize for tools, knowledge has to come from a dedicated continued-pretraining (CPT) stage, before any agentic data touches it.
+This is the foundational experiment, and the one usually left out of a model's story. It took the longest, it started with a failure, and everything after it depends on what it settled.
 
-**Experiment.** On top of the Zagreus-0.4B-ita base we ran a knowledge CPT on curated Italian/English Wikipedia and model-augmented QA, then extended context to 32k, and only then applied the agentic SFT. We compared the result against a sibling that skipped the CPT — the original Nesso-agentic — on the same academic suite.
+**The wall.** Zagreus-0.4B-ita, our from-scratch bilingual base, was trained on roughly a trillion tokens. Across every one of its ~775,000 pre-training steps, its MMLU score never left chance — about 0.25, the number you get by guessing. A model this small, trained on web text, simply does not accumulate enough world knowledge to pass a knowledge exam. That was the wall standing between us and Qwen.
 
-**Conclusion.** It worked. Nesso2 reaches an Italian academic average of **0.334**, statistically level with Qwen3-0.6B's **0.336**, and it beats its no-CPT sibling on knowledge outright — Italian MMLU **32.6 vs 28.2**, English MMLU **27.0 vs 24.0**. Knowledge is a pretraining job. Once it lives in the weights, the fine-tune can specialize hard without eroding it. This single decision is why, later, heavy agentic tuning cost us no measurable knowledge.
+**Hypothesis, first attempt.** Maybe post-training could supply the missing knowledge — supervised fine-tuning, or on-policy distillation from a larger teacher.
+
+**Experiment (the useful failure).** We built exactly that: SFT, then a mixed on-policy distillation run with a nesso-3B teacher, then a second, *focused*, MMLU-only distillation. We measured after each.
+
+**Conclusion.** Distillation was a wash. The mixed run moved Italian MMLU from 0.258 to 0.264 — noise. Even the focused, MMLU-only run bought just two points, 0.283 to 0.302. But those same runs revealed something we hadn't expected: on Italian HellaSwag and ARC, our little model already *beat* Qwen. **The entire gap to Qwen was MMLU, and nothing else.** Post-training reweights what a model already knows; it cannot install facts that were never learned. Knowledge is a *pretraining* problem — and there is only one lever for it.
+
+**Hypothesis, second attempt.** Continued pre-training (CPT) on knowledge-dense, *extractable* data can install the facts — if we replay old data to avoid forgetting.
+
+**Experiment.** We built a knowledge corpus in two tiers on the Seeweb infrastructure. The first (~52M tokens) turned ready-made question banks — MMLU auxiliary, SciQ, OpenBookQA, ARC, the Italian *pinocchio* set — into plain text. The second, the real engine (~2 billion tokens), took **2.47 million Italian and English Wikipedia passages** and had Qwen3.6-35B *augment* each one: three to five grounded question–answer pairs, a multiple-choice item, and a summary, all self-contained and in the passage's own language. The same fact, rendered as prose, as a question, and as a choice — so the model learns to *recall* it, not merely to have seen it. We resumed the base checkpoint, re-warmed the learning rate, and trained a **50/50 blend** of this knowledge with replayed pre-training data — a 1.5-billion-token probe first, then a definitive 4.46-billion-token run.
+
+**Conclusion.** The wall came down. Italian MMLU went from 0.253 at chance to **0.372** — twelve points — and English from 0.246 to **0.394**. As a *base model, before a single instruction example*, the CPT checkpoint already edged Qwen on the Italian average (0.351 vs 0.346), beating it outright on Italian commonsense and reasoning. The 50/50 replay did its job: reasoning was untouched. We then extended the context to 32k tokens — raising RoPE's frequency base and adapting on long documents, with a slice of knowledge kept in the mix as a guard — and lost under two points of MMLU for it. Knowledge is a pretraining job; once it lives in the weights, the fine-tune can specialize hard without eroding it. This one decision is why, later, heavy agentic tuning cost us no measurable knowledge — and why Nesso2 beats its no-CPT sibling nesso-agentic on MMLU in both languages (0.326 vs 0.282 in Italian).
+
+![Continued pre-training breaks the MMLU wall](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/nesso2/images/cpt_mmlu.png?raw=true)
 
 ---
 
@@ -80,6 +92,8 @@ Hold that distinction. It explains all six models.
 
 **Conclusion.** The bet paid, cleanly. No-tool discrimination went **2 → 7**, multi-step **1 → 6**, and firing on real tool calls held (single 9, parallel-same 10). The total reached **68 — the best of the six**, one point above Qwen. And because the no-tool data was natural language rather than refusal boilerplate, it *helped* conversation: Nesso2 posts the best Italian chat of the whole lineage (**4.40/10**, tied with the reference model) and the highest correctness of the line. One data-responsive skill, trained richly, funded by skills that don't respond to data.
 
+![The iteration: agentic total v3 → v8](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/nesso2/images/iteration.png?raw=true)
+
 ---
 
 ## Two detours that did not work — kept for the record
@@ -103,6 +117,8 @@ The honest scorecard:
 | Agentic — English (/50) | 33 | **38** |
 | Italian academic avg | 0.334 | **0.336** |
 | Italian conversation (/10) | **4.40** | 2.80 |
+
+![Italian vs English tool use](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/nesso2/images/agentic_bylang.png?raw=true)
 
 Nesso2 is the best agentic model of the set and the best at Italian tool use by a clear margin, with no knowledge tax and the best Italian conversation of its family. It is **not** the best at English tool use — Qwen keeps that — and it does not out-know a model trained on far more data on English MMLU. One category, observation grounding, regressed as a side effect of the no-tool push (8 → 3 in the benchmark); notably it did not appear in the conversation judge, so we read it as a narrow evaluation artifact, and we flag it anyway.
 
