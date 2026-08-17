@@ -53,6 +53,15 @@ One fact organized everything that followed: **across all ~775k pre-training ste
 - **Tier 1 (~52M tokens)** — ready-made QA turned into text: MMLU auxiliary-train, SciQ, OpenBookQA, ARC, and the Italian *pinocchio* set.
 - **Tier 2 (~2.0B tokens)** — Italian + English **Wikipedia (2.47M passages), QA-augmented by Qwen3.6-35B**: for each passage, 3–5 grounded question–answer pairs, one multiple-choice item, and a summary, all self-contained and in-language. This is the *extractability* trick — knowledge the model can actually retrieve, not just tokens it has seen. (Augmentation ran at ~97.5% yield; a strict grounding filter kept answers inside the source passage.)
 
+*Example — how one passage becomes retrievable knowledge (the augmentation format):*
+
+> **Source passage (Wikipedia IT):** «Alessandro Volta … inventò la pila elettrica nel 1800 …»
+> **→ grounded QA:** *D: Chi inventò la pila elettrica? R: Alessandro Volta.* · *D: In che anno? R: Nel 1800.*
+> **→ multiple choice:** *Volta inventò… (a) il telefono (b) la pila elettrica (c) la radio* → **(b)**
+> **→ summary:** *Alessandro Volta inventò la pila elettrica nel 1800.*
+
+The same fact is presented as free text, as a question, and as a choice — so the model learns to *recall* it, not just recognize it.
+
 **Experiment.** Resume the base checkpoint, re-warm the learning rate, and train a **50/50 blend of knowledge and replay** (old pretraining data) so reasoning isn't forgotten. We validated with a 1.5B-token probe, then committed to a definitive 4.46B-token run.
 
 **Result** (lm-eval; MMLU 5-shot `acc`, HellaSwag/ARC 0-shot `acc_norm`):
@@ -63,6 +72,8 @@ One fact organized everything that followed: **across all ~775k pre-training ste
 | MMLU-en | 0.246 | 0.366 | **0.394** | 0.474 |
 | HellaSwag-it | — | — | **0.393** | 0.362 |
 | ARC-it | — | — | **0.287** | 0.273 |
+
+![Continued pre-training breaks the MMLU wall](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/nesso2/images/cpt_mmlu.png?raw=true)
 
 **Conclusion.** CPT broke the wall — **+12 points of Italian MMLU over the base**, from chance to genuinely-above-chance. And as a *base model, before any SFT*, the CPT checkpoint already **edges Qwen3-0.6B on the Italian average** (0.351 vs 0.346), beating it on Italian commonsense (HellaSwag) and reasoning (ARC). The 50/50 replay worked: reasoning was not sacrificed for knowledge.
 
@@ -92,7 +103,17 @@ We read three families **together**, because at 0.4B they disagree and the disag
 - **Family B1 — Agentic function calling** (`eval/agentic_eval_100.py`): a frozen bilingual **100-case** suite, 10 categories, 50 IT / 50 EN, Hermes `<tool_call>` format, **pure greedy** decoding, automatic per-category grader. Cases in `eval/agentic_eval_cases_100.json`.
 - **Family B2 — Conversation** (`eval/conv_gen.py` → `eval/judge_conversations.py`): 20 multi-turn tasks per language, graded 1–10 on correctness / language-fidelity / helpfulness by **Qwen3.6-35B-A3B**. Prompts in `eval/conv_prompts.json`.
 
-### Agentic capability profile (x/10)
+### Family B1 — agentic function calling
+
+![Agentic benchmark — 100 cases](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/nesso2/images/agentic_total.png?raw=true)
+
+![Italian vs English tool use](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/nesso2/images/agentic_bylang.png?raw=true)
+
+*Example — a case Nesso2 handles well (parallel same-tool):* given a `get_weather` tool and *"Che tempo fa a Roma e a Torino?"*, it emits **two** calls — `get_weather(Roma)` and `get_weather(Torino)`.
+
+#### Per-category capability (x/10)
+
+![Per-category capability: Nesso2 vs Qwen](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/nesso2/images/agentic_categories.png?raw=true)
 
 | Category | v3 | v6 | v6.1 | v7 | **Nesso2** | Qwen |
 |---|---|---|---|---|---|---|
@@ -110,6 +131,12 @@ We read three families **together**, because at 0.4B they disagree and the disag
 
 ▲ deliberate gains in the final run · ▼ the one accepted regression (see caveats).
 
+### Family B2 — conversation quality
+
+![Italian conversation quality — 35B judge](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/nesso2/images/conversation_it.png?raw=true)
+
+Despite its agentic specialization, Nesso2 delivers the **best Italian conversation of its lineage** — tied with the reference `nesso-0.4B-agentic` and far above Qwen3-0.6B. The no-tool knowledge data helped correctness rather than hurting chat.
+
 ---
 
 ## The iteration — from 61 to 68
@@ -124,6 +151,8 @@ We read three families **together**, because at 0.4B they disagree and the disag
 | v6.1 | Per-language quality floor (all IT, EN ≥ 0.6) | 65 |
 | v7 | "Best of both" — spread budget too thin, **failed** | 61 |
 | **v8 = Nesso2** | **Focused no-tool fix (4.5× data), budget reclaimed from capacity-bound categories, multi-step kept** | **68** |
+
+![The iteration: agentic total v3 → v8](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/nesso2/images/iteration.png?raw=true)
 
 > The last mile wasn't more data — it was **one data-responsive skill, trained richly and naturally, with budget stolen from skills that don't respond to data.**
 
