@@ -1,0 +1,2022 @@
+{
+ "tools": [
+  {
+   "type": "function",
+   "function": {
+    "name": "get_weather",
+    "description": "Weather forecast for a city on a given day.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "city": {
+       "type": "string"
+      },
+      "day": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "city"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "calculate",
+    "description": "Evaluate a math expression and return the number.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "expression": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "expression"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "convert_currency",
+    "description": "Convert an amount from one currency to another.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "amount": {
+       "type": "number"
+      },
+      "from": {
+       "type": "string"
+      },
+      "to": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "amount",
+      "from",
+      "to"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "book_flight",
+    "description": "Book a flight.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "origin": {
+       "type": "string"
+      },
+      "destination": {
+       "type": "string"
+      },
+      "date": {
+       "type": "string"
+      },
+      "passengers": {
+       "type": "integer"
+      },
+      "travel_class": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "origin",
+      "destination",
+      "date",
+      "passengers"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "send_email",
+    "description": "Send an email. Requires a recipient address.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "to": {
+       "type": "string"
+      },
+      "subject": {
+       "type": "string"
+      },
+      "body": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "to",
+      "body"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "web_search",
+    "description": "Search the web for up-to-date information.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "query": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "query"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "create_event",
+    "description": "Create a calendar event.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "title": {
+       "type": "string"
+      },
+      "date": {
+       "type": "string"
+      },
+      "time": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "title",
+      "date"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "get_stock_price",
+    "description": "Get the current stock price for a ticker symbol.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "symbol": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "symbol"
+     ]
+    }
+   }
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "translate_text",
+    "description": "Translate text into a target language.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      },
+      "target_language": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text",
+      "target_language"
+     ]
+    }
+   }
+  }
+ ],
+ "cases": [
+  {
+   "id": "s1",
+   "lang": "IT",
+   "cat": "single",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Che tempo fa a Torino oggi?"
+    }
+   ],
+   "spec": {
+    "tools": [
+     "get_weather"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "s2",
+   "lang": "EN",
+   "cat": "single",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Search the web for today's top news."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "web_search"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "s3",
+   "lang": "IT",
+   "cat": "single",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Aggiungi 'Riunione team' in calendario il 3 giugno alle 10."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "create_event"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "s4",
+   "lang": "EN",
+   "cat": "single",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Convert 50 pounds to euros."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "convert_currency"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "ps1",
+   "lang": "IT",
+   "cat": "par_same",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Confronta il meteo di domani a Roma e Firenze."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "get_weather"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "ps2",
+   "lang": "EN",
+   "cat": "par_same",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Compare tomorrow's weather in Paris and Berlin."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "get_weather"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "ps3",
+   "lang": "IT",
+   "cat": "par_same",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Dimmi il prezzo delle azioni di Apple e Microsoft."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "get_stock_price"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "ps4",
+   "lang": "EN",
+   "cat": "par_same",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Get the stock price of Tesla and Amazon."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "get_stock_price"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "pd1",
+   "lang": "IT",
+   "cat": "par_diff",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Cerca notizie sull'inflazione e convertimi 1000 euro in dollari."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "convert_currency",
+     "web_search"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "pd2",
+   "lang": "EN",
+   "cat": "par_diff",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Search news about the elections and calculate 15% of 200."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "calculate",
+     "web_search"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "pd3",
+   "lang": "IT",
+   "cat": "par_diff",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Che tempo fa a Roma e quanto fa 12 per 15?"
+    }
+   ],
+   "spec": {
+    "tools": [
+     "calculate",
+     "get_weather"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "pd4",
+   "lang": "EN",
+   "cat": "par_diff",
+   "messages": [
+    {
+     "role": "user",
+     "content": "What's Apple's stock price and the weather in Cupertino?"
+    }
+   ],
+   "spec": {
+    "tools": [
+     "get_stock_price",
+     "get_weather"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "ma1",
+   "lang": "IT",
+   "cat": "multiarg",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Prenota un volo da Milano a Tokyo il 20 maggio 2025 per 3 persone in business."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "book_flight"
+    ],
+    "n": 1,
+    "argkeys": [
+     "book_flight",
+     [
+      "origin",
+      "destination",
+      "date",
+      "passengers"
+     ]
+    ],
+    "intarg": [
+     "book_flight",
+     "passengers",
+     3
+    ]
+   }
+  },
+  {
+   "id": "ma2",
+   "lang": "EN",
+   "cat": "multiarg",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Book a flight from London to New York on 2025-07-01 for 1 person in first class."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "book_flight"
+    ],
+    "n": 1,
+    "argkeys": [
+     "book_flight",
+     [
+      "origin",
+      "destination",
+      "date",
+      "passengers"
+     ]
+    ],
+    "intarg": [
+     "book_flight",
+     "passengers",
+     1
+    ]
+   }
+  },
+  {
+   "id": "ma3",
+   "lang": "IT",
+   "cat": "multiarg",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Invia una email a mario@rossi.it con oggetto 'Preventivo' e corpo 'In allegato il preventivo richiesto'."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "send_email"
+    ],
+    "n": 1,
+    "argkeys": [
+     "send_email",
+     [
+      "to",
+      "body"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "ma4",
+   "lang": "EN",
+   "cat": "multiarg",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Create an event 'Dentist' on 2025-03-12 at 09:30."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "create_event"
+    ],
+    "n": 1,
+    "argkeys": [
+     "create_event",
+     [
+      "title",
+      "date"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "d1",
+   "lang": "IT",
+   "cat": "disamb",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Quanto valgono 250 dollari in euro?"
+    }
+   ],
+   "spec": {
+    "tools": [
+     "convert_currency"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "d2",
+   "lang": "EN",
+   "cat": "disamb",
+   "messages": [
+    {
+     "role": "user",
+     "content": "What is 250 USD in euros?"
+    }
+   ],
+   "spec": {
+    "tools": [
+     "convert_currency"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "d3",
+   "lang": "IT",
+   "cat": "disamb",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Quanto fa il 18% di 340?"
+    }
+   ],
+   "spec": {
+    "tools": [
+     "calculate"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "d4",
+   "lang": "EN",
+   "cat": "disamb",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Translate 'good morning' into Italian."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "translate_text"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "mi1",
+   "lang": "IT",
+   "cat": "missing",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Invia una email per confermare la riunione di venerdì."
+    }
+   ],
+   "spec": {
+    "tool": "send_email",
+    "fabricate_field": "to"
+   }
+  },
+  {
+   "id": "mi2",
+   "lang": "EN",
+   "cat": "missing",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Send an email to confirm Friday's meeting."
+    }
+   ],
+   "spec": {
+    "tool": "send_email",
+    "fabricate_field": "to"
+   }
+  },
+  {
+   "id": "mi3",
+   "lang": "IT",
+   "cat": "missing",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Prenota un volo per Parigi."
+    }
+   ],
+   "spec": {
+    "tool": "book_flight",
+    "fabricate_field": "origin"
+   }
+  },
+  {
+   "id": "mi4",
+   "lang": "EN",
+   "cat": "missing",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Book a flight to Paris."
+    }
+   ],
+   "spec": {
+    "tool": "book_flight",
+    "fabricate_field": "origin"
+   }
+  },
+  {
+   "id": "u1",
+   "lang": "IT",
+   "cat": "unavail",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Prenotami un taxi per domani alle 8."
+    }
+   ],
+   "spec": " "
+  },
+  {
+   "id": "u2",
+   "lang": "EN",
+   "cat": "unavail",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Order me a pizza for tonight."
+    }
+   ],
+   "spec": " "
+  },
+  {
+   "id": "u3",
+   "lang": "IT",
+   "cat": "unavail",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Accendi le luci del soggiorno."
+    }
+   ],
+   "spec": " "
+  },
+  {
+   "id": "u4",
+   "lang": "EN",
+   "cat": "unavail",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Play some jazz music."
+    }
+   ],
+   "spec": " "
+  },
+  {
+   "id": "k1",
+   "lang": "IT",
+   "cat": "notool",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Chi ha scritto i Promessi Sposi?"
+    }
+   ],
+   "spec": {
+    "gold": "manzoni"
+   }
+  },
+  {
+   "id": "k2",
+   "lang": "EN",
+   "cat": "notool",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Who wrote Romeo and Juliet?"
+    }
+   ],
+   "spec": {
+    "gold": "shakespeare"
+   }
+  },
+  {
+   "id": "k3",
+   "lang": "IT",
+   "cat": "notool",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Ciao, come stai oggi?"
+    }
+   ],
+   "spec": {
+    "gold": null
+   }
+  },
+  {
+   "id": "k4",
+   "lang": "EN",
+   "cat": "notool",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Explain in one sentence what a black hole is."
+    }
+   ],
+   "spec": {
+    "gold": null
+   }
+  },
+  {
+   "id": "o1",
+   "lang": "IT",
+   "cat": "obs",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Che tempo fa a Roma domani? Devo decidere se portare l'ombrello."
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Roma\", \"day\": \"domani\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"city\": \"Roma\", \"temp\": \"28°C\", \"condition\": \"sereno\", \"rain_prob\": \"5%\"}"
+    }
+   ],
+   "spec": {
+    "want": "no umbrella / sereno"
+   }
+  },
+  {
+   "id": "o2",
+   "lang": "EN",
+   "cat": "obs",
+   "messages": [
+    {
+     "role": "user",
+     "content": "What's the weather in London tomorrow? Should I bring an umbrella?"
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"London\", \"day\": \"tomorrow\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"city\": \"London\", \"temp\": \"12°C\", \"condition\": \"rain\", \"rain_prob\": \"85%\"}"
+    }
+   ],
+   "spec": {
+    "want": "bring umbrella / rain"
+   }
+  },
+  {
+   "id": "o3",
+   "lang": "IT",
+   "cat": "obs",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Qual è il prezzo delle azioni Apple?"
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"get_stock_price\", \"arguments\": {\"symbol\": \"AAPL\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"symbol\": \"AAPL\", \"price\": 190, \"currency\": \"USD\"}"
+    }
+   ],
+   "spec": {
+    "want": "190 USD",
+    "gold": "190"
+   }
+  },
+  {
+   "id": "o4",
+   "lang": "EN",
+   "cat": "obs",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Convert 100 euros to dollars."
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"convert_currency\", \"arguments\": {\"amount\": 100, \"from\": \"EUR\", \"to\": \"USD\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"result\": 108, \"currency\": \"USD\"}"
+    }
+   ],
+   "spec": {
+    "want": "108",
+    "gold": "108"
+   }
+  },
+  {
+   "id": "m1",
+   "lang": "IT",
+   "cat": "multistep",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Trova il prezzo delle azioni Apple e poi convertilo in euro."
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"get_stock_price\", \"arguments\": {\"symbol\": \"AAPL\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"symbol\": \"AAPL\", \"price\": 190, \"currency\": \"USD\"}"
+    }
+   ],
+   "spec": {
+    "next": "convert_currency"
+   }
+  },
+  {
+   "id": "m2",
+   "lang": "EN",
+   "cat": "multistep",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Find the date of the next Summer Olympics, then add it to my calendar."
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"web_search\", \"arguments\": {\"query\": \"next Summer Olympics date\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"result\": \"Los Angeles 2028, opening 2028-07-14\"}"
+    }
+   ],
+   "spec": {
+    "next": "create_event"
+   }
+  },
+  {
+   "id": "m3",
+   "lang": "IT",
+   "cat": "multistep",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Controlla il meteo di domani a Roma; se piove mandami una mail a me@ex.it per ricordarmi l'ombrello."
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Roma\", \"day\": \"domani\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"city\": \"Roma\", \"condition\": \"pioggia\", \"rain_prob\": \"90%\"}"
+    }
+   ],
+   "spec": {
+    "next": "send_email"
+   }
+  },
+  {
+   "id": "m4",
+   "lang": "EN",
+   "cat": "multistep",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Check tomorrow's weather in Rome; if it rains, email me@ex.it a reminder."
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Rome\", \"day\": \"tomorrow\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"city\": \"Rome\", \"condition\": \"sunny\", \"rain_prob\": \"5%\"}"
+    }
+   ],
+   "spec": {
+    "next": null
+   }
+  },
+  {
+   "id": "s5",
+   "lang": "IT",
+   "cat": "single",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Qual è il prezzo delle azioni di Ferrari?"
+    }
+   ],
+   "spec": {
+    "tools": [
+     "get_stock_price"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "s6",
+   "lang": "EN",
+   "cat": "single",
+   "messages": [
+    {
+     "role": "user",
+     "content": "What's the weather in Dublin on Friday?"
+    }
+   ],
+   "spec": {
+    "tools": [
+     "get_weather"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "s7",
+   "lang": "IT",
+   "cat": "single",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Traduci 'grazie mille' in tedesco."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "translate_text"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "s8",
+   "lang": "EN",
+   "cat": "single",
+   "messages": [
+    {
+     "role": "user",
+     "content": "How much is 300 dollars in pounds?"
+    }
+   ],
+   "spec": {
+    "tools": [
+     "convert_currency"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "s9",
+   "lang": "IT",
+   "cat": "single",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Quanto fa 47 più 88?"
+    }
+   ],
+   "spec": {
+    "tools": [
+     "calculate"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "s10",
+   "lang": "EN",
+   "cat": "single",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Add 'Gym' to my calendar on 2025-04-10 at 18:00."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "create_event"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "ps5",
+   "lang": "IT",
+   "cat": "par_same",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Confronta il prezzo delle azioni di Google e Amazon."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "get_stock_price"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "ps6",
+   "lang": "EN",
+   "cat": "par_same",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Compare tomorrow's weather in Madrid and Lisbon."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "get_weather"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "ps7",
+   "lang": "IT",
+   "cat": "par_same",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Che tempo fa oggi a Napoli e a Bari?"
+    }
+   ],
+   "spec": {
+    "tools": [
+     "get_weather"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "ps8",
+   "lang": "EN",
+   "cat": "par_same",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Get the stock price of Nvidia and Meta."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "get_stock_price"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "ps9",
+   "lang": "IT",
+   "cat": "par_same",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Converti 100 euro in dollari e 100 euro in sterline."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "convert_currency"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "ps10",
+   "lang": "EN",
+   "cat": "par_same",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Convert 50 USD to EUR and 50 USD to GBP."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "convert_currency"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "pd5",
+   "lang": "IT",
+   "cat": "par_diff",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Cerca notizie sul clima e dimmi il prezzo delle azioni Tesla."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "get_stock_price",
+     "web_search"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "pd6",
+   "lang": "EN",
+   "cat": "par_diff",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Translate 'hello' into French and tell me the weather in Nice."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "get_weather",
+     "translate_text"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "pd7",
+   "lang": "IT",
+   "cat": "par_diff",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Quanto fa 200 diviso 8 e che tempo fa a Venezia?"
+    }
+   ],
+   "spec": {
+    "tools": [
+     "calculate",
+     "get_weather"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "pd8",
+   "lang": "EN",
+   "cat": "par_diff",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Convert 500 euros to dollars and search news about AI."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "convert_currency",
+     "web_search"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "pd9",
+   "lang": "IT",
+   "cat": "par_diff",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Dimmi il prezzo delle azioni Microsoft e traduci 'buonasera' in inglese."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "get_stock_price",
+     "translate_text"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "pd10",
+   "lang": "EN",
+   "cat": "par_diff",
+   "messages": [
+    {
+     "role": "user",
+     "content": "What's 25% of 80 and what's the weather in Oslo?"
+    }
+   ],
+   "spec": {
+    "tools": [
+     "calculate",
+     "get_weather"
+    ],
+    "n": 2
+   }
+  },
+  {
+   "id": "ma5",
+   "lang": "IT",
+   "cat": "multiarg",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Prenota un volo da Roma a Berlino il 2025-09-10 per 2 persone in economy."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "book_flight"
+    ],
+    "n": 1,
+    "argkeys": [
+     "book_flight",
+     [
+      "origin",
+      "destination",
+      "date",
+      "passengers"
+     ]
+    ],
+    "intarg": [
+     "book_flight",
+     "passengers",
+     2
+    ]
+   }
+  },
+  {
+   "id": "ma6",
+   "lang": "EN",
+   "cat": "multiarg",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Book a flight from Paris to Madrid on 2025-08-15 for 4 passengers in economy."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "book_flight"
+    ],
+    "n": 1,
+    "argkeys": [
+     "book_flight",
+     [
+      "origin",
+      "destination",
+      "date",
+      "passengers"
+     ]
+    ],
+    "intarg": [
+     "book_flight",
+     "passengers",
+     4
+    ]
+   }
+  },
+  {
+   "id": "ma7",
+   "lang": "IT",
+   "cat": "multiarg",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Invia una email a laura@ex.it con oggetto 'Riunione' e corpo 'Confermo la riunione di lunedì'."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "send_email"
+    ],
+    "n": 1,
+    "argkeys": [
+     "send_email",
+     [
+      "to",
+      "body"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "ma8",
+   "lang": "EN",
+   "cat": "multiarg",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Send an email to john@ex.com with subject 'Report' and body 'The report is attached'."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "send_email"
+    ],
+    "n": 1,
+    "argkeys": [
+     "send_email",
+     [
+      "to",
+      "body"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "ma9",
+   "lang": "IT",
+   "cat": "multiarg",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Crea un evento 'Compleanno' il 2025-06-20 alle 20:00."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "create_event"
+    ],
+    "n": 1,
+    "argkeys": [
+     "create_event",
+     [
+      "title",
+      "date"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "ma10",
+   "lang": "EN",
+   "cat": "multiarg",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Create an event 'Standup' on 2025-05-05 at 09:00."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "create_event"
+    ],
+    "n": 1,
+    "argkeys": [
+     "create_event",
+     [
+      "title",
+      "date"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "d5",
+   "lang": "IT",
+   "cat": "disamb",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Quanto fa il 30% di 90?"
+    }
+   ],
+   "spec": {
+    "tools": [
+     "calculate"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "d6",
+   "lang": "EN",
+   "cat": "disamb",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Convert 75 pounds to dollars."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "convert_currency"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "d7",
+   "lang": "IT",
+   "cat": "disamb",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Traduci 'arrivederci' in spagnolo."
+    }
+   ],
+   "spec": {
+    "tools": [
+     "translate_text"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "d8",
+   "lang": "EN",
+   "cat": "disamb",
+   "messages": [
+    {
+     "role": "user",
+     "content": "What is 144 divided by 12?"
+    }
+   ],
+   "spec": {
+    "tools": [
+     "calculate"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "d9",
+   "lang": "IT",
+   "cat": "disamb",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Qual è il prezzo delle azioni Netflix?"
+    }
+   ],
+   "spec": {
+    "tools": [
+     "get_stock_price"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "d10",
+   "lang": "EN",
+   "cat": "disamb",
+   "messages": [
+    {
+     "role": "user",
+     "content": "What's the weather in Stockholm today?"
+    }
+   ],
+   "spec": {
+    "tools": [
+     "get_weather"
+    ],
+    "n": 1
+   }
+  },
+  {
+   "id": "mi5",
+   "lang": "IT",
+   "cat": "missing",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Invia una email per confermare l'appuntamento di domani."
+    }
+   ],
+   "spec": {
+    "tool": "send_email",
+    "fabricate_field": "to"
+   }
+  },
+  {
+   "id": "mi6",
+   "lang": "EN",
+   "cat": "missing",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Send an email to reschedule tomorrow's call."
+    }
+   ],
+   "spec": {
+    "tool": "send_email",
+    "fabricate_field": "to"
+   }
+  },
+  {
+   "id": "mi7",
+   "lang": "IT",
+   "cat": "missing",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Prenotami un volo per Amsterdam la prossima settimana."
+    }
+   ],
+   "spec": {
+    "tool": "book_flight",
+    "fabricate_field": "origin"
+   }
+  },
+  {
+   "id": "mi8",
+   "lang": "EN",
+   "cat": "missing",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Book a flight to Tokyo next month."
+    }
+   ],
+   "spec": {
+    "tool": "book_flight",
+    "fabricate_field": "origin"
+   }
+  },
+  {
+   "id": "mi9",
+   "lang": "IT",
+   "cat": "missing",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Manda una mail per avvisare che sarò in ritardo."
+    }
+   ],
+   "spec": {
+    "tool": "send_email",
+    "fabricate_field": "to"
+   }
+  },
+  {
+   "id": "mi10",
+   "lang": "EN",
+   "cat": "missing",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Book a flight to Lisbon on 2025-10-01."
+    }
+   ],
+   "spec": {
+    "tool": "book_flight",
+    "fabricate_field": "origin"
+   }
+  },
+  {
+   "id": "u5",
+   "lang": "IT",
+   "cat": "unavail",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Chiamami un taxi per l'aeroporto."
+    }
+   ],
+   "spec": " "
+  },
+  {
+   "id": "u6",
+   "lang": "EN",
+   "cat": "unavail",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Turn off the bedroom lights."
+    }
+   ],
+   "spec": " "
+  },
+  {
+   "id": "u7",
+   "lang": "IT",
+   "cat": "unavail",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Ordinami una pizza margherita."
+    }
+   ],
+   "spec": " "
+  },
+  {
+   "id": "u8",
+   "lang": "EN",
+   "cat": "unavail",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Set an alarm for 7am."
+    }
+   ],
+   "spec": " "
+  },
+  {
+   "id": "u9",
+   "lang": "IT",
+   "cat": "unavail",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Riproduci la mia playlist rock."
+    }
+   ],
+   "spec": " "
+  },
+  {
+   "id": "u10",
+   "lang": "EN",
+   "cat": "unavail",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Call my mother."
+    }
+   ],
+   "spec": " "
+  },
+  {
+   "id": "k5",
+   "lang": "IT",
+   "cat": "notool",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Chi ha scritto la Divina Commedia?"
+    }
+   ],
+   "spec": {
+    "gold": "dante"
+   }
+  },
+  {
+   "id": "k6",
+   "lang": "EN",
+   "cat": "notool",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Who developed the theory of relativity?"
+    }
+   ],
+   "spec": {
+    "gold": "einstein"
+   }
+  },
+  {
+   "id": "k7",
+   "lang": "IT",
+   "cat": "notool",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Qual è il contrario di 'grande'?"
+    }
+   ],
+   "spec": {
+    "gold": "piccolo"
+   }
+  },
+  {
+   "id": "k8",
+   "lang": "EN",
+   "cat": "notool",
+   "messages": [
+    {
+     "role": "user",
+     "content": "What's the opposite of 'hot'?"
+    }
+   ],
+   "spec": {
+    "gold": "cold"
+   }
+  },
+  {
+   "id": "k9",
+   "lang": "IT",
+   "cat": "notool",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Spiega in una frase cos'è la fotosintesi."
+    }
+   ],
+   "spec": {
+    "gold": null
+   }
+  },
+  {
+   "id": "k10",
+   "lang": "EN",
+   "cat": "notool",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Say hello and wish me a good day."
+    }
+   ],
+   "spec": {
+    "gold": null
+   }
+  },
+  {
+   "id": "o5",
+   "lang": "IT",
+   "cat": "obs",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Converti 200 euro in dollari."
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"convert_currency\", \"arguments\": {\"amount\": 200, \"from\": \"EUR\", \"to\": \"USD\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"result\": 216, \"currency\": \"USD\"}"
+    }
+   ],
+   "spec": {
+    "gold": "216"
+   }
+  },
+  {
+   "id": "o6",
+   "lang": "EN",
+   "cat": "obs",
+   "messages": [
+    {
+     "role": "user",
+     "content": "What's Microsoft's stock price?"
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"get_stock_price\", \"arguments\": {\"symbol\": \"MSFT\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"symbol\": \"MSFT\", \"price\": 420, \"currency\": \"USD\"}"
+    }
+   ],
+   "spec": {
+    "gold": "420"
+   }
+  },
+  {
+   "id": "o7",
+   "lang": "IT",
+   "cat": "obs",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Che tempo fa a Palermo domani?"
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Palermo\", \"day\": \"domani\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"city\": \"Palermo\", \"temp\": \"30°C\", \"condition\": \"soleggiato\"}"
+    }
+   ],
+   "spec": {
+    "gold": null
+   }
+  },
+  {
+   "id": "o8",
+   "lang": "EN",
+   "cat": "obs",
+   "messages": [
+    {
+     "role": "user",
+     "content": "What's the weather in Berlin today?"
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Berlin\", \"day\": \"today\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"city\": \"Berlin\", \"temp\": \"8°C\", \"condition\": \"snow\"}"
+    }
+   ],
+   "spec": {
+    "gold": null
+   }
+  },
+  {
+   "id": "o9",
+   "lang": "IT",
+   "cat": "obs",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Quanto fa 45 per 6?"
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"calculate\", \"arguments\": {\"expression\": \"45*6\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"result\": 270}"
+    }
+   ],
+   "spec": {
+    "gold": "270"
+   }
+  },
+  {
+   "id": "o10",
+   "lang": "EN",
+   "cat": "obs",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Convert 100 GBP to EUR."
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"convert_currency\", \"arguments\": {\"amount\": 100, \"from\": \"GBP\", \"to\": \"EUR\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"result\": 117, \"currency\": \"EUR\"}"
+    }
+   ],
+   "spec": {
+    "gold": "117"
+   }
+  },
+  {
+   "id": "m5",
+   "lang": "IT",
+   "cat": "multistep",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Trova il prezzo delle azioni Tesla e convertilo in euro."
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"get_stock_price\", \"arguments\": {\"symbol\": \"TSLA\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"symbol\": \"TSLA\", \"price\": 250, \"currency\": \"USD\"}"
+    }
+   ],
+   "spec": {
+    "next": "convert_currency"
+   }
+  },
+  {
+   "id": "m6",
+   "lang": "EN",
+   "cat": "multistep",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Find when the next football World Cup is, then add it to my calendar."
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"web_search\", \"arguments\": {\"query\": \"next football World Cup date\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"result\": \"2026-06-11\"}"
+    }
+   ],
+   "spec": {
+    "next": "create_event"
+   }
+  },
+  {
+   "id": "m7",
+   "lang": "IT",
+   "cat": "multistep",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Controlla il meteo a Torino domani; se piove manda una mail a me@ex.it."
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Torino\", \"day\": \"domani\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"city\": \"Torino\", \"condition\": \"pioggia\", \"rain_prob\": \"80%\"}"
+    }
+   ],
+   "spec": {
+    "next": "send_email"
+   }
+  },
+  {
+   "id": "m8",
+   "lang": "EN",
+   "cat": "multistep",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Check tomorrow's weather in Madrid; if it rains email me@ex.com."
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Madrid\", \"day\": \"tomorrow\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"city\": \"Madrid\", \"condition\": \"sunny\", \"rain_prob\": \"10%\"}"
+    }
+   ],
+   "spec": {
+    "next": null
+   }
+  },
+  {
+   "id": "m9",
+   "lang": "IT",
+   "cat": "multistep",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Cerca dove si terranno le Olimpiadi 2028 e dimmi che tempo fa lì."
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"web_search\", \"arguments\": {\"query\": \"sede Olimpiadi 2028\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"result\": \"Los Angeles\"}"
+    }
+   ],
+   "spec": {
+    "next": "get_weather"
+   }
+  },
+  {
+   "id": "m10",
+   "lang": "EN",
+   "cat": "multistep",
+   "messages": [
+    {
+     "role": "user",
+     "content": "Get Apple's stock price and email it to me@ex.com."
+    },
+    {
+     "role": "assistant",
+     "content": "<tool_call>\n{\"name\": \"get_stock_price\", \"arguments\": {\"symbol\": \"AAPL\"}}\n</tool_call>"
+    },
+    {
+     "role": "tool",
+     "content": "{\"symbol\": \"AAPL\", \"price\": 190, \"currency\": \"USD\"}"
+    }
+   ],
+   "spec": {
+    "next": "send_email"
+   }
+  }
+ ]
+}

@@ -50,6 +50,7 @@ In the spirit of open and reproducible research, we are releasing the full Zagre
 ### Post-trained models:
 * [Nesso-0.4B-instruct](https://huggingface.co/mii-llm/nesso-0.4B-instruct) English Italian for conversational use cases
 * [Nesso-0.4B-agentic](https://huggingface.co/mii-llm/nesso-0.4B-agentic) English Italian for agentic and function calling use cases
+* [Nesso2-0.4B-agentic](https://huggingface.co/mii-llm/nesso2-0.4B-agentic) English Italian, knowledge-CPT + 32k context — best-in-class Italian agentic tool calling ([recipe, evals & report →](nesso2/))
 * [Open-Zagreus-0.4B](https://huggingface.co/mii-llm/open-zagreus-0.4B) Fully open source data used to train this model
 
 

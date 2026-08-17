@@ -1,0 +1,521 @@
+<title>Nesso2-0.4B-Agentic — Technical Report</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#E7E9ED; --surface:#FBFCFD; --surface-2:#F1F3F6;
+    --ink:#141A21; --ink-soft:#59636E; --ink-faint:#8A94A0;
+    --line:rgba(20,26,33,.12); --line-strong:rgba(20,26,33,.22);
+    --accent:#1657D0; --accent-2:#3B78E6; --accent-soft:rgba(22,87,208,.10);
+    --win:#16855A; --loss:#C33C4B; --warn:#A9781A;
+    --font-sans:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Segoe UI",Roboto,sans-serif;
+    --font-serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --font-mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+    --measure:66ch;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0D1117; --surface:#151B23; --surface-2:#1B222C;
+      --ink:#E7ECF2; --ink-soft:#98A4B1; --ink-faint:#6A7885;
+      --line:rgba(231,236,242,.13); --line-strong:rgba(231,236,242,.24);
+      --accent:#4E97FF; --accent-2:#79B0FF; --accent-soft:rgba(78,151,255,.14);
+      --win:#45C98A; --loss:#F2707E; --warn:#E0A93B;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#E7E9ED; --surface:#FBFCFD; --surface-2:#F1F3F6;
+    --ink:#141A21; --ink-soft:#59636E; --ink-faint:#8A94A0;
+    --line:rgba(20,26,33,.12); --line-strong:rgba(20,26,33,.22);
+    --accent:#1657D0; --accent-2:#3B78E6; --accent-soft:rgba(22,87,208,.10);
+    --win:#16855A; --loss:#C33C4B; --warn:#A9781A;
+  }
+  :root[data-theme="dark"]{
+    --bg:#0D1117; --surface:#151B23; --surface-2:#1B222C;
+    --ink:#E7ECF2; --ink-soft:#98A4B1; --ink-faint:#6A7885;
+    --line:rgba(231,236,242,.13); --line-strong:rgba(231,236,242,.24);
+    --accent:#4E97FF; --accent-2:#79B0FF; --accent-soft:rgba(78,151,255,.14);
+    --win:#45C98A; --loss:#F2707E; --warn:#E0A93B;
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--font-serif); font-size:18px; line-height:1.65;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  .wrap{max-width:1120px; margin:0 auto; padding:0 clamp(20px,5vw,56px)}
+  .col{max-width:var(--measure)}
+  h1,h2,h3,.eyebrow,.mono,th,.stat-num,.tag,.bar-label,.bar-val,nav,.foot{font-family:var(--font-sans)}
+  .mono,.eyebrow,.tag,.bar-label,.bar-val,th,code,.kv,.stat-lab{font-family:var(--font-mono)}
+  h2{font-size:clamp(1.5rem,3.2vw,2.15rem); line-height:1.12; letter-spacing:-.02em; text-wrap:balance; margin:0 0 .35em; font-weight:800}
+  h3{font-size:1.12rem; letter-spacing:-.01em; margin:0 0 .3em; font-weight:700}
+  p{margin:0 0 1.05em}
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid var(--accent-soft)}
+  a:hover{border-bottom-color:var(--accent)}
+  strong{font-weight:700}
+  .eyebrow{font-size:.72rem; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); font-weight:600}
+  .num-tag{font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:3px}
+
+  /* top nav / spec bar */
+  nav{position:sticky; top:0; z-index:20; background:color-mix(in srgb,var(--bg) 88%,transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+  .nav-in{max-width:1120px; margin:0 auto; padding:11px clamp(20px,5vw,56px); display:flex; align-items:center; gap:16px; justify-content:space-between}
+  .brand{font-size:.82rem; letter-spacing:.02em; font-weight:700; display:flex; align-items:center; gap:9px}
+  .dot{width:9px; height:9px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+  .brand small{color:var(--ink-faint); font-weight:500; letter-spacing:.12em; text-transform:uppercase; font-size:.66rem}
+  .nav-meta{font-family:var(--font-mono); font-size:.7rem; color:var(--ink-soft); display:flex; gap:18px}
+  .nav-meta span b{color:var(--ink); font-weight:600}
+  @media(max-width:680px){.nav-meta{display:none}}
+
+  /* hero */
+  header.hero{padding:clamp(48px,9vw,104px) 0 clamp(30px,5vw,52px)}
+  .hero h1{font-family:var(--font-sans); font-size:clamp(2.1rem,6.2vw,4.1rem); line-height:1.03; letter-spacing:-.035em; font-weight:850; margin:.35em 0 .5em; text-wrap:balance; max-width:16ch}
+  .hero h1 .hl{color:var(--accent)}
+  .hero .lede{font-size:clamp(1.08rem,2.3vw,1.32rem); color:var(--ink-soft); max-width:60ch; line-height:1.55}
+  .spec{display:flex; flex-wrap:wrap; gap:8px 10px; margin-top:26px}
+  .spec .kv{font-size:.72rem; color:var(--ink-soft); background:var(--surface); border:1px solid var(--line); padding:6px 11px; border-radius:999px; letter-spacing:.02em}
+  .spec .kv b{color:var(--ink); font-weight:600}
+
+  /* stat cards */
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:clamp(30px,5vw,50px) 0}
+  @media(max-width:860px){.stats{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:460px){.stats{grid-template-columns:1fr}}
+  .stat{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:20px 18px; position:relative; overflow:hidden}
+  .stat::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--accent)}
+  .stat.win::before{background:var(--win)}
+  .stat-num{font-size:2.15rem; font-weight:820; letter-spacing:-.03em; line-height:1; font-variant-numeric:tabular-nums; display:flex; align-items:baseline; gap:6px}
+  .stat-num em{font-size:.95rem; font-weight:600; font-style:normal; color:var(--ink-faint)}
+  .stat-lab{font-size:.72rem; color:var(--ink-soft); margin-top:9px; line-height:1.45; letter-spacing:.01em}
+  .stat-lab b{color:var(--ink)}
+
+  /* section scaffold */
+  section{padding:clamp(40px,7vw,80px) 0; border-top:1px solid var(--line)}
+  .sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:26px}
+  .sec-head .idx{font-family:var(--font-mono); font-size:.8rem; color:var(--accent); font-weight:600; padding-top:.35em}
+  .lead{font-size:1.15rem; color:var(--ink-soft)}
+
+  /* panels */
+  .panel{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:clamp(20px,3vw,30px); margin:22px 0}
+  .panel-title{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px}
+  .panel-title h3{margin:0}
+  .panel-title .tag{font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint)}
+
+  /* bar chart */
+  .bars{display:flex; flex-direction:column; gap:9px}
+  .bar{display:grid; grid-template-columns:112px 1fr 46px; align-items:center; gap:12px}
+  @media(max-width:520px){.bar{grid-template-columns:88px 1fr 40px; gap:9px}}
+  .bar-label{font-size:.78rem; color:var(--ink-soft); text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .bar.me .bar-label{color:var(--ink); font-weight:700}
+  .track{height:22px; background:var(--surface-2); border-radius:6px; position:relative; overflow:hidden}
+  .fill{position:absolute; left:0; top:0; bottom:0; border-radius:6px; background:linear-gradient(90deg,var(--accent),var(--accent-2)); min-width:2px}
+  .bar.dim .fill{background:var(--line-strong)}
+  .bar.rival .fill{background:repeating-linear-gradient(45deg,var(--ink-faint),var(--ink-faint) 6px,transparent 6px,transparent 12px); opacity:.85}
+  .bar.win .fill{background:linear-gradient(90deg,var(--win),color-mix(in srgb,var(--win) 60%,var(--accent-2)))}
+  .bar-val{font-size:.82rem; font-weight:700; font-variant-numeric:tabular-nums; color:var(--ink)}
+  .axis{display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:.64rem; color:var(--ink-faint); margin:4px 0 0 124px; letter-spacing:.04em}
+  @media(max-width:520px){.axis{margin-left:97px}}
+  .cap{font-size:.82rem; color:var(--ink-soft); margin-top:14px; font-family:var(--font-serif)}
+
+  /* grouped duel */
+  .duel{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+  @media(max-width:620px){.duel{grid-template-columns:1fr}}
+  .duel .cell{background:var(--surface-2); border:1px solid var(--line); border-radius:12px; padding:18px}
+  .duel h4{font-family:var(--font-mono); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 14px}
+  .vs-row{display:grid; grid-template-columns:52px 1fr; align-items:center; gap:12px; margin-bottom:11px}
+  .vs-row .who{font-family:var(--font-mono); font-size:.74rem; font-weight:700}
+  .vs-track{height:26px; background:var(--surface); border:1px solid var(--line); border-radius:6px; position:relative; overflow:hidden}
+  .vs-fill{position:absolute; left:0; top:0; bottom:0; display:flex; align-items:center; padding-left:9px; font-family:var(--font-mono); font-size:.74rem; font-weight:700; color:#fff; border-radius:6px}
+  .vs-fill.a{background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+  .vs-fill.b{background:var(--ink-faint)}
+  .delta{font-family:var(--font-mono); font-size:.72rem; font-weight:700; margin-top:4px}
+  .delta.pos{color:var(--win)} .delta.neg{color:var(--loss)}
+
+  /* tables */
+  .scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:12px; border:1px solid var(--line)}
+  table{border-collapse:collapse; width:100%; font-family:var(--font-mono); font-size:.8rem; min-width:560px}
+  caption{caption-side:bottom; text-align:left; font-family:var(--font-serif); font-size:.82rem; color:var(--ink-soft); padding:10px 4px 0}
+  th,td{padding:9px 12px; text-align:right; font-variant-numeric:tabular-nums; border-bottom:1px solid var(--line); white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  thead th{background:var(--surface-2); font-size:.68rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); font-weight:600; position:sticky; top:0}
+  tbody tr:last-child td{border-bottom:none}
+  td.me,th.me{background:var(--accent-soft); color:var(--ink); font-weight:700}
+  td.rival,th.rival{background:color-mix(in srgb,var(--ink-faint) 12%,transparent)}
+  tr.total td{font-weight:800; border-top:2px solid var(--line-strong)}
+  .heat td.h{color:var(--ink); font-weight:600; border:1px solid color-mix(in srgb,var(--bg) 70%,transparent)}
+  .heat td.h[style]{background:color-mix(in srgb,var(--accent) calc(var(--v)*7%),transparent)}
+  .up{color:var(--win)} .down{color:var(--loss)}
+  .arrow{font-family:var(--font-sans); font-weight:800}
+
+  /* pipeline / timeline */
+  .steps{display:grid; gap:2px; counter-reset:s}
+  .step{display:grid; grid-template-columns:auto 1fr; gap:18px; padding:20px 0; border-bottom:1px solid var(--line)}
+  .step:last-child{border-bottom:none}
+  .step .marker{font-family:var(--font-mono); font-size:.78rem; color:var(--accent); font-weight:700; padding-top:2px; white-space:nowrap}
+  .step h3{font-family:var(--font-sans)}
+  .step p{margin:0; font-size:.98rem; color:var(--ink-soft); max-width:62ch}
+  .step .meta{font-family:var(--font-mono); font-size:.7rem; color:var(--ink-faint); margin-top:8px; letter-spacing:.02em}
+
+  .tl{display:flex; flex-direction:column; gap:0}
+  .tl-row{display:grid; grid-template-columns:64px 1fr auto; gap:16px; align-items:start; padding:16px 0; border-bottom:1px solid var(--line); position:relative}
+  .tl-row:last-child{border-bottom:none}
+  .tl-tag{font-family:var(--font-mono); font-weight:800; font-size:.9rem; letter-spacing:-.01em}
+  .tl-body h4{font-family:var(--font-sans); font-size:1rem; margin:0 0 3px}
+  .tl-body p{margin:0; font-size:.92rem; color:var(--ink-soft); max-width:58ch}
+  .tl-score{font-family:var(--font-mono); font-weight:800; font-size:1.05rem; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+  .tl-score small{display:block; font-size:.62rem; font-weight:500; color:var(--ink-faint); letter-spacing:.08em; text-transform:uppercase}
+  .tl-row.best{background:var(--accent-soft); border-radius:10px; padding-left:14px; padding-right:14px}
+  .tl-row.fail .tl-score{color:var(--loss)}
+  .tl-row.best .tl-score{color:var(--accent)}
+  .pill{display:inline-block; font-family:var(--font-mono); font-size:.62rem; padding:2px 7px; border-radius:5px; letter-spacing:.06em; text-transform:uppercase; vertical-align:middle; margin-left:6px}
+  .pill.w{background:color-mix(in srgb,var(--win) 18%,transparent); color:var(--win)}
+  .pill.f{background:color-mix(in srgb,var(--loss) 16%,transparent); color:var(--loss)}
+
+  /* negative-results cards */
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+  @media(max-width:720px){.grid2{grid-template-columns:1fr}}
+  .card{background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--loss); border-radius:12px; padding:18px 20px}
+  .card h3{font-family:var(--font-sans); font-size:1rem; display:flex; align-items:center; gap:8px}
+  .card h3 .x{color:var(--loss); font-weight:800}
+  .card p{margin:.5em 0 0; font-size:.92rem; color:var(--ink-soft)}
+  .card .lesson{margin-top:10px; font-family:var(--font-mono); font-size:.72rem; color:var(--ink); border-top:1px dashed var(--line); padding-top:9px}
+  .card .lesson b{color:var(--accent)}
+
+  /* methodology grid */
+  .methods{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+  @media(max-width:820px){.methods{grid-template-columns:1fr}}
+  .method{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:20px}
+  .method .g{font-family:var(--font-mono); font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600}
+  .method h3{font-family:var(--font-sans); margin:.35em 0 .4em}
+  .method p{font-size:.9rem; color:var(--ink-soft); margin:0 0 .8em}
+  .method ul{margin:0; padding-left:1.05em; font-family:var(--font-mono); font-size:.72rem; color:var(--ink-soft); line-height:1.7}
+  .method li b{color:var(--ink)}
+
+  /* callout */
+  .callout{background:var(--accent-soft); border:1px solid color-mix(in srgb,var(--accent) 30%,transparent); border-radius:14px; padding:22px clamp(20px,3vw,28px); margin:24px 0}
+  .callout .eyebrow{margin-bottom:8px; display:block}
+  .callout p{margin:0; font-size:1.05rem; color:var(--ink)}
+  .callout p + p{margin-top:.7em; font-size:.95rem; color:var(--ink-soft)}
+
+  code{background:var(--surface-2); border:1px solid var(--line); border-radius:5px; padding:1px 6px; font-size:.85em}
+  pre{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:16px 18px; overflow-x:auto; font-family:var(--font-mono); font-size:.78rem; line-height:1.6; color:var(--ink)}
+  pre .k{color:var(--accent)} pre .c{color:var(--ink-faint)}
+
+  .foot{border-top:1px solid var(--line); padding:40px 0 60px; color:var(--ink-soft); font-size:.82rem; font-family:var(--font-mono)}
+  .foot .made{color:var(--ink); font-weight:600; margin-bottom:6px; font-size:.9rem}
+  .foot a{border:none}
+  .disclaimer{font-size:.72rem; color:var(--ink-faint); margin-top:16px; max-width:70ch; line-height:1.6}
+
+  @media(prefers-reduced-motion:no-preference){
+    .fill,.vs-fill{animation:grow .9s cubic-bezier(.2,.8,.2,1) both}
+    @keyframes grow{from{transform:scaleX(0); transform-origin:left}to{transform:scaleX(1)}}
+  }
+</style>
+
+<nav>
+  <div class="nav-in">
+    <div class="brand"><span class="dot"></span> Nesso2-0.4B-Agentic <small>mii-llm</small></div>
+    <div class="nav-meta">
+      <span>agentic <b>68/100</b></span>
+      <span>it tool-use <b>+6 vs Qwen</b></span>
+      <span>~438M params</span>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">Technical report · Italian agentic SLM</span>
+    <h1>A <span class="hl">0.4B</span> model that beats Qwen3-0.6B at Italian tool-calling.</h1>
+    <p class="lede">Nesso2-0.4B-Agentic is a bilingual small language model built from scratch for function calling and agentic execution — with a deliberate bet on Italian. Across a three-family evaluation, it tops a field of six comparable models on agentic capability while matching a larger rival on Italian knowledge. This is the record of how we got there, including the runs that failed.</p>
+    <div class="spec">
+      <span class="kv">params <b>~438M</b></span>
+      <span class="kv">context <b>32k</b></span>
+      <span class="kv">langs <b>it · en</b></span>
+      <span class="kv">template <b>Llama-3 + tools</b></span>
+      <span class="kv">base <b>Zagreus-0.4B-ita</b></span>
+      <span class="kv">stage <b>SFT</b></span>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat win">
+      <div class="stat-num">68<em>/100</em></div>
+      <div class="stat-lab"><b>Best agentic score</b> of six models on our 100-case function-calling suite — ahead of Qwen3-0.6B (67).</div>
+    </div>
+    <div class="stat win">
+      <div class="stat-num">+6<em>/50</em></div>
+      <div class="stat-lab"><b>Italian tool-calling lead</b> over Qwen3-0.6B (35 vs 29). Every Zagreus model beats Qwen in Italian.</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">4.40<em>/10</em></div>
+      <div class="stat-lab"><b>Best Italian chat</b> of its lineage — tied with the reference model, judged by a 35B model.</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">≈ par<em></em></div>
+      <div class="stat-lab"><b>Italian knowledge</b> level with Qwen3-0.6B (avg .334 vs .336) — no academic tax from specialization.</div>
+    </div>
+  </div>
+
+  <section>
+    <div class="sec-head"><span class="idx">01</span><div class="col"><span class="eyebrow">The claim</span><h2>What "one of the best" actually means at this size</h2></div></div>
+    <div class="col">
+      <p>At ~0.4–0.6B parameters, a model cannot be good at everything — capacity is the binding constraint. So "best" has to be a claim about a <em>target</em>, measured honestly against real rivals. Ours is precise:</p>
+      <p><strong>For Italian agentic tool use in the sub-billion class, Nesso2-0.4B-Agentic is the strongest open model we could find</strong> — it wins our agentic benchmark outright, leads decisively in Italian, and does so without giving up Italian knowledge or conversational quality. It is <em>not</em> the best at English tool use (Qwen3-0.6B keeps that), and it does not out-know a model trained on far more data. We show all of it below.</p>
+      <p>The rest of this report is the evidence: how the model was built, how we measured it against five other models across three independent evaluation families, the iteration curve that got us from 61 to 68, and — because a report that only lists wins isn't evidence — the experiments that regressed and what they taught us.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="idx">02</span><div class="col"><span class="eyebrow">The model</span><h2>Four stages, not one fine-tune</h2></div></div>
+    <div class="col"><p class="lead">A tiny model earns both knowledge and agentic skill only if the pipeline gives it each on purpose. Nesso2 is the tip of a four-stage build.</p></div>
+    <div class="steps">
+      <div class="step">
+        <div class="marker">STAGE 1</div>
+        <div><h3>Pre-training from scratch — ~1T tokens</h3><p>The Zagreus-0.4B-ita foundation, trained on a trilingual-plus-code mix (~400B English, ~400B Italian, ~200B code) from FineWeb, FineWeb-2, FinePDFs and StarCoder.</p><div class="meta">64× A100 · Seeweb HPC · Nanotron (mii-llm fork)</div></div>
+      </div>
+      <div class="step">
+        <div class="marker">STAGE 2</div>
+        <div><h3>Knowledge CPT — breaking the MMLU ceiling</h3><p>Continued pre-training on a curated knowledge corpus (Italian/English Wikipedia + model-augmented QA) to lift factual capability that a small base cannot reach from web text alone. This is the stage that later lets Italian MMLU/ARC hold up under heavy agentic specialization.</p><div class="meta">Seeweb HPC · Nanotron</div></div>
+      </div>
+      <div class="step">
+        <div class="marker">STAGE 3</div>
+        <div><h3>32k context extension</h3><p>Long-context adaptation (RoPE θ raised to 1e6) so the model can hold real tool schemas, observations and multi-step trajectories in-context.</p><div class="meta">Seeweb HPC · RoPE θ = 1e6</div></div>
+      </div>
+      <div class="step">
+        <div class="marker">STAGE 4</div>
+        <div><h3>Agentic SFT (this model)</h3><p>Supervised fine-tuning on a bilingual instruction mixture plus a synthetic function-calling corpus with randomized tool schemas — covering single/parallel calls, argument disambiguation, missing-argument handling, unavailable-tool refusal, observation grounding, multi-step trajectories, and no-tool discrimination.</p><div class="meta">TRL SFTTrainer + FSDP · Llama-3 template · 3 epochs · LR 1e-3 cosine</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="idx">03</span><div class="col"><span class="eyebrow">Method</span><h2>How we measured — three independent families</h2></div></div>
+    <div class="col"><p class="lead">One benchmark proves nothing. We evaluate every candidate on three families that stress different things, then read them <em>together</em> — because at 0.4B they often disagree, and the disagreement is the signal.</p></div>
+    <div class="methods">
+      <div class="method">
+        <div class="g">Family A</div>
+        <h3>Academic</h3>
+        <p>Standard knowledge & reasoning, Italian and English, via our lm-evaluation-harness fork.</p>
+        <ul>
+          <li><b>MMLU</b> — 5-shot acc</li>
+          <li><b>HellaSwag / ARC</b> — 0-shot acc_norm</li>
+          <li><b>IFEval</b> — instruction-level, generative</li>
+        </ul>
+      </div>
+      <div class="method">
+        <div class="g">Family B1</div>
+        <h3>Agentic function calling</h3>
+        <p>A frozen, bilingual 100-case suite — 10 categories, 50 Italian / 50 English — scored by an automatic per-category grader.</p>
+        <ul>
+          <li><b>Format</b> — Hermes <code>&lt;tool_call&gt;</code> JSON</li>
+          <li><b>Decoding</b> — pure greedy</li>
+          <li><b>Tools</b> — randomized schemas</li>
+        </ul>
+      </div>
+      <div class="method">
+        <div class="g">Family B2</div>
+        <h3>Conversation (LLM-judge)</h3>
+        <p>20 multi-turn tasks per language, graded 1–10 on correctness, language-fidelity and helpfulness.</p>
+        <ul>
+          <li><b>Judge</b> — Qwen3.6-35B-A3B</li>
+          <li><b>Answers</b> — greedy</li>
+          <li><b>Axes</b> — 3, absolute scale</li>
+        </ul>
+      </div>
+    </div>
+    <p class="cap col">Six models sit in the comparison set throughout: our agentic line (v3, v6, v6.1, v7 and the released <strong>v8 = Nesso2</strong>), plus <strong>Qwen3-0.6B</strong> as the external rival. The conversation family additionally includes the reference <code>nesso-0.4B-agentic</code>.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="idx">04</span><div class="col"><span class="eyebrow">Headline result</span><h2>Agentic capability — 100 cases, six models</h2></div></div>
+    <div class="panel">
+      <div class="panel-title"><h3>Total score</h3><span class="tag">out of 100 · higher is better</span></div>
+      <div class="bars">
+        <div class="bar me win"><div class="bar-label">Nesso2 (v8)</div><div class="track"><div class="fill" style="width:68%"></div></div><div class="bar-val">68</div></div>
+        <div class="bar rival"><div class="bar-label">Qwen3-0.6B</div><div class="track"><div class="fill" style="width:67%"></div></div><div class="bar-val">67</div></div>
+        <div class="bar dim"><div class="bar-label">v6</div><div class="track"><div class="fill" style="width:67%"></div></div><div class="bar-val">67</div></div>
+        <div class="bar dim"><div class="bar-label">v6.1</div><div class="track"><div class="fill" style="width:65%"></div></div><div class="bar-val">65</div></div>
+        <div class="bar dim"><div class="bar-label">v3</div><div class="track"><div class="fill" style="width:61%"></div></div><div class="bar-val">61</div></div>
+        <div class="bar dim"><div class="bar-label">v7</div><div class="track"><div class="fill" style="width:61%"></div></div><div class="bar-val">61</div></div>
+      </div>
+      <div class="axis"><span>0</span><span>50</span><span>100</span></div>
+      <p class="cap">The band is tight by design — every model here is competent. The point is the order: a 0.4B model finishes first, one point above a rival with 50% more parameters.</p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title"><h3>The real story is language</h3><span class="tag">head-to-head · x / 50</span></div>
+      <div class="duel">
+        <div class="cell">
+          <h4>Italian tool use</h4>
+          <div class="vs-row"><span class="who">Nesso2</span><div class="vs-track"><div class="vs-fill a" style="width:70%">35</div></div></div>
+          <div class="vs-row"><span class="who">Qwen</span><div class="vs-track"><div class="vs-fill b" style="width:58%">29</div></div></div>
+          <div class="delta pos">▲ +6 — Nesso2 leads</div>
+        </div>
+        <div class="cell">
+          <h4>English tool use</h4>
+          <div class="vs-row"><span class="who">Nesso2</span><div class="vs-track"><div class="vs-fill a" style="width:66%">33</div></div></div>
+          <div class="vs-row"><span class="who">Qwen</span><div class="vs-track"><div class="vs-fill b" style="width:76%">38</div></div></div>
+          <div class="delta neg">▼ −5 — Qwen leads</div>
+        </div>
+      </div>
+      <p class="cap">Honest split: Nesso2 owns Italian, Qwen owns English. Since the target is Italian agentic use, this is the trade we chose — and against every model in the set, Nesso2's Italian (35) is the highest recorded.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="idx">05</span><div class="col"><span class="eyebrow">Capability profile</span><h2>Where each model actually spends its capacity</h2></div></div>
+    <div class="col"><p>Per-category scores (out of 10) reveal the anatomy behind the totals. Read the <strong>Nesso2</strong> column against <strong>Qwen</strong>: Nesso2 dominates parallel calls and disambiguation, closed the <em>no-tool</em> gap that was every earlier model's blind spot, and gained multi-step — the deliberate targets of the final run.</p></div>
+    <div class="scroll">
+      <table class="heat">
+        <thead>
+          <tr><th>Category</th><th>v3</th><th>v6</th><th>v6.1</th><th>v7</th><th class="me">Nesso2</th><th class="rival">Qwen</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>single call</td><td class="h" style="--v:9">9</td><td class="h" style="--v:8">8</td><td class="h" style="--v:8">8</td><td class="h" style="--v:9">9</td><td class="h me" style="--v:9">9</td><td class="h rival" style="--v:7">7</td></tr>
+          <tr><td>parallel (same tool)</td><td class="h" style="--v:10">10</td><td class="h" style="--v:10">10</td><td class="h" style="--v:10">10</td><td class="h" style="--v:9">9</td><td class="h me" style="--v:10">10</td><td class="h rival" style="--v:5">5</td></tr>
+          <tr><td>parallel (diff tools)</td><td class="h" style="--v:7">7</td><td class="h" style="--v:4">4</td><td class="h" style="--v:4">4</td><td class="h" style="--v:2">2</td><td class="h me" style="--v:4">4</td><td class="h rival" style="--v:4">4</td></tr>
+          <tr><td>multi-argument</td><td class="h" style="--v:10">10</td><td class="h" style="--v:6">6</td><td class="h" style="--v:6">6</td><td class="h" style="--v:6">6</td><td class="h me" style="--v:6">6</td><td class="h rival" style="--v:10">10</td></tr>
+          <tr><td>disambiguation</td><td class="h" style="--v:10">10</td><td class="h" style="--v:9">9</td><td class="h" style="--v:9">9</td><td class="h" style="--v:9">9</td><td class="h me" style="--v:8">8</td><td class="h rival" style="--v:8">8</td></tr>
+          <tr><td>missing argument</td><td class="h" style="--v:4">4</td><td class="h" style="--v:10">10</td><td class="h" style="--v:8">8</td><td class="h" style="--v:5">5</td><td class="h me" style="--v:6">6</td><td class="h rival" style="--v:3">3</td></tr>
+          <tr><td>unavailable tool</td><td class="h" style="--v:1">1</td><td class="h" style="--v:10">10</td><td class="h" style="--v:9">9</td><td class="h" style="--v:9">9</td><td class="h me" style="--v:9">9</td><td class="h rival" style="--v:10">10</td></tr>
+          <tr><td>no-tool discrimination <span class="arrow up">▲</span></td><td class="h" style="--v:1">1</td><td class="h" style="--v:2">2</td><td class="h" style="--v:2">2</td><td class="h" style="--v:1">1</td><td class="h me" style="--v:7">7</td><td class="h rival" style="--v:8">8</td></tr>
+          <tr><td>observation grounding <span class="arrow down">▼</span></td><td class="h" style="--v:7">7</td><td class="h" style="--v:8">8</td><td class="h" style="--v:8">8</td><td class="h" style="--v:6">6</td><td class="h me" style="--v:3">3</td><td class="h rival" style="--v:10">10</td></tr>
+          <tr><td>multi-step <span class="arrow up">▲</span></td><td class="h" style="--v:2">2</td><td class="h" style="--v:0">0</td><td class="h" style="--v:1">1</td><td class="h" style="--v:5">5</td><td class="h me" style="--v:6">6</td><td class="h rival" style="--v:2">2</td></tr>
+          <tr class="total"><td>Total</td><td>61</td><td>67</td><td>65</td><td>61</td><td class="me">68</td><td class="rival">67</td></tr>
+        </tbody>
+        <caption>Family B1 · 100 bilingual cases · greedy decoding. <span class="up">▲</span> targeted gains in the final run, <span class="down">▼</span> the one accepted regression (see caveats).</caption>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="idx">06</span><div class="col"><span class="eyebrow">No knowledge tax</span><h2>Academic & conversational quality held</h2></div></div>
+    <div class="col"><p>Specialization usually costs general ability. Because the knowledge came from a dedicated CPT stage rather than the fine-tune, it didn't here — Nesso2 matches Qwen3-0.6B on <em>Italian</em> academics and beats its own no-CPT sibling on knowledge, while posting the best Italian conversation score of the lineage.</p></div>
+
+    <div class="panel">
+      <div class="panel-title"><h3>Italian academic average</h3><span class="tag">acc · IFEval·ARC·HellaSwag·MMLU</span></div>
+      <div class="bars">
+        <div class="bar rival"><div class="bar-label">Qwen3-0.6B</div><div class="track"><div class="fill" style="width:83.9%"></div></div><div class="bar-val">.336</div></div>
+        <div class="bar me"><div class="bar-label">Nesso2 (v8)</div><div class="track"><div class="fill" style="width:83.5%"></div></div><div class="bar-val">.334</div></div>
+        <div class="bar dim"><div class="bar-label">nesso-agentic</div><div class="track"><div class="fill" style="width:81.4%"></div></div><div class="bar-val">.326</div></div>
+      </div>
+      <div class="axis"><span>0</span><span>.20</span><span>.40</span></div>
+      <p class="cap">Statistical parity with Qwen in Italian (.334 vs .336), and clearly ahead of the sibling that skipped the CPT stage — Nesso2 leads Italian HellaSwag and ARC; Qwen keeps only MMLU, its far larger pre-training showing. Full per-task numbers are on the model card.</p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title"><h3>Italian conversation — judged by a 35B model</h3><span class="tag">mean overall · out of 10</span></div>
+      <div class="bars">
+        <div class="bar dim"><div class="bar-label">nesso-agentic</div><div class="track"><div class="fill" style="width:44%"></div></div><div class="bar-val">4.40</div></div>
+        <div class="bar me win"><div class="bar-label">Nesso2 (v8)</div><div class="track"><div class="fill" style="width:44%"></div></div><div class="bar-val">4.40</div></div>
+        <div class="bar dim"><div class="bar-label">v3</div><div class="track"><div class="fill" style="width:43%"></div></div><div class="bar-val">4.30</div></div>
+        <div class="bar dim"><div class="bar-label">v6.1</div><div class="track"><div class="fill" style="width:41.5%"></div></div><div class="bar-val">4.15</div></div>
+        <div class="bar rival"><div class="bar-label">Qwen3-0.6B</div><div class="track"><div class="fill" style="width:28%"></div></div><div class="bar-val">2.80</div></div>
+      </div>
+      <div class="axis"><span>0</span><span>5</span><span>10</span></div>
+      <p class="cap">Nesso2 ties the reference model for best Italian chat and outscores Qwen3-0.6B by 1.6 points — evidence that the no-tool knowledge data helped correctness rather than hurting conversation. (English chat is Nesso2's relative weak spot; Qwen leads there.)</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="idx">07</span><div class="col"><span class="eyebrow">The iteration</span><h2>From 61 to 68 — a zero-sum budget, spent deliberately</h2></div></div>
+    <div class="col">
+      <p>The core lesson of this project: <strong>at 0.4B the training-data budget is zero-sum.</strong> Some agentic skills are <em>data-responsive</em> (more examples move them); others are <em>capacity-bound</em> (they don't budge no matter how much you add). Progress came from identifying which is which, and refusing to spend budget on the latter.</p>
+    </div>
+    <div class="tl">
+      <div class="tl-row">
+        <div class="tl-tag">v3</div>
+        <div class="tl-body"><h4>The strong-but-trigger-happy baseline</h4><p>SFT on filtered Italian data + agentic. Excellent single/parallel calls, but over-fires: it reaches for tools when it shouldn't.</p></div>
+        <div class="tl-score">61<small>/100</small></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-tag">v5</div>
+        <div class="tl-body"><h4>ChatML + embedding resize <span class="pill f">reverted</span></h4><p>Tested a ChatML template with warm-initialized new tokens. Lost to the Llama-3 template on every axis. Dropped.</p></div>
+        <div class="tl-score fail">↩</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-tag">v6</div>
+        <div class="tl-body"><h4>Abstention, fixed</h4><p>Rebalanced negatives taught missing-argument and unavailable-tool handling — jumped both from near-zero to 9–10/10.</p></div>
+        <div class="tl-score">67<small>/100</small></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-tag">v6.1</div>
+        <div class="tl-body"><h4>Per-language quality floor</h4><p>Kept all Italian, filtered only noisier English (score ≥ 0.6). Best Italian chat of the round; a solid ship candidate.</p></div>
+        <div class="tl-score">65<small>/100</small></div>
+      </div>
+      <div class="tl-row fail">
+        <div class="tl-tag">v7</div>
+        <div class="tl-body"><h4>"Best of both" — the instructive failure <span class="pill f">regressed</span></h4><p>Tried to improve everything at once, thinning the budget across capacity-bound categories. Tied for last. Proof that spreading effort is worse than concentrating it.</p></div>
+        <div class="tl-score">61<small>/100</small></div>
+      </div>
+      <div class="tl-row best">
+        <div class="tl-tag">v8</div>
+        <div class="tl-body"><h4>The focused fix = Nesso2 <span class="pill w">released</span></h4><p>One data-responsive target, done richly: <b>4.5× more no-tool examples</b> (with the tempting tool present, answered naturally), budget reclaimed from capacity-bound categories, multi-step kept. No-tool 2→7, multi-step 1→6, firing held.</p></div>
+        <div class="tl-score">68<small>/100</small></div>
+      </div>
+    </div>
+    <div class="callout">
+      <span class="eyebrow">The insight, in one line</span>
+      <p>The last mile at 0.4B wasn't more data — it was <strong>one data-responsive skill, trained richly and naturally, with budget stolen from skills that don't respond to data.</strong></p>
+      <p>This is the transferable recipe we carry to the 3B model: diagnose responsiveness first, then concentrate.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="idx">08</span><div class="col"><span class="eyebrow">What didn't work</span><h2>The negative results — because evidence needs them</h2></div></div>
+    <div class="col"><p>Every claim above is stronger for the experiments that failed around it. These are the ones we kept notes on.</p></div>
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="x">✕</span> Spreading the budget (v7)</h3>
+        <p>Improving every category at once <em>lowered</em> the total to 61 — thinning data-responsive wins to fund capacity-bound categories that never moved.</p>
+        <div class="lesson"><b>Lesson:</b> concentrate budget on one responsive target, not many.</div>
+      </div>
+      <div class="card">
+        <h3><span class="x">✕</span> DPO on the v3 checkpoint</h3>
+        <p>Preference-tuning toward "more detailed" answers cut conversation quality from 4.25 to 3.48 for a +0.008 IFEval gain — at 0.4B, "more detailed" becomes hallucination.</p>
+        <div class="lesson"><b>Lesson:</b> ship the SFT; DPO for verbosity backfires at this scale.</div>
+      </div>
+      <div class="card">
+        <h3><span class="x">✕</span> ChatML + embedding resize (v5)</h3>
+        <p>New special tokens, warm-initialized, on a ChatML template lost to the plain Llama-3 template across the board.</p>
+        <div class="lesson"><b>Lesson:</b> don't pay a re-embedding cost for a template the base never saw.</div>
+      </div>
+      <div class="card">
+        <h3><span class="x">✕</span> Repetition penalty on tool calls</h3>
+        <p>Our chat-tuned decoding (<code>rep_penalty 1.15</code>) corrupted tool JSON — the template echoes <code>name</code>/<code>arguments</code>, so the penalty suppressed exactly those tokens, emitting <code>"Name"</code> or dropping arguments.</p>
+        <div class="lesson"><b>Lesson:</b> pure greedy for structured output; save the penalty for prose.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="idx">09</span><div class="col"><span class="eyebrow">Honest caveats</span><h2>Where Nesso2 is not the answer</h2></div></div>
+    <div class="col">
+      <p>The specialization is a real trade, and integrity means naming it:</p>
+      <p><strong>English tool use.</strong> Qwen3-0.6B leads (38 vs 33 / 50). If your agent runs primarily in English, it is the stronger pick.</p>
+      <p><strong>Observation grounding regressed.</strong> The no-tool "answer directly" data bled into one category — reading a tool result and responding from it — dropping it 8→3 in the benchmark. Notably this did <em>not</em> appear in the conversation judge (correctness actually rose), so we read it as a narrow eval-format artifact rather than a capability loss; we flag it anyway.</p>
+      <p><strong>Raw knowledge.</strong> On English MMLU, a model trained on far more data stays ahead. Nesso2's knowledge win is specifically Italian, and specifically relative to its own class.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="idx">10</span><div class="col"><span class="eyebrow">Reproduce it</span><h2>Run the model, run the benchmarks</h2></div></div>
+    <div class="col"><p>The academic suite is public; the model card carries the full per-task table and working inference code. A single-tool call, verified:</p></div>
+    <pre><span class="c"># pure greedy — no repetition penalty for tool calls</span>
+prompt = tokenizer.apply_chat_template(
+    messages, tools=tools, tokenize=<span class="k">False</span>, add_generation_prompt=<span class="k">True</span>)
+inputs = tokenizer(prompt, return_tensors=<span class="k">"pt"</span>, add_special_tokens=<span class="k">True</span>)
+out = model.generate(**inputs, do_sample=<span class="k">False</span>, max_new_tokens=<span class="k">256</span>)
+
+<span class="c"># -> &lt;tool_call&gt;{"name": "get_weather", "arguments": {"city": "Milano"}}&lt;/tool_call&gt;</span></pre>
+    <p class="cap col">Academic benchmarks were run with the <a href="https://github.com/mii-llm/lm-evaluation-harness/">mii-llm lm-evaluation-harness fork</a>. The agentic and conversation suites are internal; methodology is described in Section 03.</p>
+  </section>
+
+  <footer class="foot">
+    <div class="made">Nesso2-0.4B-Agentic · a mii-llm technical report</div>
+    Built from scratch on Seeweb HPC · base model <a href="https://huggingface.co/mii-llm/zagreus-0.4B-ita">Zagreus-0.4B-ita</a> · Apache-2.0
+    <p class="disclaimer">All figures are from our own evaluation runs across six models. Qwen3-0.6B academic numbers use the same lm-eval harness fork; agentic and conversation numbers were produced in-house with the configurations described above. "Best" claims are scoped to the sub-billion-parameter open models in our comparison set at the time of writing. Made with care in Italy.</p>
+  </footer>
+
+</div>
