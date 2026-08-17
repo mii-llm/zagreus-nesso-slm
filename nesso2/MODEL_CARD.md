@@ -191,28 +191,39 @@ def chat(messages, tools=None, max_new_tokens=256):
     calls = re.findall(r"<tool_call>\s*(\{.*?\})\s*</tool_call>", answer, flags=re.S)
     return answer, calls
 
-tools = [{
-    "type": "function",
-    "function": {
-        "name": "get_weather",
-        "description": "Ritorna il meteo per una città",
-        "parameters": {
-            "type": "object",
-            "properties": {"city": {"type": "string"}},
-            "required": ["city"],
-        },
-    },
-}]
-
-messages = [
-    {"role": "system", "content": "Sei un assistente che può usare strumenti quando servono."},
-    {"role": "user", "content": "Che tempo fa a Milano?"},
+# A small toolbox the assistant can choose from
+tools = [
+    {"type": "function", "function": {
+        "name": "get_weather", "description": "Meteo attuale per una città",
+        "parameters": {"type": "object",
+            "properties": {"city": {"type": "string"}}, "required": ["city"]}}},
+    {"type": "function", "function": {
+        "name": "convert_currency", "description": "Converte un importo tra due valute",
+        "parameters": {"type": "object",
+            "properties": {"amount": {"type": "number"}, "from": {"type": "string"}, "to": {"type": "string"}},
+            "required": ["amount", "from", "to"]}}},
+    {"type": "function", "function": {
+        "name": "search_restaurants", "description": "Cerca ristoranti in una città",
+        "parameters": {"type": "object",
+            "properties": {"city": {"type": "string"}, "cuisine": {"type": "string"}}, "required": ["city"]}}},
 ]
+SYSTEM = "Sei un assistente che può usare strumenti quando servono."
 
-answer, calls = chat(messages, tools=tools)
-print("ANSWER:", answer)
-print("CALLS :", calls)   # -> [{"name": "get_weather", "arguments": {"city": "Milano"}}]
+# 1) Selects the right tool among several and fills the arguments
+_, calls = chat([{"role": "system", "content": SYSTEM},
+                 {"role": "user", "content": "Quanto sono 100 euro in dollari?"}], tools=tools)
+print(calls)
+# -> ['{"name": "convert_currency", "arguments": {"amount": 100, "from": "EUR", "to": "USD"}}']
+
+# 2) Emits parallel calls for a multi-part request
+_, calls = chat([{"role": "system", "content": SYSTEM},
+                 {"role": "user", "content": "Che tempo fa a Roma e a Torino?"}], tools=tools)
+print(calls)
+# -> ['{"name": "get_weather", "arguments": {"city": "Roma"}}',
+#     '{"name": "get_weather", "arguments": {"city": "Torino"}}']
 ```
+
+> ℹ️ **Give complete requests.** The model is strongest when the required arguments are present in the user's message (it excels at tool selection and parallel calls). Like most models this size, when a required argument is missing it may fill a sensible default instead of always asking for it — so validate required arguments before executing a call.
 
 > 💡 **Tip**: For **function calling and structured output**, use **pure greedy** decoding (`do_sample=False`, no repetition penalty). The tool-call JSON is short and the prompt template already contains the structural tokens (`name`, `arguments`, quotes, braces) — a repetition penalty or `no_repeat_ngram_size` will suppress exactly those tokens and corrupt the JSON (e.g. emitting `"Name"` or dropping `arguments`). For **long free-form conversation**, a light `repetition_penalty` (≈1.15) can help avoid loops on a model this small, but keep it **off** for tool calls.
 
