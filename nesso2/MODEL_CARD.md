@@ -117,7 +117,6 @@ The instruction dataset is a **bilingual (Italian/English)** mixture combining b
 | Epochs | 3 |
 | Per-device batch size | 2 |
 | Gradient accumulation | 8 |
-| Sequence length | 8192 |
 | Gradient checkpointing | On |
 | Precision | BF16 |
 | FSDP strategy | FULL_SHARD |
