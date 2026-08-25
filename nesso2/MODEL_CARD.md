@@ -274,6 +274,20 @@ esplicitamente programmati per un compito specifico.
 
 ---
 
+## Production notes & recommendations
+
+**Nesso2-0.4B-agentic (v8) is the recommended release model** — it is the best Italian tool-caller *and* the best Italian conversationalist of its family, and its Italian lead over Qwen3-0.6B is confirmed on **two independently-authored function-calling benchmarks** (see Evaluation). For a single Italian deployment it serves both agentic and conversational use.
+
+Because it is a ~0.4B model, two lightweight application-layer wrappers make it robust in production:
+
+1. **Validate arguments before executing a call.** Like most models this size, when a *required* argument is missing the model may fill a plausible default instead of asking. Before executing any tool call, verify each required-argument value is actually grounded in the user's message; if not, treat it as missing and ask the user. This prevents acting on hallucinated values (e.g. emailing an invented recipient).
+
+2. **Feed observations back explicitly.** After a tool returns, pass the result to the model as a `tool` turn and ask for the final answer. If the model tries to re-call the tool instead of answering from the observation, short-circuit and prompt it to answer using the returned data. Observation grounding is the model's relative weak spot (see Limitations), and this wrapper neutralizes it.
+
+**Decoding:** **pure greedy** for tool calls (a repetition penalty corrupts the JSON); a light `repetition_penalty ≈ 1.15` is fine for free-form chat.
+
+---
+
 ## Evaluation
 
 Three complementary evaluation families were used. Academic benchmarks were run with our [fork of lm-evaluation-harness](https://github.com/mii-llm/lm-evaluation-harness/); agentic and conversational quality were measured with dedicated bilingual test suites.
@@ -334,6 +348,17 @@ Despite its agentic specialization, Nesso2-0.4B-agentic delivers the **best Ital
 ### Discussion
 
 Nesso2-0.4B-agentic is a **task-specialized** model: its post-training prioritizes structured-output fidelity, tool-calling accuracy, no-tool discrimination, and agentic planning. Thanks to the knowledge-CPT stage, this specialization comes **without the usual academic tax on Italian** — the model matches Qwen3-0.6B on Italian benchmarks and beats it on the agentic suite, while remaining a genuinely useful Italian conversationalist. Its edge over general-purpose SLMs of similar size is best assessed on **agentic and function-calling tasks**, not academic leaderboards.
+
+### Limitations
+
+Known weak spots, all manageable with the wrappers in *Production notes*:
+
+- **Observation grounding.** After a tool returns a result, the model sometimes answers from its own priors or re-calls the tool instead of grounding on the returned data. Mitigate by feeding observations back explicitly (wrapper 2).
+- **Abstention on *tempting* cases.** When a required argument is missing or no tool applies, the model is reliable on many phrasings but can fire a tool (or fill a default value) on borderline, tool-tempting prompts. Mitigate with argument-grounding validation (wrapper 1). This is phrasing-sensitive, not uniform.
+- **English < Italian.** English tool use, English chat, and English MMLU trail Qwen3-0.6B. This is a deliberate Italian-first trade — for an English-primary deployment, Qwen3-0.6B is the stronger pick.
+- **~0.4B capacity limits.** Different-tool parallel calls, multi-argument calls, and exact multi-step completion are capacity-bound and do not reach large-model reliability; keep such flows simple or supervised.
+
+*(Two later experiments confirmed these are the real edges: a grounding-heavy variant fixed observation handling but regressed conversation, and a weight-merge that topped one benchmark did not hold up on a stricter independent one. Nesso2 = v8 remains the balanced release. See the [nesso2 README](https://github.com/mii-llm/zagreus-nesso-slm/tree/main/nesso2) for the full record.)*
 
 ---
 

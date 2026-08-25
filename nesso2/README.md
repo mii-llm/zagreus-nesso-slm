@@ -184,8 +184,23 @@ We read three families **together**, because at 0.4B they disagree and the disag
 ### Honest caveats
 
 - **English tool use:** Qwen3-0.6B leads (38 vs 33 / 50).
-- **Observation grounding** regressed (8 → 3) — the no-tool data bled into it; did *not* appear in the conversation judge, so likely a narrow eval-format artifact, flagged regardless.
+- **Observation grounding:** v8's weakest category (obs 3/10) — after a tool returns, the model sometimes answers from priors or re-calls instead of grounding on the result. Confirmed as a *real* weakness on an independent benchmark (not an eval artifact). Mitigable at the app layer (feed observations back explicitly).
+- **Abstention on tempting cases:** reliable on many phrasings, but can fire a tool / fill a default value on borderline, tool-tempting prompts. Phrasing-sensitive.
 - **Raw knowledge:** Qwen stays ahead on English MMLU.
+
+---
+
+## After v8 — grounding, merging, and cross-validation
+
+Once v8 was the candidate, we tried to close its two soft spots (observation grounding, abstention) and stress-tested the result on a second, independently-authored benchmark. Both efforts confirmed v8 as the right release.
+
+**A grounding-heavy variant (v9)** put ~63% of the agentic mix into observation traces, schema-fidelity, and missing-argument clarification. It *worked* on its target — **observation grounding recovered 3 → 9** (independently reproduced on the second benchmark: 53.5 → 76.8). But at that dose the terse, structured data **collapsed conversation** — Italian chat fell **4.50 → 3.50**, with correctness and helpfulness down too — and it dipped parallel-calling. **Lesson: grounding data genuinely fixes observation handling, but must be a *minority* of the mix (~15–20%), not 63%.** Not shipped.
+
+**A weight-merge (0.65·v8 + 0.35·v9)** was the classic "combine specialists" move — same base, so ideal for merging. On *our* 100-case suite it topped everything (**69**, best Italian 37). But on the **independent partial-credit benchmark it dropped to worst of the three (57.8%)** — the parallel-calling and formatting gains that a binary grader accepted did not survive strict grading. **The merge's win didn't generalize; it was fragile to grading philosophy.** Not shipped.
+
+**Cross-benchmark validation.** Across two independently-authored function-calling benchmarks, **v8 wins Italian on both** (my suite: IT 35/50 vs Qwen 29; the second: FC-it **63.1%** vs Qwen 51.3%), and v8 / v9 score *consistently* (unlike the merge). The "best Italian agentic SLM" claim is therefore robust, not benchmark-specific.
+
+**Production guidance.** Ship **v8** as a single model for Italian agentic *and* conversation, wrapped with two app-layer guards — (1) validate required arguments are grounded in the user's turn before executing, (2) feed tool observations back explicitly — which neutralize its two soft spots without v9's generation cost. Only split into two models (v9 for a heavily observation-loop-driven agent, v8 for chat) if you have measured obs as the bottleneck. See the [model card](MODEL_CARD.md#production-notes--recommendations) for details.
 
 ---
 
