@@ -333,6 +333,8 @@ Our frozen function-calling suite: 100 bilingual cases across 10 categories (sin
 
 Nesso2-0.4B-agentic is **best overall** and **decisively ahead on Italian tool use (+6)**, while Qwen keeps an English advantage. This is the benchmark the model is optimized for, and where its real-world value over general-purpose SLMs shows.
 
+**Speed matters for agents — the scoped claim.** Agentic tool-calling is latency-sensitive, so the relevant comparison is the **fast, single-forward-pass regime**. On an independent function-calling benchmark, Nesso2 leads Italian FC over Qwen3-0.6B's *non-thinking* mode (**63.1% vs 51.3%**) at the same speed — **~0.83 s / ~40 tokens per call**. Qwen's *thinking* mode reaches higher raw accuracy (Italian FC 73.1%) but at **~6× the latency (4.71 s) and ~5× the tokens** — a different latency class for real-time use. Even against thinking-Qwen, Nesso2 still wins multi-step (67–70 vs 14) and parallel-same-tool (91 vs 76). So: **the best Italian tool-caller at low latency / without test-time reasoning, and ~6× faster than the reasoning alternative.**
+
 ### 3. Conversational quality (LLM-as-judge)
 
 20 bilingual multi-turn tasks per language, graded 1–10 by `Qwen3.6-35B-A3B` on correctness / language-fidelity / helpfulness (greedy answers). Mean overall score:
