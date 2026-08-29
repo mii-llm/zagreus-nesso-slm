@@ -206,6 +206,32 @@ Once v8 was the candidate, we tried to close its two soft spots (observation gro
 
 ---
 
+## Reasoning and grounding — mapping the 0.4B wall (negative results)
+
+After v8 shipped, we ran a deeper program to fix its one real weakness — **observation grounding** (obs 3/10) — and to add a **reasoning mode**. Four experiments, all negative at 0.4B. Together they map a hard *capacity* wall, and we keep them for the record.
+
+**1. v8.1 — obs via a minority data dose.** We swapped v8's weak observation generator for the rich one at a careful **12%** (learning v9's "63% was too much" lesson) and re-ran the *full* battery. On the 100-case suite it worked cleanly: **obs 3 → 8, total 68 → 72, Italian FC a new high (38/50)**. But the rest of the battery caught the cost — the same obs data **terse-ified conversation** (Italian chat 4.55 → 3.60) and **dropped pure function-calling** on the independent benchmark (63.1 → 57.0), while academics stayed flat. *The obs gain showed up only on the benchmark that tests obs; it cost the things the product actually runs on.* A second confirmation (after v9) that a **monolithic 0.4B can't add obs without hurting chat**. Not shipped.
+
+**2. A reasoning mode + RLVR.** We built a full **GRPO / RLVR loop** (grader reward: correct call / correct abstention + grounding + a length penalty) and a `/think`·`/no_think` hybrid seeded by *rationalization distillation* (a 35B teacher writes the reasoning that justifies each gold action). Two findings: SFT alone makes reasoning **post-hoc, not causal** — `/think` was a wash-to-negative, helping abstention but hurting execution. RLVR nudged it the right way but **never past v8**: the decision data was near-ceiling, so the policy barely moved (KL ≈ 0.005). *The RLVR loop is sound and reusable — it just can't manufacture headroom that isn't there at 0.4B.*
+
+**3. The hybrid — obs in a fast mode, chat protected by self-distillation.** The idea that should have worked: pin `/no_think` to v8's **own** outputs (self-distilled, so chat can't drift) and route obs capability only through the `/think` marker. It *half*-worked — **obs reached 9–10 in the fast mode** (v8's biggest hole, fixed) and English chat even improved. But **Italian chat still regressed** (v8 4.50 → 3.40): self-distillation captures v8's *average* Italian across varied prompts, not its *peak*, so training pulls Italian toward the mean. A v2 that rebalanced to 62% Italian and filtered degenerate targets recovered some (3.15 → 3.40) but not all. Not shipped.
+
+**The wall, four ways.** Every method that adds observation-handling regresses **Italian chat** into the same band, while v8 — which never trained on obs — holds it at 4.50:
+
+| method | obs added? | Italian chat (35B judge) |
+|---|---|---|
+| **v8 (shipped)** | no | **4.50** |
+| v9 (30% obs) | yes | ~3.50 |
+| v8.1 (12% obs) | yes | 3.60 |
+| hybrid-v1 (obs in `/think`) | yes | 3.15 |
+| hybrid-v2 (IT-rebalanced) | yes | 3.40 |
+
+**Conclusion.** Observation-grounding and *peak* Italian chat **compete for the same 0.4B capacity, and obs training always wins at Italian's expense.** This is why v8 ships as-is — its obs hole handled by the two app-layer guards — and why observation-grounding and reasoning are a **3B target**, where there is room for both. The RLVR loop, reward, and hybrid/self-distill scripts port directly.
+
+**One card left to play — chat-anchored RL.** Every attempt above was *imitation* (SFT or self-distillation), which has **no signal to protect chat** — it fits the obs targets and lets conversation drift. Reinforcement learning is structurally different: its reward can *explicitly* include chat preservation — reward obs-correctness on tool inputs **and** agreement-with-v8 (a KL anchor) on chat inputs — optimizing *"get better at obs **while staying v8 on chat**,"* a needle SFT cannot thread. Our GRPO runs never tried this (agentic-only reward). It may still hit the capacity ceiling — RL shapes the objective but can't add parameters — but it is the one **untested, principled** 0.4B experiment, and even a negative result would prove the wall is *capacity*, not training signal.
+
+---
+
 ## Repository layout
 
 ```
