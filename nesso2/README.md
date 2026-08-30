@@ -228,7 +228,34 @@ After v8 shipped, we ran a deeper program to fix its one real weakness — **obs
 
 **Conclusion.** Observation-grounding and *peak* Italian chat **compete for the same 0.4B capacity, and obs training always wins at Italian's expense.** This is why v8 ships as-is — its obs hole handled by the two app-layer guards — and why observation-grounding and reasoning are a **3B target**, where there is room for both. The RLVR loop, reward, and hybrid/self-distill scripts port directly.
 
-**One card left to play — chat-anchored RL.** Every attempt above was *imitation* (SFT or self-distillation), which has **no signal to protect chat** — it fits the obs targets and lets conversation drift. Reinforcement learning is structurally different: its reward can *explicitly* include chat preservation — reward obs-correctness on tool inputs **and** agreement-with-v8 (a KL anchor) on chat inputs — optimizing *"get better at obs **while staying v8 on chat**,"* a needle SFT cannot thread. Our GRPO runs never tried this (agentic-only reward). It may still hit the capacity ceiling — RL shapes the objective but can't add parameters — but it is the one **untested, principled** 0.4B experiment, and even a negative result would prove the wall is *capacity*, not training signal.
+**The card that broke the wall — chat-anchored RL.** Every attempt above was *imitation* (SFT or self-distillation), which has **no signal to protect chat** — it fits the obs targets and lets conversation drift. Reinforcement learning is structurally different: its reward can *explicitly* include chat preservation. So we built it (see the next section), and **it is the one method that improved the 0.4B without the chat cost** — the wall was a property of *imitation*, not of the parameters.
+
+---
+
+## nesso2-0.4B-instruct — the chat-anchored RL that worked
+
+We ran GRPO from v8 with a **two-part reward in the same batch**: on tool inputs, reward *observation-grounding* (0 if the model re-calls instead of using the result, 1 if it grounds on the observation); on chat inputs, reward *staying v8* (token-F1 to v8's own response). A **low KL coefficient** lets the policy actually move, while the **chat reward** — not the KL — is what holds conversation. That is the needle SFT cannot thread: *"get better at obs **while remaining v8 on chat**,"* expressed directly in the objective.
+
+*(Config lesson that unlocked it: a large KL-to-reference anchor caps all movement — KL plateaus at ~0.005 regardless of learning rate. Drop beta low and let the **reward** protect chat.)*
+
+The result is the first **strictly-or-better-than-v8** model of the whole program, on every eval family at once:
+
+| family | v8 | **instruct (chat-anchor)** | Δ |
+|---|---|---|---|
+| Observation grounding (100-case) | 3 / 10 | **5 / 10** | **+2** |
+| Agentic total (100-case) | 68 | **70** | **+2** |
+| Conversation — Italian (judge /10) | 4.55 | 4.30 | −0.25 (held) |
+| Conversation — English (judge /10) | 3.70 | **4.30** | **+0.60** |
+| Conversation — overall (judge /10) | 4.12 | **4.30** | **+0.18** |
+| Function-calling (independent bench, exact) | 33 / 100 · it 18 | 31 / 100 · **it 17** | tied (±1-2) |
+| Academic (MMLU/HS/ARC/IFEval, it+en) | baseline | ≈ v8 | flat |
+| Latency | 0.81 s | 0.78 s | same, single-pass |
+
+**Nothing regressed.** obs went up, *overall* chat went up (correctness, helpfulness, and fluency all improved), English conversation closed most of its gap, function-calling held (Italian exactly), academics were flat — at the same no-think speed. It is a **single native mode** (no `/think`·`/no_think` — the two-mode lineage above was the negative result); it simply responds, fast.
+
+**What ships, and why "instruct":** this model is released as **`nesso2-0.4B-instruct`** — the *best-conversational, fast* member of the family, alongside `Nesso2-0.4B-Agentic` (v8), the execution-first tool-caller. On **Italian conversation it is the strongest small model we know of** (judge 4.30 and robot-domain 87.5 vs Qwen3-0.6B's 2.70 / 60.1), and it now **beats Qwen on English conversation too** (robot-domain 77.5 vs 75.0).
+
+**Honest limits (the target for the next iteration).** The obs gain is *real but small* (+2) and came from a single 800-step run on mostly-easy grounding cases; on a harder production-robot suite, observation-grounding and abstention did **not** generalize (our models still fire a tool when none applies). Those production decision skills — abstention, observation-grounding, multi-step — are the remaining gap for both "best Italian agentic" and English function-calling. The encouraging part is that we now have the **method** to attack them: the same chat-anchored RL, pointed at harder, domain-varied decision data, run longer. That is `instruct`'s planned v2.
 
 ---
 
