@@ -264,7 +264,8 @@ The result is the first **strictly-or-better-than-v8** model of the whole progra
 ```
 nesso2/
 ├── README.md                        this file
-├── MODEL_CARD.md                    the Hugging Face model card
+├── MODEL_CARD.md                    Nesso2-0.4B-Agentic (v8) model card
+├── MODEL_CARD_INSTRUCT.md           Nesso2-0.4B-Instruct model card (chat-anchored RL)
 ├── report.html                      full visual technical report
 ├── eval/
 │   ├── agentic_eval_100.py          Family B1 — 100-case function-calling suite (6 models)
@@ -274,10 +275,15 @@ nesso2/
 │   ├── conv_prompts.json            the conversation eval tasks
 │   └── bench_academic.sh            Family A — lm-eval-harness runner (it+en)
 └── training/
-    ├── sbatch-sft-agentic-v8.sh     agentic SFT (TRL + FSDP, Slurm)
+    ├── sbatch-sft-agentic-v8.sh     agentic SFT (TRL + FSDP, Slurm) — produces v8
     ├── build_perlang.py             per-language quality-floor data prep (IT-all + EN ≥ 0.6)
-    └── push_to_hf.py                convert + push checkpoint (swaps in the tool template)
+    ├── push_to_hf.py                convert + push checkpoint (swaps in the tool template)
+    ├── reward_chatanchor.py         chat-anchored RLVR reward (obs grounding + F1-to-v8 chat anchor)
+    ├── grpo_train_ca.py             GRPO trainer, v8 → Instruct (branched reward, KL-to-v8)
+    └── sbatch-grpo-ca.sh            chat-anchored RLVR launcher (Slurm)
 ```
+
+The agentic instruction corpus and the RLVR data builder remain private (family policy); `reward_chatanchor.py` + `grpo_train_ca.py` reproduce the **method**, and `grpo_train_ca.py`'s docstring documents the exact input schema so the recipe is runnable on your own data.
 
 > The synthetic **data-generation** scripts are intentionally **not** included: consistent with the family's policy, the agentic instruction corpus is a curated research asset and is not released as open source. The scripts here reproduce the **training recipe** and the **evaluation**, not the private data.
 
