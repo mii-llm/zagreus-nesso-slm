@@ -309,18 +309,18 @@ MMLU is 5-shot `acc`; HellaSwag / ARC are 0-shot `acc_norm`; IFEval is `inst_lev
 | Model | IFEval EN ↑ | ARC EN ↑ | HellaSwag EN ↑ | MMLU EN ↑ | **Avg EN** |
 |---|---|---|---|---|---|
 | Qwen/Qwen3-0.6B | 0.2758 | **0.3430** | **0.4742** | **0.4013** | **0.3736** |
-| **Nesso2-0.4B-agentic** | 0.3790 | 0.3040 | 0.4730 | 0.2700 | 0.3565 |
-| mii-llm/nesso-0.4B-agentic | **0.4120** | 0.3040 | 0.4690 | 0.2400 | 0.3563 |
+| **Nesso2-0.4B-agentic** | 0.3790 | 0.3040 | 0.4730 | 0.3356 | 0.3729 |
+| mii-llm/nesso-0.4B-agentic | **0.4120** | 0.3040 | 0.4690 | 0.2939 | 0.3697 |
 
 #### Overall
 
 | Model | Avg IT | Avg EN | **Overall** |
 |---|---|---|---|
 | Qwen/Qwen3-0.6B | 0.3355 | 0.3736 | **0.3545** |
-| **Nesso2-0.4B-agentic** | 0.3338 | 0.3565 | 0.3451 |
-| mii-llm/nesso-0.4B-agentic | 0.3255 | 0.3563 | 0.3409 |
+| **Nesso2-0.4B-agentic** | 0.3338 | 0.3729 | 0.3534 |
+| mii-llm/nesso-0.4B-agentic | 0.3255 | 0.3697 | 0.3476 |
 
-**Takeaways.** On **Italian** academics, Nesso2-0.4B-agentic effectively **ties Qwen3-0.6B** (0.3338 vs 0.3355) and leads it on Italian HellaSwag and ARC — the knowledge CPT stage closes the gap that similarly-sized SLMs usually cede to Qwen. It also **outperforms its sibling `nesso-0.4B-agentic` on MMLU** in both languages (Italian 0.326 vs 0.282; English 0.270 vs 0.240), which is precisely the CPT stage paying off. Qwen retains a clear edge only on MMLU (a knowledge-heavy benchmark favoring its far larger pre-training budget).
+**Takeaways.** On **Italian** academics, Nesso2-0.4B-agentic effectively **ties Qwen3-0.6B** (0.3338 vs 0.3355) and leads it on Italian HellaSwag and ARC — the knowledge CPT stage closes the gap that similarly-sized SLMs usually cede to Qwen. It also **outperforms its sibling `nesso-0.4B-agentic` on MMLU** in both languages (Italian 0.326 vs 0.282; English 0.336 vs 0.294), which is precisely the CPT stage paying off. Qwen retains a clear edge only on MMLU (a knowledge-heavy benchmark favoring its far larger pre-training budget).
 
 ### 2. Agentic function calling (bilingual, 100 cases) ⭐
 
