@@ -294,33 +294,33 @@ Three complementary evaluation families were used. Academic benchmarks were run 
 
 ### 1. Academic benchmarks
 
-MMLU is 5-shot `acc`; HellaSwag / ARC are 0-shot `acc_norm`; IFEval is `inst_level_loose_acc` (generative, chat template). All numbers are `acc` on a 0–1 scale.
+MMLU is 5-shot `acc`; HellaSwag / ARC are 0-shot `acc_norm`; IFEval is `inst_level_loose_acc` (generative, chat template). All numbers are on a 0–1 scale. **All models were run with the same script**; in particular IFEval uses each model's chat template. (An earlier version of this card mixed protocols — Qwen3-0.6B IFEval without the chat template, an Italian ARC typo and an English MMLU of a different setting — which understated Qwen; the figures below are the corrected, like-for-like ones.)
 
 #### Italian
 
 | Model | IFEval IT ↑ | ARC IT ↑ | HellaSwag IT ↑ | MMLU IT ↑ | **Avg IT** |
 |---|---|---|---|---|---|
-| Qwen/Qwen3-0.6B | **0.3058** | 0.3040 | 0.3598 | **0.4025** | **0.3355** |
-| **Nesso2-0.4B-agentic** | 0.2960 | 0.3040 | **0.4090** | 0.3260 | 0.3338 |
+| Qwen/Qwen3-0.6B | **0.3765** | 0.2678 | 0.3607 | **0.4039** | **0.3522** |
+| **Nesso2-0.4B-agentic** | 0.2960 | **0.3040** | **0.4090** | 0.3260 | 0.3338 |
 | mii-llm/nesso-0.4B-agentic | 0.3120 | 0.3010 | 0.4070 | 0.2820 | 0.3255 |
 
 #### English
 
 | Model | IFEval EN ↑ | ARC EN ↑ | HellaSwag EN ↑ | MMLU EN ↑ | **Avg EN** |
 |---|---|---|---|---|---|
-| Qwen/Qwen3-0.6B | 0.2758 | **0.3430** | **0.4742** | **0.4013** | **0.3736** |
-| **Nesso2-0.4B-agentic** | 0.3790 | 0.3040 | 0.4730 | 0.3356 | 0.3729 |
-| mii-llm/nesso-0.4B-agentic | **0.4120** | 0.3040 | 0.4690 | 0.2939 | 0.3697 |
+| Qwen/Qwen3-0.6B | **0.4640** | **0.3456** | 0.4729 | **0.4728** | **0.4388** |
+| **Nesso2-0.4B-agentic** | 0.3790 | 0.3040 | **0.4730** | 0.3356 | 0.3729 |
+| mii-llm/nesso-0.4B-agentic | 0.4120 | 0.3040 | 0.4690 | 0.2939 | 0.3697 |
 
 #### Overall
 
 | Model | Avg IT | Avg EN | **Overall** |
 |---|---|---|---|
-| Qwen/Qwen3-0.6B | 0.3355 | 0.3736 | **0.3545** |
+| Qwen/Qwen3-0.6B | **0.3522** | **0.4388** | **0.3955** |
 | **Nesso2-0.4B-agentic** | 0.3338 | 0.3729 | 0.3534 |
 | mii-llm/nesso-0.4B-agentic | 0.3255 | 0.3697 | 0.3476 |
 
-**Takeaways.** On **Italian** academics, Nesso2-0.4B-agentic effectively **ties Qwen3-0.6B** (0.3338 vs 0.3355) and leads it on Italian HellaSwag and ARC — the knowledge CPT stage closes the gap that similarly-sized SLMs usually cede to Qwen. It also **outperforms its sibling `nesso-0.4B-agentic` on MMLU** in both languages (Italian 0.326 vs 0.282; English 0.336 vs 0.294), which is precisely the CPT stage paying off. Qwen retains a clear edge only on MMLU (a knowledge-heavy benchmark favoring its far larger pre-training budget).
+**Takeaways.** On academics, **Qwen3-0.6B is ahead overall** (0.3955 vs 0.3534). Nesso2-0.4B-agentic **leads it on Italian HellaSwag (+4.8) and Italian ARC (+3.6)** and is level on English HellaSwag — the knowledge CPT stage keeps the Italian commonsense/reasoning gains that similarly-sized SLMs usually lack. It also **outperforms its sibling `nesso-0.4B-agentic` on MMLU** in both languages (Italian 0.326 vs 0.282; English 0.336 vs 0.294), which is the CPT stage paying off. Qwen is clearly ahead on **MMLU** (+7.8 Italian, +13.7 English: a knowledge gap favoring its far larger pre-training budget), on **IFEval** (+8.1 Italian, +8.5 English) and on English ARC. Nesso2's edge over Qwen3-0.6B is in agentic tool use and Italian conversation (below), not on academic leaderboards.
 
 ### 2. Agentic function calling (bilingual, 100 cases) ⭐
 
@@ -349,7 +349,7 @@ Despite its agentic specialization, Nesso2-0.4B-agentic delivers the **best Ital
 
 ### Discussion
 
-Nesso2-0.4B-agentic is a **task-specialized** model: its post-training prioritizes structured-output fidelity, tool-calling accuracy, no-tool discrimination, and agentic planning. Thanks to the knowledge-CPT stage, this specialization comes **without the usual academic tax on Italian** — the model matches Qwen3-0.6B on Italian benchmarks and beats it on the agentic suite, while remaining a genuinely useful Italian conversationalist. Its edge over general-purpose SLMs of similar size is best assessed on **agentic and function-calling tasks**, not academic leaderboards.
+Nesso2-0.4B-agentic is a **task-specialized** model: its post-training prioritizes structured-output fidelity, tool-calling accuracy, no-tool discrimination, and agentic planning. Thanks to the knowledge-CPT stage, this specialization comes **without giving up the CPT knowledge gains** — it keeps its lead over Qwen3-0.6B on Italian HellaSwag/ARC and beats it on the agentic suite, while Qwen remains ahead on MMLU and IFEval, while remaining a genuinely useful Italian conversationalist. Its edge over general-purpose SLMs of similar size is best assessed on **agentic and function-calling tasks**, not academic leaderboards.
 
 ### Limitations
 

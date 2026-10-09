@@ -18,10 +18,10 @@ Measured across **six models** on three independent evaluation families.
 | **Agentic — total** (100 cases) | **68 / 100** 🥇 | 67 / 100 |
 | **Agentic — Italian** (x/50) | **35** | 29 |
 | **Agentic — English** (x/50) | 33 | **38** |
-| **Italian academic avg** (acc) | 0.334 | 0.336 |
+| **Italian academic avg** (acc) | 0.334 | **0.352** |
 | **Italian conversation** (LLM-judge, /10) | **4.40** | 2.80 |
 
-**Takeaways.** Nesso2 is the **best agentic model overall** and leads Italian tool use by **+6**, while effectively **tying Qwen3-0.6B on Italian academics** (no knowledge tax) and posting the **best Italian conversation score of its lineage**. The trade is explicit: Qwen keeps English tool use and raw English MMLU.
+**Takeaways.** Nesso2 is the **best agentic model overall** and leads Italian tool use by **+6**, while **trailing Qwen3-0.6B by ~2 points on the Italian academic average** (0.334 vs 0.352: ahead on Italian HellaSwag/ARC, behind on MMLU and IFEval) and posting the **best Italian conversation score of its lineage**. The trade is explicit: Qwen keeps English tool use, raw MMLU and IFEval.
 
 ---
 

@@ -115,7 +115,7 @@ The honest scorecard:
 | Agentic total (/100) | **68** | 67 |
 | Agentic — Italian (/50) | **35** | 29 |
 | Agentic — English (/50) | 33 | **38** |
-| Italian academic avg | 0.334 | **0.336** |
+| Italian academic avg | 0.334 | **0.352** |
 | Italian conversation (/10) | **4.40** | 2.80 |
 
 ![Italian vs English tool use](https://github.com/mii-llm/zagreus-nesso-slm/blob/main/nesso2/images/agentic_bylang.png?raw=true)
