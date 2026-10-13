@@ -1,5 +1,5 @@
-<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 470' width='900' font-family='-apple-system,Segoe UI,Helvetica,Arial,sans-serif'>
-<rect width='900' height='470' fill='#ffffff'/>
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 470' width='1000' font-family='-apple-system,Segoe UI,Helvetica,Arial,sans-serif'>
+<rect width='1000' height='470' fill='#ffffff'/>
 <text x='20' y='28' font-size='18' font-weight='700' fill='#111'>100-case bilingual function-calling suite: every experiment on the road to Nesso3</text>
 <text x='20' y='48' font-size='12' fill='#555'>total correct out of 100 (50 IT + 50 EN), greedy decoding, each model on its own native contract</text>
 <line x1='410.0' y1='62' x2='410.0' y2='400' stroke='#e5e7eb'/>
