@@ -6,6 +6,7 @@
 - ✍️ Blog post — the experiments, hypotheses & conclusions: [`BLOG.md`](BLOG.md)
 - 📄 Full visual report: [`report.html`](report.html)
 - 🧬 Base: [`mii-llm/zagreus-0.4B-ita`](https://huggingface.co/mii-llm/zagreus-0.4B-ita) → knowledge-CPT → 32k context → agentic SFT
+- ➡️ **Successor:** [`Nesso3-0.4B-Agentic`](../nesso3/) (`mii-llm/nesso3-0.4B-agentic`): one compact tool contract over thousands of tool schemas; +6 on the 100-case suite below, with its own experiment log
 
 ---
 

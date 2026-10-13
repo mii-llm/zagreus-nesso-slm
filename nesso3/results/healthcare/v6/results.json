@@ -1,0 +1,3335 @@
+{
+  "generated_at": "2026-09-29T13:27:14.720077+00:00",
+  "gpu": "NVIDIA A100 80GB PCIe",
+  "torch_version": "2.6.0+cu124",
+  "settings": {
+    "models": [
+      "giux78/zagreus-0.4B-cpt-full-32k-sft-compact-v5b",
+      "giux78/zagreus-0.4B-cpt-full-32k-sft-compact-v6"
+    ],
+    "output_dir": "results-sanita-v6",
+    "conv_max_new_tokens": 192,
+    "fc_max_new_tokens": 160,
+    "local_files_only": false,
+    "limit": 0,
+    "only_tests": null,
+    "function_only": false,
+    "conversation_only": false
+  },
+  "models": {
+    "giux78/zagreus-0.4B-cpt-full-32k-sft-compact-v5b": {
+      "aggregate": {
+        "overall": {
+          "score": 0.6847083333333334,
+          "tests": 40,
+          "exact_passes": 16,
+          "mean_seconds": 1.549216935969889,
+          "median_seconds": 1.217358588706702,
+          "mean_output_tokens": 67.65
+        },
+        "function_calling": {
+          "score": 0.6847083333333334,
+          "tests": 40,
+          "exact_passes": 16,
+          "mean_seconds": 1.549216935969889,
+          "median_seconds": 1.217358588706702,
+          "mean_output_tokens": 67.65
+        },
+        "function_calling_it": {
+          "score": 0.6847083333333334,
+          "tests": 40,
+          "exact_passes": 16,
+          "mean_seconds": 1.549216935969889,
+          "median_seconds": 1.217358588706702,
+          "mean_output_tokens": 67.65
+        },
+        "function_calling_subtype_single_call": {
+          "score": 1.0,
+          "tests": 4,
+          "exact_passes": 4,
+          "mean_seconds": 0.8588039691094309,
+          "median_seconds": 0.8440622068010271,
+          "mean_output_tokens": 38
+        },
+        "function_calling_subtype_multi_argument": {
+          "score": 0.8466666666666667,
+          "tests": 4,
+          "exact_passes": 0,
+          "mean_seconds": 1.066754125757143,
+          "median_seconds": 0.9494401924312115,
+          "mean_output_tokens": 48
+        },
+        "function_calling_subtype_parallel_same_tool": {
+          "score": 0.8500000000000001,
+          "tests": 4,
+          "exact_passes": 2,
+          "mean_seconds": 1.5223935223184526,
+          "median_seconds": 1.5175922168418765,
+          "mean_output_tokens": 68.5
+        },
+        "function_calling_subtype_parallel_diff_tools": {
+          "score": 0.8500000000000001,
+          "tests": 4,
+          "exact_passes": 2,
+          "mean_seconds": 1.6612855209968984,
+          "median_seconds": 1.66139467805624,
+          "mean_output_tokens": 72
+        },
+        "function_calling_subtype_disambiguation": {
+          "score": 0.8566666666666667,
+          "tests": 4,
+          "exact_passes": 1,
+          "mean_seconds": 1.1925925717223436,
+          "median_seconds": 1.0513236168771982,
+          "mean_output_tokens": 49.75
+        },
+        "function_calling_subtype_missing_argument": {
+          "score": 0.5,
+          "tests": 4,
+          "exact_passes": 2,
+          "mean_seconds": 0.7290147533640265,
+          "median_seconds": 0.7163998088799417,
+          "mean_output_tokens": 29.75
+        },
+        "function_calling_subtype_unavailable_tool": {
+          "score": 0.75,
+          "tests": 4,
+          "exact_passes": 3,
+          "mean_seconds": 0.9605176714248955,
+          "median_seconds": 0.8350726142525673,
+          "mean_output_tokens": 41.5
+        },
+        "function_calling_subtype_no_tool_discrimination": {
+          "score": 0.675,
+          "tests": 4,
+          "exact_passes": 2,
+          "mean_seconds": 1.05833147210069,
+          "median_seconds": 1.064317932818085,
+          "mean_output_tokens": 46
+        },
+        "function_calling_subtype_observation_grounding": {
+          "score": 0.21875,
+          "tests": 4,
+          "exact_passes": 0,
+          "mean_seconds": 3.321095387917012,
+          "median_seconds": 2.7725552725605667,
+          "mean_output_tokens": 145.5
+        },
+        "function_calling_subtype_multi_step": {
+          "score": 0.3,
+          "tests": 4,
+          "exact_passes": 0,
+          "mean_seconds": 3.121380364987999,
+          "median_seconds": 2.9520497820340097,
+          "mean_output_tokens": 137.5
+        }
+      },
+      "records": [
+        {
+          "id": "san_it_cerca",
+          "category": "function_calling",
+          "subtype": "single_call",
+          "language": "it",
+          "display_prompt": "Cerca la prestazione 'risonanza magnetica ginocchio'.",
+          "output": "<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"risonanza magnetica ginocchio\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "risonanza magnetica ginocchio"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "risonanza magnetica ginocchio"
+              }
+            }
+          ],
+          "score": 1.0,
+          "score_details": [
+            "expected cerca_prestazione, actual cerca_prestazione: name_score=1.00",
+            "arg nome='risonanza magnetica ginocchio', expected 'risonanza magnetica ginocchio': True",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 940,
+          "output_tokens": 35,
+          "seconds": 0.819858442991972
+        },
+        {
+          "id": "san_it_annulla",
+          "category": "function_calling",
+          "subtype": "single_call",
+          "language": "it",
+          "display_prompt": "Annulla la prenotazione con codice PRN-4471.",
+          "output": "<tool_call>\n{\"name\": \"annulla_prenotazione\", \"arguments\": {\"codice_prenotazione\": \"PRN-4471\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "PRN-4471"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "PRN-4471"
+              }
+            }
+          ],
+          "score": 1.0,
+          "score_details": [
+            "expected annulla_prenotazione, actual annulla_prenotazione: name_score=1.00",
+            "arg codice_prenotazione='PRN-4471', expected 'PRN-4471': True",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 941,
+          "output_tokens": 38,
+          "seconds": 0.8595848912373185
+        },
+        {
+          "id": "san_it_ricetta",
+          "category": "function_calling",
+          "subtype": "single_call",
+          "language": "it",
+          "display_prompt": "Consulta la ricetta dematerializzata numero RCE-2026-88213.",
+          "output": "<tool_call>\n{\"name\": \"consulta_ricetta\", \"arguments\": {\"numero_ricetta\": \"RCE-2026-88213\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-2026-88213"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-2026-88213"
+              }
+            }
+          ],
+          "score": 1.0,
+          "score_details": [
+            "expected consulta_ricetta, actual consulta_ricetta: name_score=1.00",
+            "arg numero_ricetta='RCE-2026-88213', expected 'RCE-2026-88213': True",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 943,
+          "output_tokens": 37,
+          "seconds": 0.8285395223647356
+        },
+        {
+          "id": "san_it_strutture",
+          "category": "function_calling",
+          "subtype": "single_call",
+          "language": "it",
+          "display_prompt": "Mostrami le strutture a Bologna per una visita cardiologica.",
+          "output": "<tool_call>\n{\"name\": \"elenco_strutture\", \"arguments\": {\"citta\": \"Bologna\", \"prestazione\": \"visita cardiologica\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "elenco_strutture",
+              "arguments": {
+                "citta": "Bologna",
+                "prestazione": "visita cardiologica"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "elenco_strutture",
+              "arguments": {
+                "citta": "Bologna",
+                "prestazione": "visita cardiologica"
+              }
+            }
+          ],
+          "score": 1.0,
+          "score_details": [
+            "expected elenco_strutture, actual elenco_strutture: name_score=1.00",
+            "arg citta='Bologna', expected 'Bologna': True",
+            "arg prestazione='visita cardiologica', expected 'visita cardiologica': True",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 941,
+          "output_tokens": 42,
+          "seconds": 0.9272330198436975
+        },
+        {
+          "id": "san_it_prenota",
+          "category": "function_calling",
+          "subtype": "multi_argument",
+          "language": "it",
+          "display_prompt": "Prenota una visita dermatologica alla struttura Ospedale San Raffaele il 2026-10-05 alle 11:20 per il codice fiscale RSSMRA85M01H501Z.",
+          "output": "<tool_call>\n{\"name\": \"prenota_appuntamento\", \"arguments\": {\"prestazione\": \"visita dermatologica\", \"struttura\": \"Ospedale San Raffaele\", \"data\": \"2026-10-05\", \"ora\": \"11:20\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "prenota_appuntamento",
+              "arguments": {
+                "prestazione": "visita dermatologica",
+                "struttura": "Ospedale San Raffaele",
+                "data": "2026-10-05",
+                "ora": "11:20"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "prenota_appuntamento",
+              "arguments": {
+                "prestazione": "visita dermatologica",
+                "struttura": "Ospedale San Raffaele",
+                "data": "2026-10-05",
+                "ora": "11:20",
+                "codice_fiscale": "RSSMRA85M01H501Z"
+              }
+            }
+          ],
+          "score": 0.9200000000000002,
+          "score_details": [
+            "expected prenota_appuntamento, actual prenota_appuntamento: name_score=1.00",
+            "arg prestazione='visita dermatologica', expected 'visita dermatologica': True",
+            "arg struttura='Ospedale San Raffaele', expected 'Ospedale San Raffaele': True",
+            "arg data='2026-10-05', expected '2026-10-05': True",
+            "arg ora='11:20', expected '11:20': True",
+            "arg codice_fiscale=None, expected 'RSSMRA85M01H501Z': False",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 975,
+          "output_tokens": 70,
+          "seconds": 1.5474977362900972
+        },
+        {
+          "id": "san_it_disp",
+          "category": "function_calling",
+          "subtype": "multi_argument",
+          "language": "it",
+          "display_prompt": "Verifica la disponibilita per una ecografia addome alla struttura Poliambulatorio Centro il 2026-09-30.",
+          "output": "<tool_call>\n{\"name\": \"verifica_disponibilita\", \"arguments\": {\"prestazione\": \"ecografia addome\", \"data\": \"2026-09-30\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "verifica_disponibilita",
+              "arguments": {
+                "prestazione": "ecografia addome",
+                "data": "2026-09-30"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "verifica_disponibilita",
+              "arguments": {
+                "prestazione": "ecografia addome",
+                "struttura": "Poliambulatorio Centro",
+                "data": "2026-09-30"
+              }
+            }
+          ],
+          "score": 0.8666666666666667,
+          "score_details": [
+            "expected verifica_disponibilita, actual verifica_disponibilita: name_score=1.00",
+            "arg prestazione='ecografia addome', expected 'ecografia addome': True",
+            "arg struttura=None, expected 'Poliambulatorio Centro': False",
+            "arg data='2026-09-30', expected '2026-09-30': True",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 956,
+          "output_tokens": 45,
+          "seconds": 1.0208410266786814
+        },
+        {
+          "id": "san_it_esenz",
+          "category": "function_calling",
+          "subtype": "multi_argument",
+          "language": "it",
+          "display_prompt": "Verifica l'esenzione E02 per il codice fiscale VRDLGI90A41F205K.",
+          "output": "<tool_call>\n{\"name\": \"verifica_esenzione\", \"arguments\": {\"codice_fiscale\": \"VRDLGI90A41F205K\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "verifica_esenzione",
+              "arguments": {
+                "codice_fiscale": "VRDLGI90A41F205K"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "verifica_esenzione",
+              "arguments": {
+                "codice_fiscale": "VRDLGI90A41F205K",
+                "codice_esenzione": "E02"
+              }
+            }
+          ],
+          "score": 0.8,
+          "score_details": [
+            "expected verifica_esenzione, actual verifica_esenzione: name_score=1.00",
+            "arg codice_fiscale='VRDLGI90A41F205K', expected 'VRDLGI90A41F205K': True",
+            "arg codice_esenzione=None, expected 'E02': False",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 949,
+          "output_tokens": 40,
+          "seconds": 0.8780393581837416
+        },
+        {
+          "id": "san_it_promemoria",
+          "category": "function_calling",
+          "subtype": "multi_argument",
+          "language": "it",
+          "display_prompt": "Invia un promemoria via sms per la prenotazione PRN-9080.",
+          "output": "<tool_call>\n{\"name\": \"invia_promemoria\", \"arguments\": {\"codice_prenotazione\": \"PRN-9080\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "invia_promemoria",
+              "arguments": {
+                "codice_prenotazione": "PRN-9080"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "invia_promemoria",
+              "arguments": {
+                "codice_prenotazione": "PRN-9080",
+                "canale": "sms"
+              }
+            }
+          ],
+          "score": 0.8,
+          "score_details": [
+            "expected invia_promemoria, actual invia_promemoria: name_score=1.00",
+            "arg codice_prenotazione='PRN-9080', expected 'PRN-9080': True",
+            "arg canale=None, expected 'sms': False",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 944,
+          "output_tokens": 37,
+          "seconds": 0.8206383818760514
+        },
+        {
+          "id": "san_it_par_annulla",
+          "category": "function_calling",
+          "subtype": "parallel_same_tool",
+          "language": "it",
+          "display_prompt": "Annulla le prenotazioni PRN-1001 e PRN-1002.",
+          "output": "<tool_call>\n{\"name\": \"annulla_prenotazione\", \"arguments\": {\"codice_prenotazione\": \"PRN-1001\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"annulla_prenotazione\", \"arguments\": {\"codice_prenotazione\": \"PRN-1002\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "PRN-1001"
+              }
+            },
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "PRN-1002"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "PRN-1001"
+              }
+            },
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "PRN-1002"
+              }
+            }
+          ],
+          "score": 1.0,
+          "score_details": [
+            "expected annulla_prenotazione, actual annulla_prenotazione: name_score=1.00",
+            "arg codice_prenotazione='PRN-1001', expected 'PRN-1001': True",
+            "expected annulla_prenotazione, actual annulla_prenotazione: name_score=1.00",
+            "arg codice_prenotazione='PRN-1002', expected 'PRN-1002': True",
+            "call count expected=2 actual=2 score=1.00"
+          ],
+          "prompt_tokens": 944,
+          "output_tokens": 75,
+          "seconds": 1.6724970676004887
+        },
+        {
+          "id": "san_it_par_ricetta",
+          "category": "function_calling",
+          "subtype": "parallel_same_tool",
+          "language": "it",
+          "display_prompt": "Consulta le ricette RCE-100 e RCE-200.",
+          "output": "<tool_call>\n{\"name\": \"consulta_ricetta\", \"arguments\": {\"numero_ricetta\": \"100\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"consulta_ricetta\", \"arguments\": {\"numero_ricetta\": \"200\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "100"
+              }
+            },
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "200"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-100"
+              }
+            },
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-200"
+              }
+            }
+          ],
+          "score": 0.6000000000000001,
+          "score_details": [
+            "expected consulta_ricetta, actual consulta_ricetta: name_score=1.00",
+            "arg numero_ricetta='100', expected 'RCE-100': False",
+            "expected consulta_ricetta, actual consulta_ricetta: name_score=1.00",
+            "arg numero_ricetta='200', expected 'RCE-200': False",
+            "call count expected=2 actual=2 score=1.00"
+          ],
+          "prompt_tokens": 939,
+          "output_tokens": 59,
+          "seconds": 1.300570965744555
+        },
+        {
+          "id": "san_it_par_cerca",
+          "category": "function_calling",
+          "subtype": "parallel_same_tool",
+          "language": "it",
+          "display_prompt": "Cerca le prestazioni 'visita oculistica' e 'campo visivo'.",
+          "output": "<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"visita oculistica\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"campo visivo\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "visita oculistica"
+              }
+            },
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "campo visivo"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "visita oculistica"
+              }
+            },
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "campo visivo"
+              }
+            }
+          ],
+          "score": 1.0,
+          "score_details": [
+            "expected cerca_prestazione, actual cerca_prestazione: name_score=1.00",
+            "arg nome='visita oculistica', expected 'visita oculistica': True",
+            "expected cerca_prestazione, actual cerca_prestazione: name_score=1.00",
+            "arg nome='campo visivo', expected 'campo visivo': True",
+            "call count expected=2 actual=2 score=1.00"
+          ],
+          "prompt_tokens": 943,
+          "output_tokens": 61,
+          "seconds": 1.3626873660832644
+        },
+        {
+          "id": "san_it_par_referto",
+          "category": "function_calling",
+          "subtype": "parallel_same_tool",
+          "language": "it",
+          "display_prompt": "Recupera i referti REF-55 e REF-77 per il codice fiscale BNCLRA92T50L219X.",
+          "output": "<tool_call>\n{\"name\": \"recupera_referto\", \"arguments\": {\"codice_fiscale\": \"BNCLRA92T50L219X\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"recupera_referto\", \"arguments\": {\"codice_fiscale\": \"BNCLRA92T50L219X\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "recupera_referto",
+              "arguments": {
+                "codice_fiscale": "BNCLRA92T50L219X"
+              }
+            },
+            {
+              "name": "recupera_referto",
+              "arguments": {
+                "codice_fiscale": "BNCLRA92T50L219X"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "recupera_referto",
+              "arguments": {
+                "codice_fiscale": "BNCLRA92T50L219X",
+                "id_referto": "REF-55"
+              }
+            },
+            {
+              "name": "recupera_referto",
+              "arguments": {
+                "codice_fiscale": "BNCLRA92T50L219X",
+                "id_referto": "REF-77"
+              }
+            }
+          ],
+          "score": 0.8,
+          "score_details": [
+            "expected recupera_referto, actual recupera_referto: name_score=1.00",
+            "arg codice_fiscale='BNCLRA92T50L219X', expected 'BNCLRA92T50L219X': True",
+            "arg id_referto=None, expected 'REF-55': False",
+            "expected recupera_referto, actual recupera_referto: name_score=1.00",
+            "arg codice_fiscale='BNCLRA92T50L219X', expected 'BNCLRA92T50L219X': True",
+            "arg id_referto=None, expected 'REF-77': False",
+            "call count expected=2 actual=2 score=1.00"
+          ],
+          "prompt_tokens": 954,
+          "output_tokens": 79,
+          "seconds": 1.7538186898455024
+        },
+        {
+          "id": "san_it_pd_esenz_ticket",
+          "category": "function_calling",
+          "subtype": "parallel_diff_tools",
+          "language": "it",
+          "display_prompt": "Verifica l'esenzione E01 per BRSNNA80A01F839K e calcola il ticket per una visita ortopedica da non esente.",
+          "output": "<tool_call>\n{\"name\": \"verifica_esenzione\", \"arguments\": {\"codice_fiscale\": \"BRSNNA80A01F839K\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"calcola_ticket\", \"arguments\": {\"prestazione\": \"visita ortopedica\", \"esente\": false}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "verifica_esenzione",
+              "arguments": {
+                "codice_fiscale": "BRSNNA80A01F839K"
+              }
+            },
+            {
+              "name": "calcola_ticket",
+              "arguments": {
+                "prestazione": "visita ortopedica",
+                "esente": false
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "verifica_esenzione",
+              "arguments": {
+                "codice_fiscale": "BRSNNA80A01F839K",
+                "codice_esenzione": "E01"
+              }
+            },
+            {
+              "name": "calcola_ticket",
+              "arguments": {
+                "prestazione": "visita ortopedica",
+                "esente": false
+              }
+            }
+          ],
+          "score": 0.9000000000000001,
+          "score_details": [
+            "expected verifica_esenzione, actual verifica_esenzione: name_score=1.00",
+            "arg codice_fiscale='BRSNNA80A01F839K', expected 'BRSNNA80A01F839K': True",
+            "arg codice_esenzione=None, expected 'E01': False",
+            "expected calcola_ticket, actual calcola_ticket: name_score=1.00",
+            "arg prestazione='visita ortopedica', expected 'visita ortopedica': True",
+            "arg esente=False, expected False: True",
+            "call count expected=2 actual=2 score=1.00"
+          ],
+          "prompt_tokens": 960,
+          "output_tokens": 78,
+          "seconds": 1.7175393085926771
+        },
+        {
+          "id": "san_it_pd_annulla_ricetta",
+          "category": "function_calling",
+          "subtype": "parallel_diff_tools",
+          "language": "it",
+          "display_prompt": "Annulla la prenotazione PRN-3003 e consulta la ricetta RCE-3003.",
+          "output": "<tool_call>\n{\"name\": \"annulla_prenotazione\", \"arguments\": {\"codice_prenotazione\": \"PRN-3003\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"consulta_ricetta\", \"arguments\": {\"numero_ricetta\": \"RCE-3003\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "PRN-3003"
+              }
+            },
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-3003"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "PRN-3003"
+              }
+            },
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-3003"
+              }
+            }
+          ],
+          "score": 1.0,
+          "score_details": [
+            "expected annulla_prenotazione, actual annulla_prenotazione: name_score=1.00",
+            "arg codice_prenotazione='PRN-3003', expected 'PRN-3003': True",
+            "expected consulta_ricetta, actual consulta_ricetta: name_score=1.00",
+            "arg numero_ricetta='RCE-3003', expected 'RCE-3003': True",
+            "call count expected=2 actual=2 score=1.00"
+          ],
+          "prompt_tokens": 948,
+          "output_tokens": 71,
+          "seconds": 1.6048134192824364
+        },
+        {
+          "id": "san_it_pd_cerca_strutture",
+          "category": "function_calling",
+          "subtype": "parallel_diff_tools",
+          "language": "it",
+          "display_prompt": "Cerca la prestazione 'TAC torace' e mostrami le strutture a Torino per TAC torace.",
+          "output": "<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"TAC torace\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"elenco_strutture\", \"arguments\": {\"citta\": \"Torino\", \"prestazione\": \"TAC torace\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "TAC torace"
+              }
+            },
+            {
+              "name": "elenco_strutture",
+              "arguments": {
+                "citta": "Torino",
+                "prestazione": "TAC torace"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "TAC torace"
+              }
+            },
+            {
+              "name": "elenco_strutture",
+              "arguments": {
+                "citta": "Torino",
+                "prestazione": "TAC torace"
+              }
+            }
+          ],
+          "score": 1.0,
+          "score_details": [
+            "expected cerca_prestazione, actual cerca_prestazione: name_score=1.00",
+            "arg nome='TAC torace', expected 'TAC torace': True",
+            "expected elenco_strutture, actual elenco_strutture: name_score=1.00",
+            "arg citta='Torino', expected 'Torino': True",
+            "arg prestazione='TAC torace', expected 'TAC torace': True",
+            "call count expected=2 actual=2 score=1.00"
+          ],
+          "prompt_tokens": 951,
+          "output_tokens": 71,
+          "seconds": 1.6700171856209636
+        },
+        {
+          "id": "san_it_pd_prom_disp",
+          "category": "function_calling",
+          "subtype": "parallel_diff_tools",
+          "language": "it",
+          "display_prompt": "Invia un promemoria email per PRN-7007 e verifica la disponibilita di una visita neurologica alla struttura Clinica Villa Serena il 2026-11-02.",
+          "output": "<tool_call>\n{\"name\": \"invia_promemoria\", \"arguments\": {\"codice_prenotazione\": \"PRN-7007\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"visita neurologica\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "invia_promemoria",
+              "arguments": {
+                "codice_prenotazione": "PRN-7007"
+              }
+            },
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "visita neurologica"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "invia_promemoria",
+              "arguments": {
+                "codice_prenotazione": "PRN-7007",
+                "canale": "email"
+              }
+            },
+            {
+              "name": "verifica_disponibilita",
+              "arguments": {
+                "prestazione": "visita neurologica",
+                "struttura": "Clinica Villa Serena",
+                "data": "2026-11-02"
+              }
+            }
+          ],
+          "score": 0.5,
+          "score_details": [
+            "expected invia_promemoria, actual invia_promemoria: name_score=1.00",
+            "arg codice_prenotazione='PRN-7007', expected 'PRN-7007': True",
+            "arg canale=None, expected 'email': False",
+            "expected verifica_disponibilita, actual cerca_prestazione: name_score=0.00",
+            "arg prestazione=None, expected 'visita neurologica': False",
+            "arg struttura=None, expected 'Clinica Villa Serena': False",
+            "arg data=None, expected '2026-11-02': False",
+            "extra arguments (not penalized): ['nome']",
+            "call count expected=2 actual=2 score=1.00"
+          ],
+          "prompt_tokens": 967,
+          "output_tokens": 68,
+          "seconds": 1.6527721704915166
+        },
+        {
+          "id": "san_it_dis_solo_verifica",
+          "category": "function_calling",
+          "subtype": "disambiguation",
+          "language": "it",
+          "display_prompt": "Voglio solo verificare se ci sono posti per una visita cardiologica alla struttura Ospedale Molinette il 2026-10-10, non prenotare ancora.",
+          "output": "<tool_call>\n{\"name\": \"verifica_disponibilita\", \"arguments\": {\"prestazione\": \"visita cardiologica\", \"data\": \"2026-10-10\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "verifica_disponibilita",
+              "arguments": {
+                "prestazione": "visita cardiologica",
+                "data": "2026-10-10"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "verifica_disponibilita",
+              "arguments": {
+                "prestazione": "visita cardiologica",
+                "struttura": "Ospedale Molinette",
+                "data": "2026-10-10"
+              }
+            }
+          ],
+          "score": 0.8666666666666667,
+          "score_details": [
+            "expected verifica_disponibilita, actual verifica_disponibilita: name_score=1.00",
+            "arg prestazione='visita cardiologica', expected 'visita cardiologica': True",
+            "arg struttura=None, expected 'Ospedale Molinette': False",
+            "arg data='2026-10-10', expected '2026-10-10': True",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 969,
+          "output_tokens": 46,
+          "seconds": 1.1272431872785091
+        },
+        {
+          "id": "san_it_dis_conferma",
+          "category": "function_calling",
+          "subtype": "disambiguation",
+          "language": "it",
+          "display_prompt": "Conferma e prenota davvero la visita ortopedica alla struttura Ospedale Careggi il 2026-10-12 alle 09:00 per RSSMRA85M01H501Z.",
+          "output": "<tool_call>\n{\"name\": \"prenota_appuntamento\", \"arguments\": {\"prestazione\": \"visita ortopedica\", \"struttura\": \"Ospedale Careggi\", \"data\": \"2026-10-12 09:00\", \"ora\": \"RSMMRA85M01H501Z\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "prenota_appuntamento",
+              "arguments": {
+                "prestazione": "visita ortopedica",
+                "struttura": "Ospedale Careggi",
+                "data": "2026-10-12 09:00",
+                "ora": "RSMMRA85M01H501Z"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "prenota_appuntamento",
+              "arguments": {
+                "prestazione": "visita ortopedica",
+                "struttura": "Ospedale Careggi",
+                "data": "2026-10-12",
+                "ora": "09:00",
+                "codice_fiscale": "RSSMRA85M01H501Z"
+              }
+            }
+          ],
+          "score": 0.76,
+          "score_details": [
+            "expected prenota_appuntamento, actual prenota_appuntamento: name_score=1.00",
+            "arg prestazione='visita ortopedica', expected 'visita ortopedica': True",
+            "arg struttura='Ospedale Careggi', expected 'Ospedale Careggi': True",
+            "arg data='2026-10-12 09:00', expected '2026-10-12': False",
+            "arg ora='RSMMRA85M01H501Z', expected '09:00': False",
+            "arg codice_fiscale=None, expected 'RSSMRA85M01H501Z': False",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 973,
+          "output_tokens": 78,
+          "seconds": 1.8718904936686158
+        },
+        {
+          "id": "san_it_dis_referto",
+          "category": "function_calling",
+          "subtype": "disambiguation",
+          "language": "it",
+          "display_prompt": "Recupera il referto dell'esame, non la ricetta: identificativo REF-909 per il cf MRTLNZ88D12G273P.",
+          "output": "<tool_call>\n{\"name\": \"recupera_referto\", \"arguments\": {\"codice_fiscale\": \"MRTLNZ88D12G273P\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "recupera_referto",
+              "arguments": {
+                "codice_fiscale": "MRTLNZ88D12G273P"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "recupera_referto",
+              "arguments": {
+                "codice_fiscale": "MRTLNZ88D12G273P",
+                "id_referto": "REF-909"
+              }
+            }
+          ],
+          "score": 0.8,
+          "score_details": [
+            "expected recupera_referto, actual recupera_referto: name_score=1.00",
+            "arg codice_fiscale='MRTLNZ88D12G273P', expected 'MRTLNZ88D12G273P': True",
+            "arg id_referto=None, expected 'REF-909': False",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 960,
+          "output_tokens": 41,
+          "seconds": 0.9754040464758873
+        },
+        {
+          "id": "san_it_dis_ricetta",
+          "category": "function_calling",
+          "subtype": "disambiguation",
+          "language": "it",
+          "display_prompt": "Voglio la ricetta dematerializzata numero RCE-4567, non il referto.",
+          "output": "<tool_call>\n{\"name\": \"consulta_ricetta\", \"arguments\": {\"numero_ricetta\": \"RCE-4567\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-4567"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-4567"
+              }
+            }
+          ],
+          "score": 1.0,
+          "score_details": [
+            "expected consulta_ricetta, actual consulta_ricetta: name_score=1.00",
+            "arg numero_ricetta='RCE-4567', expected 'RCE-4567': True",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 947,
+          "output_tokens": 34,
+          "seconds": 0.795832559466362
+        },
+        {
+          "id": "san_it_miss_prenota",
+          "category": "function_calling",
+          "subtype": "missing_argument",
+          "language": "it",
+          "display_prompt": "Prenota una visita dermatologica.",
+          "output": "Per procedere, ho bisogno di conoscere il codice fiscale.",
+          "parsed_calls": [],
+          "expected_calls": [],
+          "score": 1.0,
+          "score_details": [
+            "expected no calls; got 0",
+            "non-tool response matched ['codice fiscale']; required at least 1 from ['struttura', 'data', 'ora', 'codice fiscale', 'quale', '?']: True"
+          ],
+          "prompt_tokens": 934,
+          "output_tokens": 18,
+          "seconds": 0.4469793997704983
+        },
+        {
+          "id": "san_it_miss_esenz",
+          "category": "function_calling",
+          "subtype": "missing_argument",
+          "language": "it",
+          "display_prompt": "Verifica un'esenzione per il mio codice fiscale RSSMRA85M01H501Z.",
+          "output": "<tool_call>\n{\"name\": \"annulla_prenotazione\", \"arguments\": {\"codice_prenotazione\": \"RSSMRA85M01H501Z\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "RSSMRA85M01H501Z"
+              }
+            }
+          ],
+          "expected_calls": [],
+          "score": 0.0,
+          "score_details": [
+            "expected no calls; got 1",
+            "non-tool response matched ['codice']; required at least 1 from ['codice esenzione', 'quale esenzione', 'codice', '?']: False"
+          ],
+          "prompt_tokens": 948,
+          "output_tokens": 42,
+          "seconds": 1.0362799959257245
+        },
+        {
+          "id": "san_it_miss_prom",
+          "category": "function_calling",
+          "subtype": "missing_argument",
+          "language": "it",
+          "display_prompt": "Invia un promemoria per la prenotazione PRN-5005.",
+          "output": "<tool_call>\n{\"name\": \"invia_promemoria\", \"arguments\": {\"codice_prenotazione\": \"PRN-5005\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "invia_promemoria",
+              "arguments": {
+                "codice_prenotazione": "PRN-5005"
+              }
+            }
+          ],
+          "expected_calls": [],
+          "score": 0.0,
+          "score_details": [
+            "expected no calls; got 1",
+            "non-tool response matched []; required at least 1 from ['canale', 'sms', 'email', 'come', '?']: False"
+          ],
+          "prompt_tokens": 942,
+          "output_tokens": 37,
+          "seconds": 0.9011914366856217
+        },
+        {
+          "id": "san_it_miss_referto",
+          "category": "function_calling",
+          "subtype": "missing_argument",
+          "language": "it",
+          "display_prompt": "Recupera il mio referto.",
+          "output": "Per procedere, ho bisogno del codice fiscale. Potresti fornirmelo?",
+          "parsed_calls": [],
+          "expected_calls": [],
+          "score": 1.0,
+          "score_details": [
+            "expected no calls; got 0",
+            "non-tool response matched ['codice fiscale', '?']; required at least 1 from ['codice fiscale', 'identificativo', 'id', 'quale', '?']: True"
+          ],
+          "prompt_tokens": 933,
+          "output_tokens": 22,
+          "seconds": 0.5316081810742617
+        },
+        {
+          "id": "san_it_unav_taxi",
+          "category": "function_calling",
+          "subtype": "unavailable_tool",
+          "language": "it",
+          "display_prompt": "Prenotami un taxi per andare in ospedale domani alle 8.",
+          "output": "Mi dispiace, non posso prenotare un taxi per te. Posso aiutarti a trovare un taxi in base alle tue esigenze.",
+          "parsed_calls": [],
+          "expected_calls": [],
+          "score": 1.0,
+          "score_details": [
+            "expected no calls; got 0",
+            "non-tool response matched ['non posso']; required at least 1 from ['non posso', 'non disponibile', 'nessuno strumento', 'non ho', 'non e disponibile']: True"
+          ],
+          "prompt_tokens": 944,
+          "output_tokens": 35,
+          "seconds": 0.8111115181818604
+        },
+        {
+          "id": "san_it_unav_farmaco",
+          "category": "function_calling",
+          "subtype": "unavailable_tool",
+          "language": "it",
+          "display_prompt": "Ordina per me un antibiotico su una farmacia online.",
+          "output": "Mi dispiace, non posso ordinare farmaci online. Posso aiutarti con informazioni su prestazioni sanitarie o assistenza sanitaria in generale.",
+          "parsed_calls": [],
+          "expected_calls": [],
+          "score": 1.0,
+          "score_details": [
+            "expected no calls; got 0",
+            "non-tool response matched ['non posso']; required at least 1 from ['non posso', 'non disponibile', 'nessuno strumento', 'non ho', 'non e disponibile']: True"
+          ],
+          "prompt_tokens": 938,
+          "output_tokens": 38,
+          "seconds": 0.8590337103232741
+        },
+        {
+          "id": "san_it_unav_chiama",
+          "category": "function_calling",
+          "subtype": "unavailable_tool",
+          "language": "it",
+          "display_prompt": "Chiama al telefono il mio medico di base adesso.",
+          "output": "Mi dispiace, non posso fare che. Posso aiutarti a trovare un medico di base nella tua zona.",
+          "parsed_calls": [],
+          "expected_calls": [],
+          "score": 1.0,
+          "score_details": [
+            "expected no calls; got 0",
+            "non-tool response matched ['non posso']; required at least 1 from ['non posso', 'non disponibile', 'nessuno strumento', 'non ho', 'non e disponibile']: True"
+          ],
+          "prompt_tokens": 938,
+          "output_tokens": 28,
+          "seconds": 0.6634667180478573
+        },
+        {
+          "id": "san_it_unav_paga",
+          "category": "function_calling",
+          "subtype": "unavailable_tool",
+          "language": "it",
+          "display_prompt": "Paga subito il ticket con la mia carta di credito 4539 1488 0343 6467.",
+          "output": "<tool_call>\n{\"name\": \"prenota_appuntamento\", \"arguments\": {\"prestazione\": \"visita cardiologica\", \"struttura\": \"cardiologo\", \"data\": \"2023-01-01\", \"ora\": \"09:00\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "prenota_appuntamento",
+              "arguments": {
+                "prestazione": "visita cardiologica",
+                "struttura": "cardiologo",
+                "data": "2023-01-01",
+                "ora": "09:00"
+              }
+            }
+          ],
+          "expected_calls": [],
+          "score": 0.0,
+          "score_details": [
+            "expected no calls; got 1",
+            "non-tool response matched []; required at least 1 from ['non posso', 'non disponibile', 'nessuno strumento', 'non ho', 'non e disponibile']: False"
+          ],
+          "prompt_tokens": 951,
+          "output_tokens": 65,
+          "seconds": 1.5084587391465902
+        },
+        {
+          "id": "san_it_nt_ticket",
+          "category": "function_calling",
+          "subtype": "no_tool_discrimination",
+          "language": "it",
+          "display_prompt": "In una frase, spiega cos'e il ticket sanitario. Non serve usare strumenti.",
+          "output": "Il ticket sanitario è un documento che permette di pagare le prestazioni sanitarie, come visite o esami, in base al numero di giorni di assicurazione sanitaria.",
+          "parsed_calls": [],
+          "expected_calls": [],
+          "score": 1.0,
+          "score_details": [
+            "expected no calls; got 0",
+            "non-tool response matched ['ticket', 'sanitar', 'paga']; required at least 2 from ['ticket', 'sanitar', 'quota', 'paga', 'prestazione']: True"
+          ],
+          "prompt_tokens": 947,
+          "output_tokens": 41,
+          "seconds": 0.9448969503864646
+        },
+        {
+          "id": "san_it_nt_esenzione",
+          "category": "function_calling",
+          "subtype": "no_tool_discrimination",
+          "language": "it",
+          "display_prompt": "Spiega in breve cosa significa 'esenzione per reddito'. Nessuno strumento.",
+          "output": "L'esenzione per reddito è un beneficio sanitario che consente a un assistito di usufruire di prestazioni sanitarie gratuite o a basso costo, come visite o esami, in base al suo reddito.",
+          "parsed_calls": [],
+          "expected_calls": [],
+          "score": 1.0,
+          "score_details": [
+            "expected no calls; got 0",
+            "non-tool response matched ['esenzione', 'reddito']; required at least 2 from ['esenzione', 'reddito', 'paga', 'ticket']: True"
+          ],
+          "prompt_tokens": 946,
+          "output_tokens": 51,
+          "seconds": 1.1837389152497053
+        },
+        {
+          "id": "san_it_nt_prelievo",
+          "category": "function_calling",
+          "subtype": "no_tool_discrimination",
+          "language": "it",
+          "display_prompt": "Dammi un consiglio generale su come prepararsi a un prelievo del sangue. Senza strumenti.",
+          "output": "Non ho accesso a informazioni in tempo reale o strumenti per fornire consigli specifici. Posso però darti alcune linee guida generali su come prepararsi a un prelievo del sangue senza strumenti.",
+          "parsed_calls": [],
+          "expected_calls": [],
+          "score": 0.7,
+          "score_details": [
+            "expected no calls; got 0",
+            "non-tool response matched ['prelievo']; required at least 2 from ['digiuno', 'acqua', 'mattina', 'prelievo', 'cibo']: False"
+          ],
+          "prompt_tokens": 952,
+          "output_tokens": 55,
+          "seconds": 1.2509782621636987
+        },
+        {
+          "id": "san_it_nt_nre",
+          "category": "function_calling",
+          "subtype": "no_tool_discrimination",
+          "language": "it",
+          "display_prompt": "Cosa vuol dire 'ricetta dematerializzata'? Rispondi a parole.",
+          "output": "<tool_call>\n{\"name\": \"consulta_ricetta\", \"arguments\": {\"numero_ricetta\": \"E01, E02, E30\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "E01, E02, E30"
+              }
+            }
+          ],
+          "expected_calls": [],
+          "score": 0.0,
+          "score_details": [
+            "expected no calls; got 1",
+            "non-tool response matched ['ricetta', 'numero']; required at least 2 from ['ricetta', 'elettronic', 'digital', 'carta', 'numero']: False"
+          ],
+          "prompt_tokens": 944,
+          "output_tokens": 37,
+          "seconds": 0.8537117606028914
+        },
+        {
+          "id": "san_it_obs_disp",
+          "category": "function_calling",
+          "subtype": "observation_grounding",
+          "language": "it",
+          "display_prompt": "Verifica la disponibilita per una visita cardiologica alla struttura Ospedale Niguarda il 2026-10-08 e poi dimmi il primo orario libero e il costo del ticket.",
+          "output": "STEP 1 — MODEL TOOL DECISION\n<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"visita cardiologica\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"verifica_disponibilita\", \"arguments\": {\"prestazione\": \"visita cardiologica\", \"data\": \"2026-10-08\", \"ora\": \"09:00\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"prenota_appuntamento\", \"arguments\": {\"prestazione\": \"visita cardiologica\", \"struttura\": \"Ospedale Niguarda\", \"data\": \"2026-10-08\", \"ora\": \"09:00\"}}\n</tool_call>\n\nTOOL OBSERVATION\n{\"orari_liberi\": [\"09:30\", \"14:00\"], \"ticket_eur\": 23}\n\nSTEP 2 — MODEL RESPONSE\n<tool_call>\n{\"name\": \"prenota_appuntamento\", \"arguments\": {\"prestazione\": \"visita cardiologica\", \"struttura\": \"Ospedale Niguarda\", \"data\": \"2026-10-08\", \"ora\": \"14:00\", \"ora_e_codice_fiscale\": \"23\"}}\n</tool_call>",
+          "parsed_calls": {
+            "step_1": [
+              {
+                "name": "cerca_prestazione",
+                "arguments": {
+                  "nome": "visita cardiologica"
+                }
+              },
+              {
+                "name": "verifica_disponibilita",
+                "arguments": {
+                  "prestazione": "visita cardiologica",
+                  "data": "2026-10-08",
+                  "ora": "09:00"
+                }
+              },
+              {
+                "name": "prenota_appuntamento",
+                "arguments": {
+                  "prestazione": "visita cardiologica",
+                  "struttura": "Ospedale Niguarda",
+                  "data": "2026-10-08",
+                  "ora": "09:00"
+                }
+              }
+            ],
+            "step_2": [
+              {
+                "name": "prenota_appuntamento",
+                "arguments": {
+                  "prestazione": "visita cardiologica",
+                  "struttura": "Ospedale Niguarda",
+                  "data": "2026-10-08",
+                  "ora": "14:00",
+                  "ora_e_codice_fiscale": "23"
+                }
+              }
+            ]
+          },
+          "expected_calls": [
+            {
+              "name": "verifica_disponibilita",
+              "arguments": {
+                "prestazione": "visita cardiologica",
+                "struttura": "Ospedale Niguarda",
+                "data": "2026-10-08"
+              }
+            }
+          ],
+          "score": 0.0,
+          "score_details": [
+            "step 1: expected verifica_disponibilita, actual verifica_disponibilita: name_score=1.00",
+            "step 1: arg prestazione='visita cardiologica', expected 'visita cardiologica': True",
+            "step 1: arg struttura=None, expected 'Ospedale Niguarda': False",
+            "step 1: arg data='2026-10-08', expected '2026-10-08': True",
+            "step 1: extra arguments (not penalized): ['ora']",
+            "step 1: call count expected=1 actual=3 score=0.33",
+            "step 1: strict call count failed: expected 1, got 3; stage score forced to 0",
+            "step 2: contains one of ['09:30']: False",
+            "step 2: contains one of ['23']: True",
+            "step 2: avoids ['14:00', '10:30']: False",
+            "step 2: words 18 <= 70: True",
+            "step 2: critical criterion failed: task score forced to 0",
+            "step 2: does not call another tool after receiving the observation: False",
+            "combined two-step score: (0.000 + 0.000) / 2"
+          ],
+          "prompt_tokens": 2131,
+          "output_tokens": 235,
+          "seconds": 5.329327865503728
+        },
+        {
+          "id": "san_it_obs_ricetta",
+          "category": "function_calling",
+          "subtype": "observation_grounding",
+          "language": "it",
+          "display_prompt": "Consulta la ricetta RCE-7788 e dimmi il farmaco e il numero di confezioni.",
+          "output": "STEP 1 — MODEL TOOL DECISION\n<tool_call>\n{\"name\": \"consulta_ricetta\", \"arguments\": {\"numero_ricetta\": \"RCE-7788\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"ricetta\", \"arguments\": {\"numero_ricetta\": \"RCE-7788\"}}\n</tool_call>\n\nTOOL OBSERVATION\n{\"numero_ricetta\": \"RCE-7788\", \"farmaco\": \"Amoxicillina 1g\", \"confezioni\": 2}\n\nSTEP 2 — MODEL RESPONSE\n<tool_call>\n{\"name\": \"ricetta\", \"arguments\": {\"numero_ricetta\": \"RCE-7788\", \"farmaco\": \"Amoxicillina 1g\", \"confezioni\": 2}}\n</tool_call>",
+          "parsed_calls": {
+            "step_1": [
+              {
+                "name": "consulta_ricetta",
+                "arguments": {
+                  "numero_ricetta": "RCE-7788"
+                }
+              },
+              {
+                "name": "ricetta",
+                "arguments": {
+                  "numero_ricetta": "RCE-7788"
+                }
+              }
+            ],
+            "step_2": [
+              {
+                "name": "ricetta",
+                "arguments": {
+                  "numero_ricetta": "RCE-7788",
+                  "farmaco": "Amoxicillina 1g",
+                  "confezioni": 2
+                }
+              }
+            ]
+          },
+          "expected_calls": [
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-7788"
+              }
+            }
+          ],
+          "score": 0.35,
+          "score_details": [
+            "step 1: expected consulta_ricetta, actual consulta_ricetta: name_score=1.00",
+            "step 1: arg numero_ricetta='RCE-7788', expected 'RCE-7788': True",
+            "step 1: call count expected=1 actual=2 score=0.50",
+            "step 1: strict call count failed: expected 1, got 2; stage score forced to 0",
+            "step 2: contains one of ['Amoxicillina']: True",
+            "step 2: contains one of ['2']: True",
+            "step 2: avoids ['Ibuprofene', '3 confezioni']: True",
+            "step 2: words 12 <= 60: True",
+            "step 2: does not call another tool after receiving the observation: False",
+            "combined two-step score: (0.000 + 0.700) / 2"
+          ],
+          "prompt_tokens": 2004,
+          "output_tokens": 118,
+          "seconds": 2.7084036180749536
+        },
+        {
+          "id": "san_it_obs_referto",
+          "category": "function_calling",
+          "subtype": "observation_grounding",
+          "language": "it",
+          "display_prompt": "Recupera il referto REF-321 per il cf FRRGPP70A01H501Z e dimmi l'esame e l'esito.",
+          "output": "STEP 1 — MODEL TOOL DECISION\n<tool_call>\n{\"name\": \"recupera_referto\", \"arguments\": {\"codice_fiscale\": \"FRRGPP70A01H501Z\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"esame e esito\"}}\n</tool_call>\n\nTOOL OBSERVATION\n{\"id_referto\": \"REF-321\", \"esame\": \"Emocromo\", \"esito\": \"nella norma\"}\n\nSTEP 2 — MODEL RESPONSE\n<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"esame e esito\"}}\n</tool_call>",
+          "parsed_calls": {
+            "step_1": [
+              {
+                "name": "recupera_referto",
+                "arguments": {
+                  "codice_fiscale": "FRRGPP70A01H501Z"
+                }
+              },
+              {
+                "name": "cerca_prestazione",
+                "arguments": {
+                  "nome": "esame e esito"
+                }
+              }
+            ],
+            "step_2": [
+              {
+                "name": "cerca_prestazione",
+                "arguments": {
+                  "nome": "esame e esito"
+                }
+              }
+            ]
+          },
+          "expected_calls": [
+            {
+              "name": "recupera_referto",
+              "arguments": {
+                "codice_fiscale": "FRRGPP70A01H501Z",
+                "id_referto": "REF-321"
+              }
+            }
+          ],
+          "score": 0.175,
+          "score_details": [
+            "step 1: expected recupera_referto, actual recupera_referto: name_score=1.00",
+            "step 1: arg codice_fiscale='FRRGPP70A01H501Z', expected 'FRRGPP70A01H501Z': True",
+            "step 1: arg id_referto=None, expected 'REF-321': False",
+            "step 1: call count expected=1 actual=2 score=0.50",
+            "step 1: strict call count failed: expected 1, got 2; stage score forced to 0",
+            "step 2: contains one of ['Emocromo']: False",
+            "step 2: contains one of ['norma']: False",
+            "step 2: avoids ['alterato', 'patologico']: True",
+            "step 2: words 9 <= 60: True",
+            "step 2: does not call another tool after receiving the observation: False",
+            "combined two-step score: (0.000 + 0.350) / 2"
+          ],
+          "prompt_tokens": 2026,
+          "output_tokens": 104,
+          "seconds": 2.409943141043186
+        },
+        {
+          "id": "san_it_obs_esenz",
+          "category": "function_calling",
+          "subtype": "observation_grounding",
+          "language": "it",
+          "display_prompt": "Verifica l'esenzione E30 per il cf CNTMRC85T10G224L e dimmi se e valida e fino a quando.",
+          "output": "STEP 1 — MODEL TOOL DECISION\n<tool_call>\n{\"name\": \"verifica_esenzione\", \"arguments\": {\"codice_fiscale\": \"CNTMRC85T10G224L\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"verifica_esenzione\", \"arguments\": {\"codice_fiscale\": \"E30\"}}\n</tool_call>\n\nTOOL OBSERVATION\n{\"codice_esenzione\": \"E30\", \"valida\": true, \"scadenza\": \"2027-03-31\"}\n\nSTEP 2 — MODEL RESPONSE\n<tool_call>\n{\"name\": \"verifica_esenzione\", \"arguments\": {\"codice_fiscale\": \"E30\", \"valida\": true, \"scadenza\": \"2027-03-31\"}}\n</tool_call>",
+          "parsed_calls": {
+            "step_1": [
+              {
+                "name": "verifica_esenzione",
+                "arguments": {
+                  "codice_fiscale": "CNTMRC85T10G224L"
+                }
+              },
+              {
+                "name": "verifica_esenzione",
+                "arguments": {
+                  "codice_fiscale": "E30"
+                }
+              }
+            ],
+            "step_2": [
+              {
+                "name": "verifica_esenzione",
+                "arguments": {
+                  "codice_fiscale": "E30",
+                  "valida": true,
+                  "scadenza": "2027-03-31"
+                }
+              }
+            ]
+          },
+          "expected_calls": [
+            {
+              "name": "verifica_esenzione",
+              "arguments": {
+                "codice_fiscale": "CNTMRC85T10G224L",
+                "codice_esenzione": "E30"
+              }
+            }
+          ],
+          "score": 0.35,
+          "score_details": [
+            "step 1: expected verifica_esenzione, actual verifica_esenzione: name_score=1.00",
+            "step 1: arg codice_fiscale='CNTMRC85T10G224L', expected 'CNTMRC85T10G224L': True",
+            "step 1: arg codice_esenzione=None, expected 'E30': False",
+            "step 1: call count expected=1 actual=2 score=0.50",
+            "step 1: strict call count failed: expected 1, got 2; stage score forced to 0",
+            "step 2: contains any of ['valida', 'si', 'sì']: True",
+            "step 2: contains one of ['2027-03-31']: True",
+            "step 2: avoids ['non valida', 'scaduta']: True",
+            "step 2: words 11 <= 60: True",
+            "step 2: does not call another tool after receiving the observation: False",
+            "combined two-step score: (0.000 + 0.700) / 2"
+          ],
+          "prompt_tokens": 2025,
+          "output_tokens": 125,
+          "seconds": 2.8367069270461798
+        },
+        {
+          "id": "san_it_ms_disp_prenota",
+          "category": "function_calling",
+          "subtype": "multi_step",
+          "language": "it",
+          "display_prompt": "Verifica la disponibilita di una visita oculistica alla struttura Ospedale Sacco il 2026-10-15; dopo il risultato, prenota il primo orario libero per il cf DLLNNA83S45F205W.",
+          "output": "STEP 1 — MODEL TOOL DECISION\n<tool_call>\n{\"name\": \"verifica_disponibilita\", \"arguments\": {\"prestazione\": \"visita oculistica\", \"data\": \"2026-10-15\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"prenota_appuntamento\", \"arguments\": {\"prestazione\": \"visita oculistica\", \"struttura\": \"Ospedale Sacco\", \"data\": \"2026-10-15\"}}\n</tool_call>\n\nTOOL OBSERVATION\n{\"orari_liberi\": [\"10:00\", \"16:30\"]}\n\nSTEP 2 — MODEL RESPONSE\n<tool_call>\n{\"name\": \"prenota_appuntamento\", \"arguments\": {\"prestazione\": \"visita oculistica\", \"struttura\": \"Ospedale Sacco\", \"data\": \"2026-10-15\", \"ora\": \"10:00\", \"codice_fiscale\": \"DLLNNA83S45F205W\"}}\n</tool_call>",
+          "parsed_calls": {
+            "step_1": [
+              {
+                "name": "verifica_disponibilita",
+                "arguments": {
+                  "prestazione": "visita oculistica",
+                  "data": "2026-10-15"
+                }
+              },
+              {
+                "name": "prenota_appuntamento",
+                "arguments": {
+                  "prestazione": "visita oculistica",
+                  "struttura": "Ospedale Sacco",
+                  "data": "2026-10-15"
+                }
+              }
+            ],
+            "step_2": [
+              {
+                "name": "prenota_appuntamento",
+                "arguments": {
+                  "prestazione": "visita oculistica",
+                  "struttura": "Ospedale Sacco",
+                  "data": "2026-10-15",
+                  "ora": "10:00",
+                  "codice_fiscale": "DLLNNA83S45F205W"
+                }
+              }
+            ]
+          },
+          "expected_calls": [
+            {
+              "name": "verifica_disponibilita",
+              "arguments": {
+                "prestazione": "visita oculistica",
+                "struttura": "Ospedale Sacco",
+                "data": "2026-10-15"
+              }
+            }
+          ],
+          "score": 0.5,
+          "score_details": [
+            "step 1: expected verifica_disponibilita, actual verifica_disponibilita: name_score=1.00",
+            "step 1: arg prestazione='visita oculistica', expected 'visita oculistica': True",
+            "step 1: arg struttura=None, expected 'Ospedale Sacco': False",
+            "step 1: arg data='2026-10-15', expected '2026-10-15': True",
+            "step 1: call count expected=1 actual=2 score=0.50",
+            "step 1: strict call count failed: expected 1, got 2; stage score forced to 0",
+            "step 2: expected prenota_appuntamento, actual prenota_appuntamento: name_score=1.00",
+            "step 2: arg prestazione='visita oculistica', expected 'visita oculistica': True",
+            "step 2: arg struttura='Ospedale Sacco', expected 'Ospedale Sacco': True",
+            "step 2: arg data='2026-10-15', expected '2026-10-15': True",
+            "step 2: arg ora='10:00', expected '10:00': True",
+            "step 2: arg codice_fiscale='DLLNNA83S45F205W', expected 'DLLNNA83S45F205W': True",
+            "step 2: call count expected=1 actual=1 score=1.00",
+            "combined two-step score: (0.000 + 1.000) / 2"
+          ],
+          "prompt_tokens": 2092,
+          "output_tokens": 189,
+          "seconds": 4.265767190605402
+        },
+        {
+          "id": "san_it_ms_esenz_ticket",
+          "category": "function_calling",
+          "subtype": "multi_step",
+          "language": "it",
+          "display_prompt": "Verifica l'esenzione E01 per il cf RSSMRA85M01H501Z; se risulta valida, calcola di conseguenza il ticket per una visita fisiatrica.",
+          "output": "STEP 1 — MODEL TOOL DECISION\n<tool_call>\n{\"name\": \"verifica_esenzione\", \"arguments\": {\"codice_fiscale\": \"RSSMRA85M01H501Z\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"calcola_ticket\", \"arguments\": {\"prestazione\": \"visita fisiatrica\", \"esente\": true}}\n</tool_call>\n\nTOOL OBSERVATION\n{\"valida\": true, \"codice_esenzione\": \"E01\"}\n\nSTEP 2 — MODEL RESPONSE\n<tool_call>\n{\"name\": \"calcola_ticket\", \"arguments\": {\"prestazione\": \"visita fisiatrica\", \"esente\": true}}\n</tool_call>",
+          "parsed_calls": {
+            "step_1": [
+              {
+                "name": "verifica_esenzione",
+                "arguments": {
+                  "codice_fiscale": "RSSMRA85M01H501Z"
+                }
+              },
+              {
+                "name": "calcola_ticket",
+                "arguments": {
+                  "prestazione": "visita fisiatrica",
+                  "esente": true
+                }
+              }
+            ],
+            "step_2": [
+              {
+                "name": "calcola_ticket",
+                "arguments": {
+                  "prestazione": "visita fisiatrica",
+                  "esente": true
+                }
+              }
+            ]
+          },
+          "expected_calls": [
+            {
+              "name": "verifica_esenzione",
+              "arguments": {
+                "codice_fiscale": "RSSMRA85M01H501Z",
+                "codice_esenzione": "E01"
+              }
+            }
+          ],
+          "score": 0.5,
+          "score_details": [
+            "step 1: expected verifica_esenzione, actual verifica_esenzione: name_score=1.00",
+            "step 1: arg codice_fiscale='RSSMRA85M01H501Z', expected 'RSSMRA85M01H501Z': True",
+            "step 1: arg codice_esenzione=None, expected 'E01': False",
+            "step 1: call count expected=1 actual=2 score=0.50",
+            "step 1: strict call count failed: expected 1, got 2; stage score forced to 0",
+            "step 2: expected calcola_ticket, actual calcola_ticket: name_score=1.00",
+            "step 2: arg prestazione='visita fisiatrica', expected 'visita fisiatrica': True",
+            "step 2: arg esente=True, expected True: True",
+            "step 2: call count expected=1 actual=1 score=1.00",
+            "combined two-step score: (0.000 + 1.000) / 2"
+          ],
+          "prompt_tokens": 2033,
+          "output_tokens": 115,
+          "seconds": 2.61308060772717
+        },
+        {
+          "id": "san_it_ms_disp_prom",
+          "category": "function_calling",
+          "subtype": "multi_step",
+          "language": "it",
+          "display_prompt": "Verifica la disponibilita di una ecografia tiroide alla struttura Poliambulatorio Nord il 2026-10-20; poi invia un promemoria via email per la prenotazione che ti verra indicata.",
+          "output": "STEP 1 — MODEL TOOL DECISION\n<tool_call>\n{\"name\": \"verifica_disponibilita\", \"arguments\": {\"prestazione\": \"ecografia tiroide\", \"data\": \"2026-10-20\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"invia_promemoria\", \"arguments\": {\"codice_prenotazione\": \"P001\", \"canale\": \"sms\"}}\n</tool_call>\n\nTOOL OBSERVATION\n{\"orari_liberi\": [\"08:15\"], \"codice_prenotazione\": \"PRN-6161\"}\n\nSTEP 2 — MODEL RESPONSE\n<tool_call>\n{\"name\": \"prenota_appuntamento\", \"arguments\": {\"prestazione\": \"ecografia tiroide\", \"struttura\": \"Poliambulatorio Nord\", \"data\": \"2026-10-20\"}}\n</tool_call>",
+          "parsed_calls": {
+            "step_1": [
+              {
+                "name": "verifica_disponibilita",
+                "arguments": {
+                  "prestazione": "ecografia tiroide",
+                  "data": "2026-10-20"
+                }
+              },
+              {
+                "name": "invia_promemoria",
+                "arguments": {
+                  "codice_prenotazione": "P001",
+                  "canale": "sms"
+                }
+              }
+            ],
+            "step_2": [
+              {
+                "name": "prenota_appuntamento",
+                "arguments": {
+                  "prestazione": "ecografia tiroide",
+                  "struttura": "Poliambulatorio Nord",
+                  "data": "2026-10-20"
+                }
+              }
+            ]
+          },
+          "expected_calls": [
+            {
+              "name": "verifica_disponibilita",
+              "arguments": {
+                "prestazione": "ecografia tiroide",
+                "struttura": "Poliambulatorio Nord",
+                "data": "2026-10-20"
+              }
+            }
+          ],
+          "score": 0.1,
+          "score_details": [
+            "step 1: expected verifica_disponibilita, actual verifica_disponibilita: name_score=1.00",
+            "step 1: arg prestazione='ecografia tiroide', expected 'ecografia tiroide': True",
+            "step 1: arg struttura=None, expected 'Poliambulatorio Nord': False",
+            "step 1: arg data='2026-10-20', expected '2026-10-20': True",
+            "step 1: call count expected=1 actual=2 score=0.50",
+            "step 1: strict call count failed: expected 1, got 2; stage score forced to 0",
+            "step 2: expected invia_promemoria, actual prenota_appuntamento: name_score=0.00",
+            "step 2: arg codice_prenotazione=None, expected 'PRN-6161': False",
+            "step 2: arg canale=None, expected 'email': False",
+            "step 2: extra arguments (not penalized): ['data', 'prestazione', 'struttura']",
+            "step 2: call count expected=1 actual=1 score=1.00",
+            "combined two-step score: (0.000 + 0.200) / 2"
+          ],
+          "prompt_tokens": 2078,
+          "output_tokens": 145,
+          "seconds": 3.2910189563408494
+        },
+        {
+          "id": "san_it_ms_ricetta_prenota",
+          "category": "function_calling",
+          "subtype": "multi_step",
+          "language": "it",
+          "display_prompt": "Consulta la ricetta RCE-9012; dopo il risultato, prenota la prestazione indicata nella ricetta alla struttura Ospedale Maggiore il 2026-11-10 alle 12:00 per il cf VRDLGI90A41F205K.",
+          "output": "STEP 1 — MODEL TOOL DECISION\n<tool_call>\n{\"name\": \"consulta_ricetta\", \"arguments\": {\"numero_ricetta\": \"RCE-9012\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"Ospedale Maggiore\"}}\n</tool_call>\n\nTOOL OBSERVATION\n{\"numero_ricetta\": \"RCE-9012\", \"prestazione\": \"visita pneumologica\"}\n\nSTEP 2 — MODEL RESPONSE\n<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"Ospedale Maggiore\"}}\n</tool_call>",
+          "parsed_calls": {
+            "step_1": [
+              {
+                "name": "consulta_ricetta",
+                "arguments": {
+                  "numero_ricetta": "RCE-9012"
+                }
+              },
+              {
+                "name": "cerca_prestazione",
+                "arguments": {
+                  "nome": "Ospedale Maggiore"
+                }
+              }
+            ],
+            "step_2": [
+              {
+                "name": "cerca_prestazione",
+                "arguments": {
+                  "nome": "Ospedale Maggiore"
+                }
+              }
+            ]
+          },
+          "expected_calls": [
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-9012"
+              }
+            }
+          ],
+          "score": 0.1,
+          "score_details": [
+            "step 1: expected consulta_ricetta, actual consulta_ricetta: name_score=1.00",
+            "step 1: arg numero_ricetta='RCE-9012', expected 'RCE-9012': True",
+            "step 1: call count expected=1 actual=2 score=0.50",
+            "step 1: strict call count failed: expected 1, got 2; stage score forced to 0",
+            "step 2: expected prenota_appuntamento, actual cerca_prestazione: name_score=0.00",
+            "step 2: arg prestazione=None, expected 'visita pneumologica': False",
+            "step 2: arg struttura=None, expected 'Ospedale Maggiore': False",
+            "step 2: arg data=None, expected '2026-11-10': False",
+            "step 2: arg ora=None, expected '12:00': False",
+            "step 2: arg codice_fiscale=None, expected 'VRDLGI90A41F205K': False",
+            "step 2: extra arguments (not penalized): ['nome']",
+            "step 2: call count expected=1 actual=1 score=1.00",
+            "combined two-step score: (0.000 + 0.200) / 2"
+          ],
+          "prompt_tokens": 2075,
+          "output_tokens": 101,
+          "seconds": 2.3156547052785754
+        }
+      ]
+    },
+    "giux78/zagreus-0.4B-cpt-full-32k-sft-compact-v6": {
+      "aggregate": {
+        "overall": {
+          "score": 0.616375,
+          "tests": 40,
+          "exact_passes": 15,
+          "mean_seconds": 1.2446647407719866,
+          "median_seconds": 1.1016546175815165,
+          "mean_output_tokens": 54.075
+        },
+        "function_calling": {
+          "score": 0.616375,
+          "tests": 40,
+          "exact_passes": 15,
+          "mean_seconds": 1.2446647407719866,
+          "median_seconds": 1.1016546175815165,
+          "mean_output_tokens": 54.075
+        },
+        "function_calling_it": {
+          "score": 0.616375,
+          "tests": 40,
+          "exact_passes": 15,
+          "mean_seconds": 1.2446647407719866,
+          "median_seconds": 1.1016546175815165,
+          "mean_output_tokens": 54.075
+        },
+        "function_calling_subtype_single_call": {
+          "score": 0.8,
+          "tests": 4,
+          "exact_passes": 3,
+          "mean_seconds": 0.8471245390828699,
+          "median_seconds": 0.8603878221474588,
+          "mean_output_tokens": 35.5
+        },
+        "function_calling_subtype_multi_argument": {
+          "score": 0.5933333333333334,
+          "tests": 4,
+          "exact_passes": 0,
+          "mean_seconds": 1.2428590471390635,
+          "median_seconds": 1.179895207285881,
+          "mean_output_tokens": 54
+        },
+        "function_calling_subtype_parallel_same_tool": {
+          "score": 0.9,
+          "tests": 4,
+          "exact_passes": 3,
+          "mean_seconds": 1.713974345009774,
+          "median_seconds": 1.5732198781333864,
+          "mean_output_tokens": 73.5
+        },
+        "function_calling_subtype_parallel_diff_tools": {
+          "score": 0.65,
+          "tests": 4,
+          "exact_passes": 1,
+          "mean_seconds": 1.3370006144978106,
+          "median_seconds": 1.3543371367268264,
+          "mean_output_tokens": 57.5
+        },
+        "function_calling_subtype_disambiguation": {
+          "score": 0.6333333333333333,
+          "tests": 4,
+          "exact_passes": 2,
+          "mean_seconds": 1.0482141054235399,
+          "median_seconds": 1.1025354089215398,
+          "mean_output_tokens": 45
+        },
+        "function_calling_subtype_missing_argument": {
+          "score": 0.5,
+          "tests": 4,
+          "exact_passes": 2,
+          "mean_seconds": 0.733305930858478,
+          "median_seconds": 0.770360894035548,
+          "mean_output_tokens": 31.75
+        },
+        "function_calling_subtype_unavailable_tool": {
+          "score": 0.5,
+          "tests": 4,
+          "exact_passes": 2,
+          "mean_seconds": 0.9126206818036735,
+          "median_seconds": 0.9146806956268847,
+          "mean_output_tokens": 39.75
+        },
+        "function_calling_subtype_no_tool_discrimination": {
+          "score": 0.5,
+          "tests": 4,
+          "exact_passes": 2,
+          "mean_seconds": 0.7774853645823896,
+          "median_seconds": 0.7304276442155242,
+          "mean_output_tokens": 34
+        },
+        "function_calling_subtype_observation_grounding": {
+          "score": 0.51875,
+          "tests": 4,
+          "exact_passes": 0,
+          "mean_seconds": 1.9394047728274018,
+          "median_seconds": 1.898614033125341,
+          "mean_output_tokens": 86
+        },
+        "function_calling_subtype_multi_step": {
+          "score": 0.5683333333333334,
+          "tests": 4,
+          "exact_passes": 0,
+          "mean_seconds": 1.8946580064948648,
+          "median_seconds": 1.917324222624302,
+          "mean_output_tokens": 83.75
+        }
+      },
+      "records": [
+        {
+          "id": "san_it_cerca",
+          "category": "function_calling",
+          "subtype": "single_call",
+          "language": "it",
+          "display_prompt": "Cerca la prestazione 'risonanza magnetica ginocchio'.",
+          "output": "<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"risonanza magnetica ginocchio\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "risonanza magnetica ginocchio"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "risonanza magnetica ginocchio"
+              }
+            }
+          ],
+          "score": 1.0,
+          "score_details": [
+            "expected cerca_prestazione, actual cerca_prestazione: name_score=1.00",
+            "arg nome='risonanza magnetica ginocchio', expected 'risonanza magnetica ginocchio': True",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 940,
+          "output_tokens": 35,
+          "seconds": 0.8386135306209326
+        },
+        {
+          "id": "san_it_annulla",
+          "category": "function_calling",
+          "subtype": "single_call",
+          "language": "it",
+          "display_prompt": "Annulla la prenotazione con codice PRN-4471.",
+          "output": "<tool_call>\n{\"name\": \"annulla_prenotazione\", \"arguments\": {\"codice_prenotazione\": \"PRN-4471\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "PRN-4471"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "PRN-4471"
+              }
+            }
+          ],
+          "score": 1.0,
+          "score_details": [
+            "expected annulla_prenotazione, actual annulla_prenotazione: name_score=1.00",
+            "arg codice_prenotazione='PRN-4471', expected 'PRN-4471': True",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 941,
+          "output_tokens": 38,
+          "seconds": 0.9068071274086833
+        },
+        {
+          "id": "san_it_ricetta",
+          "category": "function_calling",
+          "subtype": "single_call",
+          "language": "it",
+          "display_prompt": "Consulta la ricetta dematerializzata numero RCE-2026-88213.",
+          "output": "<tool_call>\n{\"name\": \"consulta_ricetta\", \"arguments\": {\"numero_ricetta\": \"RCE-2026-88213\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-2026-88213"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-2026-88213"
+              }
+            }
+          ],
+          "score": 1.0,
+          "score_details": [
+            "expected consulta_ricetta, actual consulta_ricetta: name_score=1.00",
+            "arg numero_ricetta='RCE-2026-88213', expected 'RCE-2026-88213': True",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 943,
+          "output_tokens": 37,
+          "seconds": 0.882162113673985
+        },
+        {
+          "id": "san_it_strutture",
+          "category": "function_calling",
+          "subtype": "single_call",
+          "language": "it",
+          "display_prompt": "Mostrami le strutture a Bologna per una visita cardiologica.",
+          "output": "<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"visita cardiologica\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "visita cardiologica"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "elenco_strutture",
+              "arguments": {
+                "citta": "Bologna",
+                "prestazione": "visita cardiologica"
+              }
+            }
+          ],
+          "score": 0.2,
+          "score_details": [
+            "expected elenco_strutture, actual cerca_prestazione: name_score=0.00",
+            "arg citta=None, expected 'Bologna': False",
+            "arg prestazione=None, expected 'visita cardiologica': False",
+            "extra arguments (not penalized): ['nome']",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 941,
+          "output_tokens": 32,
+          "seconds": 0.7609153846278787
+        },
+        {
+          "id": "san_it_prenota",
+          "category": "function_calling",
+          "subtype": "multi_argument",
+          "language": "it",
+          "display_prompt": "Prenota una visita dermatologica alla struttura Ospedale San Raffaele il 2026-10-05 alle 11:20 per il codice fiscale RSSMRA85M01H501Z.",
+          "output": "<tool_call>\n{\"name\": \"prenota_appuntamento\", \"arguments\": {\"prestazione\": \"visita dermatologica\", \"struttura\": \"Ospedale San Raffaele\", \"data\": \"2026-10-05T11:20:00Z\", \"ora\": \"11:20\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "prenota_appuntamento",
+              "arguments": {
+                "prestazione": "visita dermatologica",
+                "struttura": "Ospedale San Raffaele",
+                "data": "2026-10-05T11:20:00Z",
+                "ora": "11:20"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "prenota_appuntamento",
+              "arguments": {
+                "prestazione": "visita dermatologica",
+                "struttura": "Ospedale San Raffaele",
+                "data": "2026-10-05",
+                "ora": "11:20",
+                "codice_fiscale": "RSSMRA85M01H501Z"
+              }
+            }
+          ],
+          "score": 0.8400000000000001,
+          "score_details": [
+            "expected prenota_appuntamento, actual prenota_appuntamento: name_score=1.00",
+            "arg prestazione='visita dermatologica', expected 'visita dermatologica': True",
+            "arg struttura='Ospedale San Raffaele', expected 'Ospedale San Raffaele': True",
+            "arg data='2026-10-05T11:20:00Z', expected '2026-10-05': False",
+            "arg ora='11:20', expected '11:20': True",
+            "arg codice_fiscale=None, expected 'RSSMRA85M01H501Z': False",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 975,
+          "output_tokens": 77,
+          "seconds": 1.7591188084334135
+        },
+        {
+          "id": "san_it_disp",
+          "category": "function_calling",
+          "subtype": "multi_argument",
+          "language": "it",
+          "display_prompt": "Verifica la disponibilita per una ecografia addome alla struttura Poliambulatorio Centro il 2026-09-30.",
+          "output": "<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"ecografia addome\", \"prestazione\": \"ecografia addome\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "ecografia addome",
+                "prestazione": "ecografia addome"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "verifica_disponibilita",
+              "arguments": {
+                "prestazione": "ecografia addome",
+                "struttura": "Poliambulatorio Centro",
+                "data": "2026-09-30"
+              }
+            }
+          ],
+          "score": 0.33333333333333337,
+          "score_details": [
+            "expected verifica_disponibilita, actual cerca_prestazione: name_score=0.00",
+            "arg prestazione='ecografia addome', expected 'ecografia addome': True",
+            "arg struttura=None, expected 'Poliambulatorio Centro': False",
+            "arg data=None, expected '2026-09-30': False",
+            "extra arguments (not penalized): ['nome']",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 956,
+          "output_tokens": 42,
+          "seconds": 0.9625400779768825
+        },
+        {
+          "id": "san_it_esenz",
+          "category": "function_calling",
+          "subtype": "multi_argument",
+          "language": "it",
+          "display_prompt": "Verifica l'esenzione E02 per il codice fiscale VRDLGI90A41F205K.",
+          "output": "<tool_call>\n{\"name\": \"annulla_prenotazione\", \"arguments\": {\"codice_prenotazione\": \"VRDLGI90A41F205K\", \"codice_fiscale\": \"VRDLGI90A41F205K\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "VRDLGI90A41F205K",
+                "codice_fiscale": "VRDLGI90A41F205K"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "verifica_esenzione",
+              "arguments": {
+                "codice_fiscale": "VRDLGI90A41F205K",
+                "codice_esenzione": "E02"
+              }
+            }
+          ],
+          "score": 0.4,
+          "score_details": [
+            "expected verifica_esenzione, actual annulla_prenotazione: name_score=0.00",
+            "arg codice_fiscale='VRDLGI90A41F205K', expected 'VRDLGI90A41F205K': True",
+            "arg codice_esenzione=None, expected 'E02': False",
+            "extra arguments (not penalized): ['codice_prenotazione']",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 949,
+          "output_tokens": 60,
+          "seconds": 1.3972503365948796
+        },
+        {
+          "id": "san_it_promemoria",
+          "category": "function_calling",
+          "subtype": "multi_argument",
+          "language": "it",
+          "display_prompt": "Invia un promemoria via sms per la prenotazione PRN-9080.",
+          "output": "<tool_call>\n{\"name\": \"invia_promemoria\", \"arguments\": {\"codice_prenotazione\": \"PRN-9080\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "invia_promemoria",
+              "arguments": {
+                "codice_prenotazione": "PRN-9080"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "invia_promemoria",
+              "arguments": {
+                "codice_prenotazione": "PRN-9080",
+                "canale": "sms"
+              }
+            }
+          ],
+          "score": 0.8,
+          "score_details": [
+            "expected invia_promemoria, actual invia_promemoria: name_score=1.00",
+            "arg codice_prenotazione='PRN-9080', expected 'PRN-9080': True",
+            "arg canale=None, expected 'sms': False",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 944,
+          "output_tokens": 37,
+          "seconds": 0.8525269655510783
+        },
+        {
+          "id": "san_it_par_annulla",
+          "category": "function_calling",
+          "subtype": "parallel_same_tool",
+          "language": "it",
+          "display_prompt": "Annulla le prenotazioni PRN-1001 e PRN-1002.",
+          "output": "<tool_call>\n{\"name\": \"annulla_prenotazione\", \"arguments\": {\"codice_prenotazione\": \"PRN-1001\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"annulla_prenotazione\", \"arguments\": {\"codice_prenotazione\": \"PRN-1002\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "PRN-1001"
+              }
+            },
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "PRN-1002"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "PRN-1001"
+              }
+            },
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "PRN-1002"
+              }
+            }
+          ],
+          "score": 1.0,
+          "score_details": [
+            "expected annulla_prenotazione, actual annulla_prenotazione: name_score=1.00",
+            "arg codice_prenotazione='PRN-1001', expected 'PRN-1001': True",
+            "expected annulla_prenotazione, actual annulla_prenotazione: name_score=1.00",
+            "arg codice_prenotazione='PRN-1002', expected 'PRN-1002': True",
+            "call count expected=2 actual=2 score=1.00"
+          ],
+          "prompt_tokens": 944,
+          "output_tokens": 75,
+          "seconds": 1.7272398928180337
+        },
+        {
+          "id": "san_it_par_ricetta",
+          "category": "function_calling",
+          "subtype": "parallel_same_tool",
+          "language": "it",
+          "display_prompt": "Consulta le ricette RCE-100 e RCE-200.",
+          "output": "<tool_call>\n{\"name\": \"consulta_ricetta\", \"arguments\": {\"numero_ricetta\": \"100\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"consulta_ricetta\", \"arguments\": {\"numero_ricetta\": \"200\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "100"
+              }
+            },
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "200"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-100"
+              }
+            },
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-200"
+              }
+            }
+          ],
+          "score": 0.6000000000000001,
+          "score_details": [
+            "expected consulta_ricetta, actual consulta_ricetta: name_score=1.00",
+            "arg numero_ricetta='100', expected 'RCE-100': False",
+            "expected consulta_ricetta, actual consulta_ricetta: name_score=1.00",
+            "arg numero_ricetta='200', expected 'RCE-200': False",
+            "call count expected=2 actual=2 score=1.00"
+          ],
+          "prompt_tokens": 939,
+          "output_tokens": 59,
+          "seconds": 1.419199863448739
+        },
+        {
+          "id": "san_it_par_cerca",
+          "category": "function_calling",
+          "subtype": "parallel_same_tool",
+          "language": "it",
+          "display_prompt": "Cerca le prestazioni 'visita oculistica' e 'campo visivo'.",
+          "output": "<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"visita oculistica\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"campo visivo\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "visita oculistica"
+              }
+            },
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "campo visivo"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "visita oculistica"
+              }
+            },
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "campo visivo"
+              }
+            }
+          ],
+          "score": 1.0,
+          "score_details": [
+            "expected cerca_prestazione, actual cerca_prestazione: name_score=1.00",
+            "arg nome='visita oculistica', expected 'visita oculistica': True",
+            "expected cerca_prestazione, actual cerca_prestazione: name_score=1.00",
+            "arg nome='campo visivo', expected 'campo visivo': True",
+            "call count expected=2 actual=2 score=1.00"
+          ],
+          "prompt_tokens": 943,
+          "output_tokens": 61,
+          "seconds": 1.4116118429228663
+        },
+        {
+          "id": "san_it_par_referto",
+          "category": "function_calling",
+          "subtype": "parallel_same_tool",
+          "language": "it",
+          "display_prompt": "Recupera i referti REF-55 e REF-77 per il codice fiscale BNCLRA92T50L219X.",
+          "output": "<tool_call>\n{\"name\": \"recupera_referto\", \"arguments\": {\"codice_fiscale\": \"BNCLRA92T50L219X\", \"id_referto\": \"REF-55\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"recupera_referto\", \"arguments\": {\"codice_fiscale\": \"BNCLRA92T50L219X\", \"id_referto\": \"REF-77\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "recupera_referto",
+              "arguments": {
+                "codice_fiscale": "BNCLRA92T50L219X",
+                "id_referto": "REF-55"
+              }
+            },
+            {
+              "name": "recupera_referto",
+              "arguments": {
+                "codice_fiscale": "BNCLRA92T50L219X",
+                "id_referto": "REF-77"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "recupera_referto",
+              "arguments": {
+                "codice_fiscale": "BNCLRA92T50L219X",
+                "id_referto": "REF-55"
+              }
+            },
+            {
+              "name": "recupera_referto",
+              "arguments": {
+                "codice_fiscale": "BNCLRA92T50L219X",
+                "id_referto": "REF-77"
+              }
+            }
+          ],
+          "score": 1.0,
+          "score_details": [
+            "expected recupera_referto, actual recupera_referto: name_score=1.00",
+            "arg codice_fiscale='BNCLRA92T50L219X', expected 'BNCLRA92T50L219X': True",
+            "arg id_referto='REF-55', expected 'REF-55': True",
+            "expected recupera_referto, actual recupera_referto: name_score=1.00",
+            "arg codice_fiscale='BNCLRA92T50L219X', expected 'BNCLRA92T50L219X': True",
+            "arg id_referto='REF-77', expected 'REF-77': True",
+            "call count expected=2 actual=2 score=1.00"
+          ],
+          "prompt_tokens": 954,
+          "output_tokens": 99,
+          "seconds": 2.297845780849457
+        },
+        {
+          "id": "san_it_pd_esenz_ticket",
+          "category": "function_calling",
+          "subtype": "parallel_diff_tools",
+          "language": "it",
+          "display_prompt": "Verifica l'esenzione E01 per BRSNNA80A01F839K e calcola il ticket per una visita ortopedica da non esente.",
+          "output": "<tool_call>\n{\"name\": \"annulla_prenotazione\", \"arguments\": {\"codice_prenotazione\": \"E01\", \"codice_esenzione\": \"E01\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"calcola_ticket\", \"arguments\": {\"prestazione\": \"visita ortopedica\", \"esente\": \"no\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "E01",
+                "codice_esenzione": "E01"
+              }
+            },
+            {
+              "name": "calcola_ticket",
+              "arguments": {
+                "prestazione": "visita ortopedica",
+                "esente": "no"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "verifica_esenzione",
+              "arguments": {
+                "codice_fiscale": "BRSNNA80A01F839K",
+                "codice_esenzione": "E01"
+              }
+            },
+            {
+              "name": "calcola_ticket",
+              "arguments": {
+                "prestazione": "visita ortopedica",
+                "esente": false
+              }
+            }
+          ],
+          "score": 0.6000000000000001,
+          "score_details": [
+            "expected verifica_esenzione, actual annulla_prenotazione: name_score=0.00",
+            "arg codice_fiscale=None, expected 'BRSNNA80A01F839K': False",
+            "arg codice_esenzione='E01', expected 'E01': True",
+            "extra arguments (not penalized): ['codice_prenotazione']",
+            "expected calcola_ticket, actual calcola_ticket: name_score=1.00",
+            "arg prestazione='visita ortopedica', expected 'visita ortopedica': True",
+            "arg esente='no', expected False: False",
+            "call count expected=2 actual=2 score=1.00"
+          ],
+          "prompt_tokens": 960,
+          "output_tokens": 84,
+          "seconds": 1.917314155958593
+        },
+        {
+          "id": "san_it_pd_annulla_ricetta",
+          "category": "function_calling",
+          "subtype": "parallel_diff_tools",
+          "language": "it",
+          "display_prompt": "Annulla la prenotazione PRN-3003 e consulta la ricetta RCE-3003.",
+          "output": "<tool_call>\n{\"name\": \"annulla_prenotazione\", \"arguments\": {\"codice_prenotazione\": \"PRN-3003\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"consulta_ricetta\", \"arguments\": {\"numero_ricetta\": \"RCE-3003\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "PRN-3003"
+              }
+            },
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-3003"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "PRN-3003"
+              }
+            },
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-3003"
+              }
+            }
+          ],
+          "score": 1.0,
+          "score_details": [
+            "expected annulla_prenotazione, actual annulla_prenotazione: name_score=1.00",
+            "arg codice_prenotazione='PRN-3003', expected 'PRN-3003': True",
+            "expected consulta_ricetta, actual consulta_ricetta: name_score=1.00",
+            "arg numero_ricetta='RCE-3003', expected 'RCE-3003': True",
+            "call count expected=2 actual=2 score=1.00"
+          ],
+          "prompt_tokens": 948,
+          "output_tokens": 71,
+          "seconds": 1.7136210454627872
+        },
+        {
+          "id": "san_it_pd_cerca_strutture",
+          "category": "function_calling",
+          "subtype": "parallel_diff_tools",
+          "language": "it",
+          "display_prompt": "Cerca la prestazione 'TAC torace' e mostrami le strutture a Torino per TAC torace.",
+          "output": "<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"TAC torace\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "TAC torace"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "TAC torace"
+              }
+            },
+            {
+              "name": "elenco_strutture",
+              "arguments": {
+                "citta": "Torino",
+                "prestazione": "TAC torace"
+              }
+            }
+          ],
+          "score": 0.5,
+          "score_details": [
+            "expected cerca_prestazione, actual cerca_prestazione: name_score=1.00",
+            "arg nome='TAC torace', expected 'TAC torace': True",
+            "missing expected call elenco_strutture",
+            "call count expected=2 actual=1 score=0.50"
+          ],
+          "prompt_tokens": 951,
+          "output_tokens": 31,
+          "seconds": 0.7220140285789967
+        },
+        {
+          "id": "san_it_pd_prom_disp",
+          "category": "function_calling",
+          "subtype": "parallel_diff_tools",
+          "language": "it",
+          "display_prompt": "Invia un promemoria email per PRN-7007 e verifica la disponibilita di una visita neurologica alla struttura Clinica Villa Serena il 2026-11-02.",
+          "output": "<tool_call>\n{\"name\": \"invia_promemoria\", \"arguments\": {\"codice_prenotazione\": \"PRN-7007\", \"canale\": \"email\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "invia_promemoria",
+              "arguments": {
+                "codice_prenotazione": "PRN-7007",
+                "canale": "email"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "invia_promemoria",
+              "arguments": {
+                "codice_prenotazione": "PRN-7007",
+                "canale": "email"
+              }
+            },
+            {
+              "name": "verifica_disponibilita",
+              "arguments": {
+                "prestazione": "visita neurologica",
+                "struttura": "Clinica Villa Serena",
+                "data": "2026-11-02"
+              }
+            }
+          ],
+          "score": 0.5,
+          "score_details": [
+            "expected invia_promemoria, actual invia_promemoria: name_score=1.00",
+            "arg codice_prenotazione='PRN-7007', expected 'PRN-7007': True",
+            "arg canale='email', expected 'email': True",
+            "missing expected call verifica_disponibilita",
+            "call count expected=2 actual=1 score=0.50"
+          ],
+          "prompt_tokens": 967,
+          "output_tokens": 44,
+          "seconds": 0.9950532279908657
+        },
+        {
+          "id": "san_it_dis_solo_verifica",
+          "category": "function_calling",
+          "subtype": "disambiguation",
+          "language": "it",
+          "display_prompt": "Voglio solo verificare se ci sono posti per una visita cardiologica alla struttura Ospedale Molinette il 2026-10-10, non prenotare ancora.",
+          "output": "<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"visita cardiologica\", \"prestazione\": \"visita cardiologica\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "visita cardiologica",
+                "prestazione": "visita cardiologica"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "verifica_disponibilita",
+              "arguments": {
+                "prestazione": "visita cardiologica",
+                "struttura": "Ospedale Molinette",
+                "data": "2026-10-10"
+              }
+            }
+          ],
+          "score": 0.33333333333333337,
+          "score_details": [
+            "expected verifica_disponibilita, actual cerca_prestazione: name_score=0.00",
+            "arg prestazione='visita cardiologica', expected 'visita cardiologica': True",
+            "arg struttura=None, expected 'Ospedale Molinette': False",
+            "arg data=None, expected '2026-10-10': False",
+            "extra arguments (not penalized): ['nome']",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 969,
+          "output_tokens": 44,
+          "seconds": 1.0217453530058265
+        },
+        {
+          "id": "san_it_dis_conferma",
+          "category": "function_calling",
+          "subtype": "disambiguation",
+          "language": "it",
+          "display_prompt": "Conferma e prenota davvero la visita ortopedica alla struttura Ospedale Careggi il 2026-10-12 alle 09:00 per RSSMRA85M01H501Z.",
+          "output": "<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"visita ortopedica Ospedale Careggi 2026-10-12 alle 09:00\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "visita ortopedica Ospedale Careggi 2026-10-12 alle 09:00"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "prenota_appuntamento",
+              "arguments": {
+                "prestazione": "visita ortopedica",
+                "struttura": "Ospedale Careggi",
+                "data": "2026-10-12",
+                "ora": "09:00",
+                "codice_fiscale": "RSSMRA85M01H501Z"
+              }
+            }
+          ],
+          "score": 0.2,
+          "score_details": [
+            "expected prenota_appuntamento, actual cerca_prestazione: name_score=0.00",
+            "arg prestazione=None, expected 'visita ortopedica': False",
+            "arg struttura=None, expected 'Ospedale Careggi': False",
+            "arg data=None, expected '2026-10-12': False",
+            "arg ora=None, expected '09:00': False",
+            "arg codice_fiscale=None, expected 'RSSMRA85M01H501Z': False",
+            "extra arguments (not penalized): ['nome']",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 973,
+          "output_tokens": 51,
+          "seconds": 1.1869931537657976
+        },
+        {
+          "id": "san_it_dis_referto",
+          "category": "function_calling",
+          "subtype": "disambiguation",
+          "language": "it",
+          "display_prompt": "Recupera il referto dell'esame, non la ricetta: identificativo REF-909 per il cf MRTLNZ88D12G273P.",
+          "output": "<tool_call>\n{\"name\": \"recupera_referto\", \"arguments\": {\"codice_fiscale\": \"MRTLNZ88D12G273P\", \"id_referto\": \"REF-909\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "recupera_referto",
+              "arguments": {
+                "codice_fiscale": "MRTLNZ88D12G273P",
+                "id_referto": "REF-909"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "recupera_referto",
+              "arguments": {
+                "codice_fiscale": "MRTLNZ88D12G273P",
+                "id_referto": "REF-909"
+              }
+            }
+          ],
+          "score": 1.0,
+          "score_details": [
+            "expected recupera_referto, actual recupera_referto: name_score=1.00",
+            "arg codice_fiscale='MRTLNZ88D12G273P', expected 'MRTLNZ88D12G273P': True",
+            "arg id_referto='REF-909', expected 'REF-909': True",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 960,
+          "output_tokens": 51,
+          "seconds": 1.183325464837253
+        },
+        {
+          "id": "san_it_dis_ricetta",
+          "category": "function_calling",
+          "subtype": "disambiguation",
+          "language": "it",
+          "display_prompt": "Voglio la ricetta dematerializzata numero RCE-4567, non il referto.",
+          "output": "<tool_call>\n{\"name\": \"consulta_ricetta\", \"arguments\": {\"numero_ricetta\": \"RCE-4567\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-4567"
+              }
+            }
+          ],
+          "expected_calls": [
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-4567"
+              }
+            }
+          ],
+          "score": 1.0,
+          "score_details": [
+            "expected consulta_ricetta, actual consulta_ricetta: name_score=1.00",
+            "arg numero_ricetta='RCE-4567', expected 'RCE-4567': True",
+            "call count expected=1 actual=1 score=1.00"
+          ],
+          "prompt_tokens": 947,
+          "output_tokens": 34,
+          "seconds": 0.8007924500852823
+        },
+        {
+          "id": "san_it_miss_prenota",
+          "category": "function_calling",
+          "subtype": "missing_argument",
+          "language": "it",
+          "display_prompt": "Prenota una visita dermatologica.",
+          "output": "Per procedere, ho bisogno di conoscere il nome della prestazione. Potresti fornirmi il nome della prestazione?",
+          "parsed_calls": [],
+          "expected_calls": [],
+          "score": 1.0,
+          "score_details": [
+            "expected no calls; got 0",
+            "non-tool response matched ['?']; required at least 1 from ['struttura', 'data', 'ora', 'codice fiscale', 'quale', '?']: True"
+          ],
+          "prompt_tokens": 934,
+          "output_tokens": 30,
+          "seconds": 0.6837901333346963
+        },
+        {
+          "id": "san_it_miss_esenz",
+          "category": "function_calling",
+          "subtype": "missing_argument",
+          "language": "it",
+          "display_prompt": "Verifica un'esenzione per il mio codice fiscale RSSMRA85M01H501Z.",
+          "output": "<tool_call>\n{\"name\": \"annulla_prenotazione\", \"arguments\": {\"codice_prenotazione\": \"RSSMRA85M01H501Z\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "annulla_prenotazione",
+              "arguments": {
+                "codice_prenotazione": "RSSMRA85M01H501Z"
+              }
+            }
+          ],
+          "expected_calls": [],
+          "score": 0.0,
+          "score_details": [
+            "expected no calls; got 1",
+            "non-tool response matched ['codice']; required at least 1 from ['codice esenzione', 'quale esenzione', 'codice', '?']: False"
+          ],
+          "prompt_tokens": 948,
+          "output_tokens": 42,
+          "seconds": 0.9603504855185747
+        },
+        {
+          "id": "san_it_miss_prom",
+          "category": "function_calling",
+          "subtype": "missing_argument",
+          "language": "it",
+          "display_prompt": "Invia un promemoria per la prenotazione PRN-5005.",
+          "output": "<tool_call>\n{\"name\": \"invia_promemoria\", \"arguments\": {\"codice_prenotazione\": \"PRN-5005\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "invia_promemoria",
+              "arguments": {
+                "codice_prenotazione": "PRN-5005"
+              }
+            }
+          ],
+          "expected_calls": [],
+          "score": 0.0,
+          "score_details": [
+            "expected no calls; got 1",
+            "non-tool response matched []; required at least 1 from ['canale', 'sms', 'email', 'come', '?']: False"
+          ],
+          "prompt_tokens": 942,
+          "output_tokens": 37,
+          "seconds": 0.8569316547363997
+        },
+        {
+          "id": "san_it_miss_referto",
+          "category": "function_calling",
+          "subtype": "missing_argument",
+          "language": "it",
+          "display_prompt": "Recupera il mio referto.",
+          "output": "Per procedere, ho bisogno di sapere il codice fiscale.",
+          "parsed_calls": [],
+          "expected_calls": [],
+          "score": 1.0,
+          "score_details": [
+            "expected no calls; got 0",
+            "non-tool response matched ['codice fiscale']; required at least 1 from ['codice fiscale', 'identificativo', 'id', 'quale', '?']: True"
+          ],
+          "prompt_tokens": 933,
+          "output_tokens": 18,
+          "seconds": 0.43215144984424114
+        },
+        {
+          "id": "san_it_unav_taxi",
+          "category": "function_calling",
+          "subtype": "unavailable_tool",
+          "language": "it",
+          "display_prompt": "Prenotami un taxi per andare in ospedale domani alle 8.",
+          "output": "<tool_call>\n{\"name\": \"invia_promemoria\", \"arguments\": {\"codice_prenotazione\": \"8\", \"canale\": \"sms\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "invia_promemoria",
+              "arguments": {
+                "codice_prenotazione": "8",
+                "canale": "sms"
+              }
+            }
+          ],
+          "expected_calls": [],
+          "score": 0.0,
+          "score_details": [
+            "expected no calls; got 1",
+            "non-tool response matched []; required at least 1 from ['non posso', 'non disponibile', 'nessuno strumento', 'non ho', 'non e disponibile']: False"
+          ],
+          "prompt_tokens": 944,
+          "output_tokens": 40,
+          "seconds": 0.9193029534071684
+        },
+        {
+          "id": "san_it_unav_farmaco",
+          "category": "function_calling",
+          "subtype": "unavailable_tool",
+          "language": "it",
+          "display_prompt": "Ordina per me un antibiotico su una farmacia online.",
+          "output": "Mi dispiace, ma non posso ordinare farmaci online. Sono qui per fornire assistenza sanitaria, non per effettuare prenotazioni mediche.",
+          "parsed_calls": [],
+          "expected_calls": [],
+          "score": 1.0,
+          "score_details": [
+            "expected no calls; got 0",
+            "non-tool response matched ['non posso']; required at least 1 from ['non posso', 'non disponibile', 'nessuno strumento', 'non ho', 'non e disponibile']: True"
+          ],
+          "prompt_tokens": 938,
+          "output_tokens": 39,
+          "seconds": 0.910058437846601
+        },
+        {
+          "id": "san_it_unav_chiama",
+          "category": "function_calling",
+          "subtype": "unavailable_tool",
+          "language": "it",
+          "display_prompt": "Chiama al telefono il mio medico di base adesso.",
+          "output": "Mi dispiace, non posso effettuare chiamate.",
+          "parsed_calls": [],
+          "expected_calls": [],
+          "score": 1.0,
+          "score_details": [
+            "expected no calls; got 0",
+            "non-tool response matched ['non posso']; required at least 1 from ['non posso', 'non disponibile', 'nessuno strumento', 'non ho', 'non e disponibile']: True"
+          ],
+          "prompt_tokens": 938,
+          "output_tokens": 17,
+          "seconds": 0.39671840518713
+        },
+        {
+          "id": "san_it_unav_paga",
+          "category": "function_calling",
+          "subtype": "unavailable_tool",
+          "language": "it",
+          "display_prompt": "Paga subito il ticket con la mia carta di credito 4539 1488 0343 6467.",
+          "output": "<tool_call>\n{\"name\": \"prenota_appuntamento\", \"arguments\": {\"prestazione\": \"visita cardiologica\", \"struttura\": \"cardiologo\", \"data\": \"2025-10-15 10:00:00\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "prenota_appuntamento",
+              "arguments": {
+                "prestazione": "visita cardiologica",
+                "struttura": "cardiologo",
+                "data": "2025-10-15 10:00:00"
+              }
+            }
+          ],
+          "expected_calls": [],
+          "score": 0.0,
+          "score_details": [
+            "expected no calls; got 1",
+            "non-tool response matched []; required at least 1 from ['non posso', 'non disponibile', 'nessuno strumento', 'non ho', 'non e disponibile']: False"
+          ],
+          "prompt_tokens": 951,
+          "output_tokens": 63,
+          "seconds": 1.4244029307737947
+        },
+        {
+          "id": "san_it_nt_ticket",
+          "category": "function_calling",
+          "subtype": "no_tool_discrimination",
+          "language": "it",
+          "display_prompt": "In una frase, spiega cos'e il ticket sanitario. Non serve usare strumenti.",
+          "output": "Il ticket sanitario è un documento che permette di pagare una prestazione sanitaria.",
+          "parsed_calls": [],
+          "expected_calls": [],
+          "score": 1.0,
+          "score_details": [
+            "expected no calls; got 0",
+            "non-tool response matched ['ticket', 'sanitar', 'paga', 'prestazione']; required at least 2 from ['ticket', 'sanitar', 'quota', 'paga', 'prestazione']: True"
+          ],
+          "prompt_tokens": 947,
+          "output_tokens": 20,
+          "seconds": 0.46752228774130344
+        },
+        {
+          "id": "san_it_nt_esenzione",
+          "category": "function_calling",
+          "subtype": "no_tool_discrimination",
+          "language": "it",
+          "display_prompt": "Spiega in breve cosa significa 'esenzione per reddito'. Nessuno strumento.",
+          "output": "L'esenzione per reddito è un beneficio che consente a un assistito di pagare solo una parte del ticket sanitario, come un ticket per un'indennità di disoccupazione o un'assicurazione sanitaria.",
+          "parsed_calls": [],
+          "expected_calls": [],
+          "score": 1.0,
+          "score_details": [
+            "expected no calls; got 0",
+            "non-tool response matched ['esenzione', 'reddito', 'paga', 'ticket']; required at least 2 from ['esenzione', 'reddito', 'paga', 'ticket']: True"
+          ],
+          "prompt_tokens": 946,
+          "output_tokens": 52,
+          "seconds": 1.1815638821572065
+        },
+        {
+          "id": "san_it_nt_prelievo",
+          "category": "function_calling",
+          "subtype": "no_tool_discrimination",
+          "language": "it",
+          "display_prompt": "Dammi un consiglio generale su come prepararsi a un prelievo del sangue. Senza strumenti.",
+          "output": "<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"prelievo del sangue\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "cerca_prestazione",
+              "arguments": {
+                "nome": "prelievo del sangue"
+              }
+            }
+          ],
+          "expected_calls": [],
+          "score": 0.0,
+          "score_details": [
+            "expected no calls; got 1",
+            "non-tool response matched ['prelievo']; required at least 2 from ['digiuno', 'acqua', 'mattina', 'prelievo', 'cibo']: False"
+          ],
+          "prompt_tokens": 952,
+          "output_tokens": 33,
+          "seconds": 0.7446754714474082
+        },
+        {
+          "id": "san_it_nt_nre",
+          "category": "function_calling",
+          "subtype": "no_tool_discrimination",
+          "language": "it",
+          "display_prompt": "Cosa vuol dire 'ricetta dematerializzata'? Rispondi a parole.",
+          "output": "<tool_call>\n{\"name\": \"consulta_ricetta\", \"arguments\": {\"numero_ricetta\": \"NRE\"}}\n</tool_call>",
+          "parsed_calls": [
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "NRE"
+              }
+            }
+          ],
+          "expected_calls": [],
+          "score": 0.0,
+          "score_details": [
+            "expected no calls; got 1",
+            "non-tool response matched ['ricetta', 'numero']; required at least 2 from ['ricetta', 'elettronic', 'digital', 'carta', 'numero']: False"
+          ],
+          "prompt_tokens": 944,
+          "output_tokens": 31,
+          "seconds": 0.7161798169836402
+        },
+        {
+          "id": "san_it_obs_disp",
+          "category": "function_calling",
+          "subtype": "observation_grounding",
+          "language": "it",
+          "display_prompt": "Verifica la disponibilita per una visita cardiologica alla struttura Ospedale Niguarda il 2026-10-08 e poi dimmi il primo orario libero e il costo del ticket.",
+          "output": "STEP 1 — MODEL TOOL DECISION\n<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"visita cardiologica Ospedale Niguarda 2026-10-08\"}}\n</tool_call>\n\nTOOL OBSERVATION\n{\"orari_liberi\": [\"09:30\", \"14:00\"], \"ticket_eur\": 23}\n\nSTEP 2 — MODEL RESPONSE\n<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"visita cardiologica Ospedale Niguarda 2026-10-08\"}}\n</tool_call>",
+          "parsed_calls": {
+            "step_1": [
+              {
+                "name": "cerca_prestazione",
+                "arguments": {
+                  "nome": "visita cardiologica Ospedale Niguarda 2026-10-08"
+                }
+              }
+            ],
+            "step_2": [
+              {
+                "name": "cerca_prestazione",
+                "arguments": {
+                  "nome": "visita cardiologica Ospedale Niguarda 2026-10-08"
+                }
+              }
+            ]
+          },
+          "expected_calls": [
+            {
+              "name": "verifica_disponibilita",
+              "arguments": {
+                "prestazione": "visita cardiologica",
+                "struttura": "Ospedale Niguarda",
+                "data": "2026-10-08"
+              }
+            }
+          ],
+          "score": 0.275,
+          "score_details": [
+            "step 1: expected verifica_disponibilita, actual cerca_prestazione: name_score=0.00",
+            "step 1: arg prestazione=None, expected 'visita cardiologica': False",
+            "step 1: arg struttura=None, expected 'Ospedale Niguarda': False",
+            "step 1: arg data=None, expected '2026-10-08': False",
+            "step 1: extra arguments (not penalized): ['nome']",
+            "step 1: call count expected=1 actual=1 score=1.00",
+            "step 2: contains one of ['09:30']: False",
+            "step 2: contains one of ['23']: False",
+            "step 2: avoids ['14:00', '10:30']: True",
+            "step 2: words 11 <= 70: True",
+            "step 2: does not call another tool after receiving the observation: False",
+            "combined two-step score: (0.200 + 0.350) / 2"
+          ],
+          "prompt_tokens": 2025,
+          "output_tokens": 94,
+          "seconds": 2.132468062452972
+        },
+        {
+          "id": "san_it_obs_ricetta",
+          "category": "function_calling",
+          "subtype": "observation_grounding",
+          "language": "it",
+          "display_prompt": "Consulta la ricetta RCE-7788 e dimmi il farmaco e il numero di confezioni.",
+          "output": "STEP 1 — MODEL TOOL DECISION\n<tool_call>\n{\"name\": \"consulta_ricetta\", \"arguments\": {\"numero_ricetta\": \"RCE-7788\"}}\n</tool_call>\n\nTOOL OBSERVATION\n{\"numero_ricetta\": \"RCE-7788\", \"farmaco\": \"Amoxicillina 1g\", \"confezioni\": 2}\n\nSTEP 2 — MODEL RESPONSE\n<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"Amoxicillina 1g\", \"prestazione\": \"ricetta RCE-7788\"}}\n</tool_call>",
+          "parsed_calls": {
+            "step_1": [
+              {
+                "name": "consulta_ricetta",
+                "arguments": {
+                  "numero_ricetta": "RCE-7788"
+                }
+              }
+            ],
+            "step_2": [
+              {
+                "name": "cerca_prestazione",
+                "arguments": {
+                  "nome": "Amoxicillina 1g",
+                  "prestazione": "ricetta RCE-7788"
+                }
+              }
+            ]
+          },
+          "expected_calls": [
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-7788"
+              }
+            }
+          ],
+          "score": 0.7625,
+          "score_details": [
+            "step 1: expected consulta_ricetta, actual consulta_ricetta: name_score=1.00",
+            "step 1: arg numero_ricetta='RCE-7788', expected 'RCE-7788': True",
+            "step 1: call count expected=1 actual=1 score=1.00",
+            "step 2: contains one of ['Amoxicillina']: True",
+            "step 2: contains one of ['2']: False",
+            "step 2: avoids ['Ibuprofene', '3 confezioni']: True",
+            "step 2: words 11 <= 60: True",
+            "step 2: does not call another tool after receiving the observation: False",
+            "combined two-step score: (1.000 + 0.525) / 2"
+          ],
+          "prompt_tokens": 1973,
+          "output_tokens": 82,
+          "seconds": 1.8647933965548873
+        },
+        {
+          "id": "san_it_obs_referto",
+          "category": "function_calling",
+          "subtype": "observation_grounding",
+          "language": "it",
+          "display_prompt": "Recupera il referto REF-321 per il cf FRRGPP70A01H501Z e dimmi l'esame e l'esito.",
+          "output": "STEP 1 — MODEL TOOL DECISION\n<tool_call>\n{\"name\": \"recupera_referto\", \"arguments\": {\"codice_fiscale\": \"FRRGPP70A01H501Z\", \"id_referto\": \"REF-321\"}}\n</tool_call>\n\nTOOL OBSERVATION\n{\"id_referto\": \"REF-321\", \"esame\": \"Emocromo\", \"esito\": \"nella norma\"}\n\nSTEP 2 — MODEL RESPONSE\n<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"emocromo\"}}\n</tool_call>",
+          "parsed_calls": {
+            "step_1": [
+              {
+                "name": "recupera_referto",
+                "arguments": {
+                  "codice_fiscale": "FRRGPP70A01H501Z",
+                  "id_referto": "REF-321"
+                }
+              }
+            ],
+            "step_2": [
+              {
+                "name": "cerca_prestazione",
+                "arguments": {
+                  "nome": "emocromo"
+                }
+              }
+            ]
+          },
+          "expected_calls": [
+            {
+              "name": "recupera_referto",
+              "arguments": {
+                "codice_fiscale": "FRRGPP70A01H501Z",
+                "id_referto": "REF-321"
+              }
+            }
+          ],
+          "score": 0.7625,
+          "score_details": [
+            "step 1: expected recupera_referto, actual recupera_referto: name_score=1.00",
+            "step 1: arg codice_fiscale='FRRGPP70A01H501Z', expected 'FRRGPP70A01H501Z': True",
+            "step 1: arg id_referto='REF-321', expected 'REF-321': True",
+            "step 1: call count expected=1 actual=1 score=1.00",
+            "step 2: contains one of ['Emocromo']: True",
+            "step 2: contains one of ['norma']: False",
+            "step 2: avoids ['alterato', 'patologico']: True",
+            "step 2: words 7 <= 60: True",
+            "step 2: does not call another tool after receiving the observation: False",
+            "combined two-step score: (1.000 + 0.525) / 2"
+          ],
+          "prompt_tokens": 2005,
+          "output_tokens": 81,
+          "seconds": 1.8279229626059532
+        },
+        {
+          "id": "san_it_obs_esenz",
+          "category": "function_calling",
+          "subtype": "observation_grounding",
+          "language": "it",
+          "display_prompt": "Verifica l'esenzione E30 per il cf CNTMRC85T10G224L e dimmi se e valida e fino a quando.",
+          "output": "STEP 1 — MODEL TOOL DECISION\n<tool_call>\n{\"name\": \"annulla_prenotazione\", \"arguments\": {\"codice_prenotazione\": \"E30\"}}\n</tool_call>\n\nTOOL OBSERVATION\n{\"codice_esenzione\": \"E30\", \"valida\": true, \"scadenza\": \"2027-03-31\"}\n\nSTEP 2 — MODEL RESPONSE\n<tool_call>\n{\"name\": \"verifica_esenzione\", \"arguments\": {\"codice_fiscale\": \"CNTMRC85T10G224L\", \"codice_esenzione\": \"E30\"}}\n</tool_call>",
+          "parsed_calls": {
+            "step_1": [
+              {
+                "name": "annulla_prenotazione",
+                "arguments": {
+                  "codice_prenotazione": "E30"
+                }
+              }
+            ],
+            "step_2": [
+              {
+                "name": "verifica_esenzione",
+                "arguments": {
+                  "codice_fiscale": "CNTMRC85T10G224L",
+                  "codice_esenzione": "E30"
+                }
+              }
+            ]
+          },
+          "expected_calls": [
+            {
+              "name": "verifica_esenzione",
+              "arguments": {
+                "codice_fiscale": "CNTMRC85T10G224L",
+                "codice_esenzione": "E30"
+              }
+            }
+          ],
+          "score": 0.275,
+          "score_details": [
+            "step 1: expected verifica_esenzione, actual annulla_prenotazione: name_score=0.00",
+            "step 1: arg codice_fiscale=None, expected 'CNTMRC85T10G224L': False",
+            "step 1: arg codice_esenzione=None, expected 'E30': False",
+            "step 1: extra arguments (not penalized): ['codice_prenotazione']",
+            "step 1: call count expected=1 actual=1 score=1.00",
+            "step 2: contains any of ['valida', 'si', 'sì']: False",
+            "step 2: contains one of ['2027-03-31']: False",
+            "step 2: avoids ['non valida', 'scaduta']: True",
+            "step 2: words 9 <= 60: True",
+            "step 2: does not call another tool after receiving the observation: False",
+            "combined two-step score: (0.200 + 0.350) / 2"
+          ],
+          "prompt_tokens": 1988,
+          "output_tokens": 87,
+          "seconds": 1.9324346696957946
+        },
+        {
+          "id": "san_it_ms_disp_prenota",
+          "category": "function_calling",
+          "subtype": "multi_step",
+          "language": "it",
+          "display_prompt": "Verifica la disponibilita di una visita oculistica alla struttura Ospedale Sacco il 2026-10-15; dopo il risultato, prenota il primo orario libero per il cf DLLNNA83S45F205W.",
+          "output": "STEP 1 — MODEL TOOL DECISION\n<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"visita oculistica\", \"data\": \"2026-10-15\"}}\n</tool_call>\n\nTOOL OBSERVATION\n{\"orari_liberi\": [\"10:00\", \"16:30\"]}\n\nSTEP 2 — MODEL RESPONSE\n<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"visita oculistica\", \"data\": \"2026-10-15\"}}\n</tool_call>",
+          "parsed_calls": {
+            "step_1": [
+              {
+                "name": "cerca_prestazione",
+                "arguments": {
+                  "nome": "visita oculistica",
+                  "data": "2026-10-15"
+                }
+              }
+            ],
+            "step_2": [
+              {
+                "name": "cerca_prestazione",
+                "arguments": {
+                  "nome": "visita oculistica",
+                  "data": "2026-10-15"
+                }
+              }
+            ]
+          },
+          "expected_calls": [
+            {
+              "name": "verifica_disponibilita",
+              "arguments": {
+                "prestazione": "visita oculistica",
+                "struttura": "Ospedale Sacco",
+                "data": "2026-10-15"
+              }
+            }
+          ],
+          "score": 0.3066666666666667,
+          "score_details": [
+            "step 1: expected verifica_disponibilita, actual cerca_prestazione: name_score=0.00",
+            "step 1: arg prestazione=None, expected 'visita oculistica': False",
+            "step 1: arg struttura=None, expected 'Ospedale Sacco': False",
+            "step 1: arg data='2026-10-15', expected '2026-10-15': True",
+            "step 1: extra arguments (not penalized): ['nome']",
+            "step 1: call count expected=1 actual=1 score=1.00",
+            "step 2: expected prenota_appuntamento, actual cerca_prestazione: name_score=0.00",
+            "step 2: arg prestazione=None, expected 'visita oculistica': False",
+            "step 2: arg struttura=None, expected 'Ospedale Sacco': False",
+            "step 2: arg data='2026-10-15', expected '2026-10-15': True",
+            "step 2: arg ora=None, expected '10:00': False",
+            "step 2: arg codice_fiscale=None, expected 'DLLNNA83S45F205W': False",
+            "step 2: extra arguments (not penalized): ['nome']",
+            "step 2: call count expected=1 actual=1 score=1.00",
+            "combined two-step score: (0.333 + 0.280) / 2"
+          ],
+          "prompt_tokens": 2031,
+          "output_tokens": 86,
+          "seconds": 1.9300904804840684
+        },
+        {
+          "id": "san_it_ms_esenz_ticket",
+          "category": "function_calling",
+          "subtype": "multi_step",
+          "language": "it",
+          "display_prompt": "Verifica l'esenzione E01 per il cf RSSMRA85M01H501Z; se risulta valida, calcola di conseguenza il ticket per una visita fisiatrica.",
+          "output": "STEP 1 — MODEL TOOL DECISION\n<tool_call>\n{\"name\": \"annulla_prenotazione\", \"arguments\": {\"codice_prenotazione\": \"E01\", \"codice_esenzione\": \"E01\"}}\n</tool_call>\n\nTOOL OBSERVATION\n{\"valida\": true, \"codice_esenzione\": \"E01\"}\n\nSTEP 2 — MODEL RESPONSE\n<tool_call>\n{\"name\": \"calcola_ticket\", \"arguments\": {\"prestazione\": \"visita fisiatrica\", \"esente\": true}}\n</tool_call>",
+          "parsed_calls": {
+            "step_1": [
+              {
+                "name": "annulla_prenotazione",
+                "arguments": {
+                  "codice_prenotazione": "E01",
+                  "codice_esenzione": "E01"
+                }
+              }
+            ],
+            "step_2": [
+              {
+                "name": "calcola_ticket",
+                "arguments": {
+                  "prestazione": "visita fisiatrica",
+                  "esente": true
+                }
+              }
+            ]
+          },
+          "expected_calls": [
+            {
+              "name": "verifica_esenzione",
+              "arguments": {
+                "codice_fiscale": "RSSMRA85M01H501Z",
+                "codice_esenzione": "E01"
+              }
+            }
+          ],
+          "score": 0.7,
+          "score_details": [
+            "step 1: expected verifica_esenzione, actual annulla_prenotazione: name_score=0.00",
+            "step 1: arg codice_fiscale=None, expected 'RSSMRA85M01H501Z': False",
+            "step 1: arg codice_esenzione='E01', expected 'E01': True",
+            "step 1: extra arguments (not penalized): ['codice_prenotazione']",
+            "step 1: call count expected=1 actual=1 score=1.00",
+            "step 2: expected calcola_ticket, actual calcola_ticket: name_score=1.00",
+            "step 2: arg prestazione='visita fisiatrica', expected 'visita fisiatrica': True",
+            "step 2: arg esente=True, expected True: True",
+            "step 2: call count expected=1 actual=1 score=1.00",
+            "combined two-step score: (0.400 + 1.000) / 2"
+          ],
+          "prompt_tokens": 2002,
+          "output_tokens": 84,
+          "seconds": 1.9045579647645354
+        },
+        {
+          "id": "san_it_ms_disp_prom",
+          "category": "function_calling",
+          "subtype": "multi_step",
+          "language": "it",
+          "display_prompt": "Verifica la disponibilita di una ecografia tiroide alla struttura Poliambulatorio Nord il 2026-10-20; poi invia un promemoria via email per la prenotazione che ti verra indicata.",
+          "output": "STEP 1 — MODEL TOOL DECISION\n<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"ecografia tiroide\", \"prestazione\": \"ecografia tiroide\"}}\n</tool_call>\n\nTOOL OBSERVATION\n{\"orari_liberi\": [\"08:15\"], \"codice_prenotazione\": \"PRN-6161\"}\n\nSTEP 2 — MODEL RESPONSE\n<tool_call>\n{\"name\": \"invia_promemoria\", \"arguments\": {\"codice_prenotazione\": \"PRN-6161\", \"canale\": \"email\"}}\n</tool_call>",
+          "parsed_calls": {
+            "step_1": [
+              {
+                "name": "cerca_prestazione",
+                "arguments": {
+                  "nome": "ecografia tiroide",
+                  "prestazione": "ecografia tiroide"
+                }
+              }
+            ],
+            "step_2": [
+              {
+                "name": "invia_promemoria",
+                "arguments": {
+                  "codice_prenotazione": "PRN-6161",
+                  "canale": "email"
+                }
+              }
+            ]
+          },
+          "expected_calls": [
+            {
+              "name": "verifica_disponibilita",
+              "arguments": {
+                "prestazione": "ecografia tiroide",
+                "struttura": "Poliambulatorio Nord",
+                "data": "2026-10-20"
+              }
+            }
+          ],
+          "score": 0.6666666666666667,
+          "score_details": [
+            "step 1: expected verifica_disponibilita, actual cerca_prestazione: name_score=0.00",
+            "step 1: arg prestazione='ecografia tiroide', expected 'ecografia tiroide': True",
+            "step 1: arg struttura=None, expected 'Poliambulatorio Nord': False",
+            "step 1: arg data=None, expected '2026-10-20': False",
+            "step 1: extra arguments (not penalized): ['nome']",
+            "step 1: call count expected=1 actual=1 score=1.00",
+            "step 2: expected invia_promemoria, actual invia_promemoria: name_score=1.00",
+            "step 2: arg codice_prenotazione='PRN-6161', expected 'PRN-6161': True",
+            "step 2: arg canale='email', expected 'email': True",
+            "step 2: call count expected=1 actual=1 score=1.00",
+            "combined two-step score: (0.333 + 1.000) / 2"
+          ],
+          "prompt_tokens": 2036,
+          "output_tokens": 88,
+          "seconds": 1.97772344853729
+        },
+        {
+          "id": "san_it_ms_ricetta_prenota",
+          "category": "function_calling",
+          "subtype": "multi_step",
+          "language": "it",
+          "display_prompt": "Consulta la ricetta RCE-9012; dopo il risultato, prenota la prestazione indicata nella ricetta alla struttura Ospedale Maggiore il 2026-11-10 alle 12:00 per il cf VRDLGI90A41F205K.",
+          "output": "STEP 1 — MODEL TOOL DECISION\n<tool_call>\n{\"name\": \"consulta_ricetta\", \"arguments\": {\"numero_ricetta\": \"RCE-9012\"}}\n</tool_call>\n\nTOOL OBSERVATION\n{\"numero_ricetta\": \"RCE-9012\", \"prestazione\": \"visita pneumologica\"}\n\nSTEP 2 — MODEL RESPONSE\n<tool_call>\n{\"name\": \"cerca_prestazione\", \"arguments\": {\"nome\": \"visita pneumologica\", \"prestazione\": \"visita medica\"}}\n</tool_call>",
+          "parsed_calls": {
+            "step_1": [
+              {
+                "name": "consulta_ricetta",
+                "arguments": {
+                  "numero_ricetta": "RCE-9012"
+                }
+              }
+            ],
+            "step_2": [
+              {
+                "name": "cerca_prestazione",
+                "arguments": {
+                  "nome": "visita pneumologica",
+                  "prestazione": "visita medica"
+                }
+              }
+            ]
+          },
+          "expected_calls": [
+            {
+              "name": "consulta_ricetta",
+              "arguments": {
+                "numero_ricetta": "RCE-9012"
+              }
+            }
+          ],
+          "score": 0.6,
+          "score_details": [
+            "step 1: expected consulta_ricetta, actual consulta_ricetta: name_score=1.00",
+            "step 1: arg numero_ricetta='RCE-9012', expected 'RCE-9012': True",
+            "step 1: call count expected=1 actual=1 score=1.00",
+            "step 2: expected prenota_appuntamento, actual cerca_prestazione: name_score=0.00",
+            "step 2: arg prestazione='visita medica', expected 'visita pneumologica': False",
+            "step 2: arg struttura=None, expected 'Ospedale Maggiore': False",
+            "step 2: arg data=None, expected '2026-11-10': False",
+            "step 2: arg ora=None, expected '12:00': False",
+            "step 2: arg codice_fiscale=None, expected 'VRDLGI90A41F205K': False",
+            "step 2: extra arguments (not penalized): ['nome']",
+            "step 2: call count expected=1 actual=1 score=1.00",
+            "combined two-step score: (1.000 + 0.200) / 2"
+          ],
+          "prompt_tokens": 2042,
+          "output_tokens": 77,
+          "seconds": 1.7662601321935654
+        }
+      ]
+    }
+  }
+}

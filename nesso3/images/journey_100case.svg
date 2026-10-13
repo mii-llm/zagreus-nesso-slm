@@ -1,0 +1,58 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 470' width='900' font-family='-apple-system,Segoe UI,Helvetica,Arial,sans-serif'>
+<rect width='900' height='470' fill='#ffffff'/>
+<text x='20' y='28' font-size='18' font-weight='700' fill='#111'>100-case bilingual function-calling suite: every experiment on the road to Nesso3</text>
+<text x='20' y='48' font-size='12' fill='#555'>total correct out of 100 (50 IT + 50 EN), greedy decoding, each model on its own native contract</text>
+<line x1='410.0' y1='62' x2='410.0' y2='400' stroke='#e5e7eb'/>
+<text x='410.0' y='416' font-size='11' fill='#777' text-anchor='middle'>0</text>
+<line x1='525.0' y1='62' x2='525.0' y2='400' stroke='#e5e7eb'/>
+<text x='525.0' y='416' font-size='11' fill='#777' text-anchor='middle'>20</text>
+<line x1='640.0' y1='62' x2='640.0' y2='400' stroke='#e5e7eb'/>
+<text x='640.0' y='416' font-size='11' fill='#777' text-anchor='middle'>40</text>
+<line x1='755.0' y1='62' x2='755.0' y2='400' stroke='#e5e7eb'/>
+<text x='755.0' y='416' font-size='11' fill='#777' text-anchor='middle'>60</text>
+<line x1='870.0' y1='62' x2='870.0' y2='400' stroke='#e5e7eb'/>
+<text x='870.0' y='416' font-size='11' fill='#777' text-anchor='middle'>80</text>
+<text x='400' y='89' font-size='12.5' fill='#222' text-anchor='end'>compact SFT v1: one compact contract, 2,531 tools</text>
+<rect x='410' y='75' width='350.8' height='20' rx='3' fill='#8b95a5'/>
+<text x='766.8' y='89' font-size='12.5' fill='#111' font-weight='700'>61</text>
+<text x='400' y='119' font-size='12.5' fill='#222' text-anchor='end'>v2: procedural abstention data (over-abstains)</text>
+<rect x='410' y='105' width='345.0' height='20' rx='3' fill='#d1493f'/>
+<text x='761.0' y='119' font-size='12.5' fill='#111' font-weight='700'>60</text>
+<text x='400' y='149' font-size='12.5' fill='#222' text-anchor='end'>v3: fewer refusals + 'answer-me' data</text>
+<rect x='410' y='135' width='368.0' height='20' rx='3' fill='#2e9e5b'/>
+<text x='784.0' y='149' font-size='12.5' fill='#111' font-weight='700'>64</text>
+<text x='400' y='179' font-size='12.5' fill='#222' text-anchor='end'>v4: name-grounding / crowded-disambiguation patches</text>
+<rect x='410' y='165' width='322.0' height='20' rx='3' fill='#d1493f'/>
+<text x='738.0' y='179' font-size='12.5' fill='#111' font-weight='700'>56</text>
+<text x='400' y='209' font-size='12.5' fill='#222' text-anchor='end'>v3 + chat-anchored RL</text>
+<rect x='410' y='195' width='391.0' height='20' rx='3' fill='#2e9e5b'/>
+<text x='807.0' y='209' font-size='12.5' fill='#111' font-weight='700'>68</text>
+<text x='400' y='239' font-size='12.5' fill='#222' text-anchor='end'>  + extra RL rewards (par-diff, multi-step, missing)</text>
+<rect x='410' y='225' width='402.5' height='20' rx='3' fill='#e0a030'/>
+<text x='818.5' y='239' font-size='12.5' fill='#111' font-weight='700'>70</text>
+<text x='400' y='269' font-size='12.5' fill='#222' text-anchor='end'>v5a: + public FC data incl. ToolMind</text>
+<rect x='410' y='255' width='281.8' height='20' rx='3' fill='#d1493f'/>
+<text x='697.8' y='269' font-size='12.5' fill='#111' font-weight='700'>49</text>
+<text x='400' y='299' font-size='12.5' fill='#222' text-anchor='end' font-weight='700'>v5b: + public FC data, no ToolMind  =  NESSO3</text>
+<rect x='410' y='285' width='425.5' height='20' rx='3' fill='#2563eb'/>
+<text x='841.5' y='299' font-size='12.5' fill='#111' font-weight='700'>74</text>
+<text x='400' y='329' font-size='12.5' fill='#222' text-anchor='end'>v6: v5b + Nemotron-SFT-Agentic-v2 slice</text>
+<rect x='410' y='315' width='391.0' height='20' rx='3' fill='#d1493f'/>
+<text x='807.0' y='329' font-size='12.5' fill='#111' font-weight='700'>68</text>
+<text x='400' y='359' font-size='12.5' fill='#222' text-anchor='end'>OPD-1 on v5b (gentle)</text>
+<rect x='410' y='345' width='414.0' height='20' rx='3' fill='#e0a030'/>
+<text x='830.0' y='359' font-size='12.5' fill='#111' font-weight='700'>72</text>
+<text x='400' y='389' font-size='12.5' fill='#222' text-anchor='end'>OPD-2 on v5b (strong)</text>
+<rect x='410' y='375' width='431.2' height='20' rx='3' fill='#e0a030'/>
+<text x='847.2' y='389' font-size='12.5' fill='#111' font-weight='700'>75</text>
+<line x1='801.0' y1='62' x2='801.0' y2='400' stroke='#555555' stroke-dasharray='4 3'/>
+<line x1='795.25' y1='62' x2='795.25' y2='400' stroke='#555555' stroke-dasharray='4 3'/>
+<line x1='847.0' y1='62' x2='847.0' y2='400' stroke='#555555' stroke-dasharray='4 3'/>
+<text x='798.125' y='56' font-size='10.5' fill='#555' text-anchor='end'>Nesso2 v1 68 · Qwen3-0.6B 67</text>
+<text x='851.0' y='56' font-size='10.5' fill='#555'>Qwen thinking 76</text>
+<rect x='20' y='438' width='12' height='12' rx='2' fill='#2563eb'/><text x='38' y='448' font-size='12' fill='#333'>released (Nesso3)</text>
+<rect x='172.2' y='438' width='12' height='12' rx='2' fill='#2e9e5b'/><text x='190.2' y='448' font-size='12' fill='#333'>worked, kept</text>
+<rect x='291.4' y='438' width='12' height='12' rx='2' fill='#e0a030'/><text x='309.4' y='448' font-size='12' fill='#333'>mixed / not released</text>
+<rect x='463.4' y='438' width='12' height='12' rx='2' fill='#d1493f'/><text x='481.4' y='448' font-size='12' fill='#333'>regression</text>
+<rect x='569.4' y='438' width='12' height='12' rx='2' fill='#8b95a5'/><text x='587.4' y='448' font-size='12' fill='#333'>baseline</text>
+</svg>

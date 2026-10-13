@@ -1,0 +1,1222 @@
+{
+ "res": {
+  "giux78/nesso2-0.4B-agentic-v2-opd2": {
+   "s1": {
+    "answer": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Torino\"}}\n</tool_call>",
+    "names": [
+     "get_weather"
+    ],
+    "calls": [
+     [
+      "get_weather",
+      {
+       "city": "Torino"
+      }
+     ]
+    ]
+   },
+   "s2": {
+    "answer": "Sure. What topic would you like to focus on?",
+    "names": [],
+    "calls": []
+   },
+   "s3": {
+    "answer": "<tool_call>\n{\"name\": \"create_event\", \"arguments\": {\"title\": \"Riunione team\", \"date\": \"3 giugno\", \"time\": \"10\"}}\n</tool_call>",
+    "names": [
+     "create_event"
+    ],
+    "calls": [
+     [
+      "create_event",
+      {
+       "title": "Riunione team",
+       "date": "3 giugno",
+       "time": "10"
+      }
+     ]
+    ]
+   },
+   "s4": {
+    "answer": "<tool_call>\n{\"name\": \"convert_currency\", \"arguments\": {\"amount\": 50, \"from\": \"USD\", \"to\": \"EUR\"}}\n</tool_call>",
+    "names": [
+     "convert_currency"
+    ],
+    "calls": [
+     [
+      "convert_currency",
+      {
+       "amount": 50,
+       "from": "USD",
+       "to": "EUR"
+      }
+     ]
+    ]
+   },
+   "ps1": {
+    "answer": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Roma\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Firenze\"}}\n</tool_call>",
+    "names": [
+     "get_weather",
+     "get_weather"
+    ],
+    "calls": [
+     [
+      "get_weather",
+      {
+       "city": "Roma"
+      }
+     ],
+     [
+      "get_weather",
+      {
+       "city": "Firenze"
+      }
+     ]
+    ]
+   },
+   "ps2": {
+    "answer": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Paris\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Berlin\"}}\n</tool_call>",
+    "names": [
+     "get_weather",
+     "get_weather"
+    ],
+    "calls": [
+     [
+      "get_weather",
+      {
+       "city": "Paris"
+      }
+     ],
+     [
+      "get_weather",
+      {
+       "city": "Berlin"
+      }
+     ]
+    ]
+   },
+   "ps3": {
+    "answer": "<tool_call>\n{\"name\": \"get_stock_price\", \"arguments\": {\"symbol\": \"AAPL\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"get_stock_price\", \"arguments\": {\"symbol\": \"MSFT\"}}\n</tool_call>",
+    "names": [
+     "get_stock_price",
+     "get_stock_price"
+    ],
+    "calls": [
+     [
+      "get_stock_price",
+      {
+       "symbol": "AAPL"
+      }
+     ],
+     [
+      "get_stock_price",
+      {
+       "symbol": "MSFT"
+      }
+     ]
+    ]
+   },
+   "ps4": {
+    "answer": "<tool_call>\n{\"name\": \"get_stock_price\", \"arguments\": {\"symbol\": \"TSLA\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"get_stock_price\", \"arguments\": {\"symbol\": \"AMZN\"}}\n</tool_call>",
+    "names": [
+     "get_stock_price",
+     "get_stock_price"
+    ],
+    "calls": [
+     [
+      "get_stock_price",
+      {
+       "symbol": "TSLA"
+      }
+     ],
+     [
+      "get_stock_price",
+      {
+       "symbol": "AMZN"
+      }
+     ]
+    ]
+   },
+   "pd1": {
+    "answer": "<tool_call>\n{\"name\": \"web_search\", \"arguments\": {\"query\": \"inflazione euro converti 1000\"}}\n</tool_call>",
+    "names": [
+     "web_search"
+    ],
+    "calls": [
+     [
+      "web_search",
+      {
+       "query": "inflazione euro converti 1000"
+      }
+     ]
+    ]
+   },
+   "pd2": {
+    "answer": "<tool_call>\n{\"name\": \"web_search\", \"arguments\": {\"query\": \"elections\"}}\n</tool_call>",
+    "names": [
+     "web_search"
+    ],
+    "calls": [
+     [
+      "web_search",
+      {
+       "query": "elections"
+      }
+     ]
+    ]
+   },
+   "pd3": {
+    "answer": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Roma\", \"day\": \"15\"}}\n</tool_call>",
+    "names": [
+     "get_weather"
+    ],
+    "calls": [
+     [
+      "get_weather",
+      {
+       "city": "Roma",
+       "day": "15"
+      }
+     ]
+    ]
+   },
+   "pd4": {
+    "answer": "<tool_call>\n{\"name\": \"get_stock_price\", \"arguments\": {\"symbol\": \"AAPL\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Cupertino\"}}\n</tool_call>",
+    "names": [
+     "get_stock_price",
+     "get_weather"
+    ],
+    "calls": [
+     [
+      "get_stock_price",
+      {
+       "symbol": "AAPL"
+      }
+     ],
+     [
+      "get_weather",
+      {
+       "city": "Cupertino"
+      }
+     ]
+    ]
+   },
+   "ma1": {
+    "answer": "<tool_call>\n{\"name\": \"book_flight\", \"arguments\": {\"origin\": \"Milano\", \"destination\": \"Tokyo\", \"date\": \"20/05/2025\", \"passengers\": 3}}\n</tool_call>",
+    "names": [
+     "book_flight"
+    ],
+    "calls": [
+     [
+      "book_flight",
+      {
+       "origin": "Milano",
+       "destination": "Tokyo",
+       "date": "20/05/2025",
+       "passengers": 3
+      }
+     ]
+    ]
+   },
+   "ma2": {
+    "answer": "<tool_call>\n{\"name\": \"book_flight\", \"arguments\": {\"origin\": \"London\", \"destination\": \"New York\", \"date\": \"2025-07-01\", \"passengers\": 1}}\n</tool_call>",
+    "names": [
+     "book_flight"
+    ],
+    "calls": [
+     [
+      "book_flight",
+      {
+       "origin": "London",
+       "destination": "New York",
+       "date": "2025-07-01",
+       "passengers": 1
+      }
+     ]
+    ]
+   },
+   "ma3": {
+    "answer": "Mi dispiace, non posso inviare un'email: non ho la capacità di farlo.",
+    "names": [],
+    "calls": []
+   },
+   "ma4": {
+    "answer": "<tool_call>\n{\"name\": \"create_event\", \"arguments\": {\"title\": \"Dentist\", \"date\": \"2025-03-12\", \"time\": \"09:30\"}}\n</tool_call>",
+    "names": [
+     "create_event"
+    ],
+    "calls": [
+     [
+      "create_event",
+      {
+       "title": "Dentist",
+       "date": "2025-03-12",
+       "time": "09:30"
+      }
+     ]
+    ]
+   },
+   "d1": {
+    "answer": "<tool_call>\n{\"name\": \"convert_currency\", \"arguments\": {\"amount\": 250, \"from\": \"USD\", \"to\": \"EUR\"}}\n</tool_call>",
+    "names": [
+     "convert_currency"
+    ],
+    "calls": [
+     [
+      "convert_currency",
+      {
+       "amount": 250,
+       "from": "USD",
+       "to": "EUR"
+      }
+     ]
+    ]
+   },
+   "d2": {
+    "answer": "250 USD is already in dollars. How much is it in euros?",
+    "names": [],
+    "calls": []
+   },
+   "d3": {
+    "answer": "Per procedere, dobbiamo prima calcolare qual è il 18% di 340. firsto il 18% di 340 è... 340 * 18/100 = 680.",
+    "names": [],
+    "calls": []
+   },
+   "d4": {
+    "answer": "<tool_call>\n{\"name\": \"translate_text\", \"arguments\": {\"text\": \"good morning\", \"target_language\": \"Italian\"}}\n</tool_call>",
+    "names": [
+     "translate_text"
+    ],
+    "calls": [
+     [
+      "translate_text",
+      {
+       "text": "good morning",
+       "target_language": "Italian"
+      }
+     ]
+    ]
+   },
+   "mi1": {
+    "answer": "Mi dispiace, non posso inviare un'email: non ho uno strumento adatto.",
+    "names": [],
+    "calls": []
+   },
+   "mi2": {
+    "answer": "Sure. What should the body say?",
+    "names": [],
+    "calls": []
+   },
+   "mi3": {
+    "answer": "Mi dispiace, non posso prenotare un volo: non ho uno strumento adatto.",
+    "names": [],
+    "calls": []
+   },
+   "mi4": {
+    "answer": "I don't have a tool available for this request.",
+    "names": [],
+    "calls": []
+   },
+   "u1": {
+    "answer": "Mi dispiace, non posso prenotare un taxi: non ho uno strumento adatto.",
+    "names": [],
+    "calls": []
+   },
+   "u2": {
+    "answer": "Sorry, that's not possible: none of the provided tools fit.",
+    "names": [],
+    "calls": []
+   },
+   "u3": {
+    "answer": "Mi dispiace, non posso accendere le luci: non ho uno strumento adatto.",
+    "names": [],
+    "calls": []
+   },
+   "u4": {
+    "answer": "Sorry, that's not possible: none of the provided tools fit.",
+    "names": [],
+    "calls": []
+   },
+   "k1": {
+    "answer": "I Promessi Sposi sono stati scritti da Alessandro Manzoni.",
+    "names": [],
+    "calls": []
+   },
+   "k2": {
+    "answer": "The writer of Romeo and Juliet is Shakespeare.",
+    "names": [],
+    "calls": []
+   },
+   "k3": {
+    "answer": "Ciao! Sto bene, grazie. Come posso aiutarti?",
+    "names": [],
+    "calls": []
+   },
+   "k4": {
+    "answer": "A black hole is a region in space where gravity is so strong that nothing, not even light, can escape its pull.",
+    "names": [],
+    "calls": []
+   },
+   "o1": {
+    "answer": "Sei bel tempo a Roma, con temperature tra i 28°C e 5% di probabilità di pioggia.",
+    "names": [],
+    "calls": []
+   },
+   "o2": {
+    "answer": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"London\", \"day\": \"tomorrow\"}}\n</tool_call>",
+    "names": [
+     "get_weather"
+    ],
+    "calls": [
+     [
+      "get_weather",
+      {
+       "city": "London",
+       "day": "tomorrow"
+      }
+     ]
+    ]
+   },
+   "o3": {
+    "answer": "Il prezzo è 190 USD per la azione Apple.",
+    "names": [],
+    "calls": []
+   },
+   "o4": {
+    "answer": "The amount is 108 USD.",
+    "names": [],
+    "calls": []
+   },
+   "m1": {
+    "answer": "<tool_call>\n{\"name\": \"convert_currency\", \"arguments\": {\"amount\": 1000, \"from\": \"USD\", \"to\": \"EUR\"}}\n</tool_call>",
+    "names": [
+     "convert_currency"
+    ],
+    "calls": [
+     [
+      "convert_currency",
+      {
+       "amount": 1000,
+       "from": "USD",
+       "to": "EUR"
+      }
+     ]
+    ]
+   },
+   "m2": {
+    "answer": "Your calendar says July 14, 2028.",
+    "names": [],
+    "calls": []
+   },
+   "m3": {
+    "answer": "<tool_call>\n{\"name\": \"send_email\", \"arguments\": {\"to\": \"me@ex.it\", \"subject\": \"Ombrello\", \"body\": \"Ciao! Sei a Roma? Ti aspettavo! Per te ho preparato un ombrello! C'è ancora tempo per l'acquisto!\", \"message\": \"Ciao! Sei a Roma? Ti aspettavo! Per te ho preparato un ombrello! C'è ancora tempo per l'acquisto!\", \"payload\": \"Ciao! Sei a Roma? Ti aspettavo! Per te ho preparato un ombrello! C'è ancora tempo per l'acquisto!\", \"reply\": \"Ciao! Sei a Roma? Ti aspettavo! Per te ho preparato un ombrello! C'è ancora tempo per l'acquisto!\", \"output\": \"Ombrello per te!\", \"payload\": \"Ombrello per te!\", \"result\": null}\n</tool_call>",
+    "names": [
+     "send_email"
+    ],
+    "calls": [
+     [
+      "send_email",
+      null
+     ]
+    ]
+   },
+   "m4": {
+    "answer": "<tool_call>\n{\"name\": \"send_email\", \"arguments\": {\"to\": \"email@example.com\", \"subject\": \"WEEKLY WINDS\", \"body\": \"Rome\", \"message\": \"I'm writing to remind you of your reminder for the next day's weather. It's going to be sunny and the wind will be strong. I hope you don't miss it. Bye!\"}}\n</tool_call>",
+    "names": [
+     "send_email"
+    ],
+    "calls": [
+     [
+      "send_email",
+      {
+       "to": "email@example.com",
+       "subject": "WEEKLY WINDS",
+       "body": "Rome",
+       "message": "I'm writing to remind you of your reminder for the next day's weather. It's going to be sunny and the wind will be strong. I hope you don't miss it. Bye!"
+      }
+     ]
+    ]
+   },
+   "s5": {
+    "answer": "<tool_call>\n{\"name\": \"get_stock_price\", \"arguments\": {\"symbol\": \"RACE\"}}\n</tool_call>",
+    "names": [
+     "get_stock_price"
+    ],
+    "calls": [
+     [
+      "get_stock_price",
+      {
+       "symbol": "RACE"
+      }
+     ]
+    ]
+   },
+   "s6": {
+    "answer": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Dublin\"}}\n</tool_call>",
+    "names": [
+     "get_weather"
+    ],
+    "calls": [
+     [
+      "get_weather",
+      {
+       "city": "Dublin"
+      }
+     ]
+    ]
+   },
+   "s7": {
+    "answer": "<tool_call>\n{\"name\": \"translate_text\", \"arguments\": {\"text\": \"grazie mille\", \"target_language\": \"German\"}}\n</tool_call>",
+    "names": [
+     "translate_text"
+    ],
+    "calls": [
+     [
+      "translate_text",
+      {
+       "text": "grazie mille",
+       "target_language": "German"
+      }
+     ]
+    ]
+   },
+   "s8": {
+    "answer": "<tool_call>\n{\"name\": \"convert_currency\", \"arguments\": {\"amount\": 300, \"from\": \"USD\", \"to\": \"Pound\"}}\n</tool_call>",
+    "names": [
+     "convert_currency"
+    ],
+    "calls": [
+     [
+      "convert_currency",
+      {
+       "amount": 300,
+       "from": "USD",
+       "to": "Pound"
+      }
+     ]
+    ]
+   },
+   "s9": {
+    "answer": "47 più 88 è pari a... 167.",
+    "names": [],
+    "calls": []
+   },
+   "s10": {
+    "answer": "<tool_call>\n{\"name\": \"create_event\", \"arguments\": {\"title\": \"Gym\", \"date\": \"2025-04-10\", \"time\": \"18:00\"}}\n</tool_call>",
+    "names": [
+     "create_event"
+    ],
+    "calls": [
+     [
+      "create_event",
+      {
+       "title": "Gym",
+       "date": "2025-04-10",
+       "time": "18:00"
+      }
+     ]
+    ]
+   },
+   "ps5": {
+    "answer": "<tool_call>\n{\"name\": \"get_stock_price\", \"arguments\": {\"symbol\": \"GOOGL\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"get_stock_price\", \"arguments\": {\"symbol\": \"AMZN\"}}\n</tool_call>",
+    "names": [
+     "get_stock_price",
+     "get_stock_price"
+    ],
+    "calls": [
+     [
+      "get_stock_price",
+      {
+       "symbol": "GOOGL"
+      }
+     ],
+     [
+      "get_stock_price",
+      {
+       "symbol": "AMZN"
+      }
+     ]
+    ]
+   },
+   "ps6": {
+    "answer": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Madrid\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Lisbon\"}}\n</tool_call>",
+    "names": [
+     "get_weather",
+     "get_weather"
+    ],
+    "calls": [
+     [
+      "get_weather",
+      {
+       "city": "Madrid"
+      }
+     ],
+     [
+      "get_weather",
+      {
+       "city": "Lisbon"
+      }
+     ]
+    ]
+   },
+   "ps7": {
+    "answer": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Napoli\", \"day\": \"19/03/2023\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Bari\", \"day\": \"19/03/2023\"}}\n</tool_call>",
+    "names": [
+     "get_weather",
+     "get_weather"
+    ],
+    "calls": [
+     [
+      "get_weather",
+      {
+       "city": "Napoli",
+       "day": "19/03/2023"
+      }
+     ],
+     [
+      "get_weather",
+      {
+       "city": "Bari",
+       "day": "19/03/2023"
+      }
+     ]
+    ]
+   },
+   "ps8": {
+    "answer": "<tool_call>\n{\"name\": \"get_stock_price\", \"arguments\": {\"symbol\": \"NVDA\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"get_stock_price\", \"arguments\": {\"symbol\": \"META\"}}\n</tool_call>",
+    "names": [
+     "get_stock_price",
+     "get_stock_price"
+    ],
+    "calls": [
+     [
+      "get_stock_price",
+      {
+       "symbol": "NVDA"
+      }
+     ],
+     [
+      "get_stock_price",
+      {
+       "symbol": "META"
+      }
+     ]
+    ]
+   },
+   "ps9": {
+    "answer": "<tool_call>\n{\"name\": \"convert_currency\", \"arguments\": {\"amount\": 100, \"from\": \"EUR\", \"to\": \"EUR\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"convert_currency\", \"arguments\": {\"amount\": 100, \"from\": \"GBP\", \"to\": \"GBP\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"convert_currency\", \"arguments\": {\"amount\": 100, \"from\": \"USD\", \"to\": \"GBP\"}}\n</tool_call>",
+    "names": [
+     "convert_currency",
+     "convert_currency",
+     "convert_currency"
+    ],
+    "calls": [
+     [
+      "convert_currency",
+      {
+       "amount": 100,
+       "from": "EUR",
+       "to": "EUR"
+      }
+     ],
+     [
+      "convert_currency",
+      {
+       "amount": 100,
+       "from": "GBP",
+       "to": "GBP"
+      }
+     ],
+     [
+      "convert_currency",
+      {
+       "amount": 100,
+       "from": "USD",
+       "to": "GBP"
+      }
+     ]
+    ]
+   },
+   "ps10": {
+    "answer": "<tool_call>\n{\"name\": \"convert_currency\", \"arguments\": {\"amount\": 50, \"from\": \"USD\", \"to\": \"EUR\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"convert_currency\", \"arguments\": {\"amount\": 50, \"from\": \"USD\", \"to\": \"GBP\"}}\n</tool_call>",
+    "names": [
+     "convert_currency",
+     "convert_currency"
+    ],
+    "calls": [
+     [
+      "convert_currency",
+      {
+       "amount": 50,
+       "from": "USD",
+       "to": "EUR"
+      }
+     ],
+     [
+      "convert_currency",
+      {
+       "amount": 50,
+       "from": "USD",
+       "to": "GBP"
+      }
+     ]
+    ]
+   },
+   "pd5": {
+    "answer": "<tool_call>\n{\"name\": \"web_search\", \"arguments\": {\"query\": \"clima\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"get_stock_price\", \"arguments\": {\"symbol\": \"TSLA\"}}\n</tool_call>",
+    "names": [
+     "web_search",
+     "get_stock_price"
+    ],
+    "calls": [
+     [
+      "web_search",
+      {
+       "query": "clima"
+      }
+     ],
+     [
+      "get_stock_price",
+      {
+       "symbol": "TSLA"
+      }
+     ]
+    ]
+   },
+   "pd6": {
+    "answer": "<tool_call>\n{\"name\": \"translate_text\", \"arguments\": {\"text\": \"hello\", \"target_language\": \"French\"}}\n</tool_call>",
+    "names": [
+     "translate_text"
+    ],
+    "calls": [
+     [
+      "translate_text",
+      {
+       "text": "hello",
+       "target_language": "French"
+      }
+     ]
+    ]
+   },
+   "pd7": {
+    "answer": "<tool_call>\n{\"name\": \"calculate\", \"arguments\": {\"expression\": \"200 divided by 8\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Venezia\"}}\n</tool_call>",
+    "names": [
+     "calculate",
+     "get_weather"
+    ],
+    "calls": [
+     [
+      "calculate",
+      {
+       "expression": "200 divided by 8"
+      }
+     ],
+     [
+      "get_weather",
+      {
+       "city": "Venezia"
+      }
+     ]
+    ]
+   },
+   "pd8": {
+    "answer": "<tool_call>\n{\"name\": \"convert_currency\", \"arguments\": {\"amount\": 500, \"from\": \"euros\", \"to\": \"dollars\"}}\n</tool_call>",
+    "names": [
+     "convert_currency"
+    ],
+    "calls": [
+     [
+      "convert_currency",
+      {
+       "amount": 500,
+       "from": "euros",
+       "to": "dollars"
+      }
+     ]
+    ]
+   },
+   "pd9": {
+    "answer": "<tool_call>\n{\"name\": \"get_stock_price\", \"arguments\": {\"symbol\": \"MSFT\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"translate_text\", \"arguments\": {\"text\": \"buonasera\", \"target_language\": \"English\"}}\n</tool_call>",
+    "names": [
+     "get_stock_price",
+     "translate_text"
+    ],
+    "calls": [
+     [
+      "get_stock_price",
+      {
+       "symbol": "MSFT"
+      }
+     ],
+     [
+      "translate_text",
+      {
+       "text": "buonasera",
+       "target_language": "English"
+      }
+     ]
+    ]
+   },
+   "pd10": {
+    "answer": "<tool_call>\n{\"name\": \"calculate\", \"arguments\": {\"expression\": \"25/100\", \"from\": \"80\", \"to\": \"Oslo\"}}\n</tool_call>",
+    "names": [
+     "calculate"
+    ],
+    "calls": [
+     [
+      "calculate",
+      {
+       "expression": "25/100",
+       "from": "80",
+       "to": "Oslo"
+      }
+     ]
+    ]
+   },
+   "ma5": {
+    "answer": "<tool_call>\n{\"name\": \"book_flight\", \"arguments\": {\"origin\": \"Roma\", \"destination\": \"Berlino\", \"date\": \"2025-09-10\", \"passengers\": 2}}\n</tool_call>",
+    "names": [
+     "book_flight"
+    ],
+    "calls": [
+     [
+      "book_flight",
+      {
+       "origin": "Roma",
+       "destination": "Berlino",
+       "date": "2025-09-10",
+       "passengers": 2
+      }
+     ]
+    ]
+   },
+   "ma6": {
+    "answer": "<tool_call>\n{\"name\": \"book_flight\", \"arguments\": {\"origin\": \"Paris\", \"destination\": \"Madrid\", \"date\": \"2025-08-15\", \"passengers\": 4}}\n</tool_call>",
+    "names": [
+     "book_flight"
+    ],
+    "calls": [
+     [
+      "book_flight",
+      {
+       "origin": "Paris",
+       "destination": "Madrid",
+       "date": "2025-08-15",
+       "passengers": 4
+      }
+     ]
+    ]
+   },
+   "ma7": {
+    "answer": "Mi manca un'informazione. A chi ti scrivo? Può relatedi a un'email specifica?",
+    "names": [],
+    "calls": []
+   },
+   "ma8": {
+    "answer": "<tool_call>\n{\"name\": \"send_email\", \"arguments\": {\"to\": \"john@ex.com\", \"subject\": \"Report\", \"body\": \"The report is attached.\"}}\n</tool_call>",
+    "names": [
+     "send_email"
+    ],
+    "calls": [
+     [
+      "send_email",
+      {
+       "to": "john@ex.com",
+       "subject": "Report",
+       "body": "The report is attached."
+      }
+     ]
+    ]
+   },
+   "ma9": {
+    "answer": "<tool_call>\n{\"name\": \"create_event\", \"arguments\": {\"title\": \"Compleanno\", \"date\": \"2025-06-20\", \"time\": \"20:00\"}}\n</tool_call>",
+    "names": [
+     "create_event"
+    ],
+    "calls": [
+     [
+      "create_event",
+      {
+       "title": "Compleanno",
+       "date": "2025-06-20",
+       "time": "20:00"
+      }
+     ]
+    ]
+   },
+   "ma10": {
+    "answer": "<tool_call>\n{\"name\": \"create_event\", \"arguments\": {\"title\": \"Standup\", \"date\": \"2025-05-05\", \"time\": \"09:00\"}}\n</tool_call>",
+    "names": [
+     "create_event"
+    ],
+    "calls": [
+     [
+      "create_event",
+      {
+       "title": "Standup",
+       "date": "2025-05-05",
+       "time": "09:00"
+      }
+     ]
+    ]
+   },
+   "d5": {
+    "answer": "Per procedere, possiamo utilizzare la funzione di calcolo. Ma prima, dobbiamo trovare il numero di persone in famiglia.",
+    "names": [],
+    "calls": []
+   },
+   "d6": {
+    "answer": "Sure. How much is 75 pounds in dollars?",
+    "names": [],
+    "calls": []
+   },
+   "d7": {
+    "answer": "<tool_call>\n{\"name\": \"translate_text\", \"arguments\": {\"text\": \"arrivederci\", \"target_language\": \"Spanish\"}}\n</tool_call>",
+    "names": [
+     "translate_text"
+    ],
+    "calls": [
+     [
+      "translate_text",
+      {
+       "text": "arrivederci",
+       "target_language": "Spanish"
+      }
+     ]
+    ]
+   },
+   "d8": {
+    "answer": "To do that, I need one detail to ask. What's 144?",
+    "names": [],
+    "calls": []
+   },
+   "d9": {
+    "answer": "<tool_call>\n{\"name\": \"get_stock_price\", \"arguments\": {\"symbol\": \"NFLX\"}}\n</tool_call>",
+    "names": [
+     "get_stock_price"
+    ],
+    "calls": [
+     [
+      "get_stock_price",
+      {
+       "symbol": "NFLX"
+      }
+     ]
+    ]
+   },
+   "d10": {
+    "answer": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Stockholm\"}}\n</tool_call>",
+    "names": [
+     "get_weather"
+    ],
+    "calls": [
+     [
+      "get_weather",
+      {
+       "city": "Stockholm"
+      }
+     ]
+    ]
+   },
+   "mi5": {
+    "answer": "Mi dispiace, non posso inviare un'email: non ho uno strumento adatto.",
+    "names": [],
+    "calls": []
+   },
+   "mi6": {
+    "answer": "What should the body say?",
+    "names": [],
+    "calls": []
+   },
+   "mi7": {
+    "answer": "Non posso prenotare un volo: nessuno degli strumenti disponibili lo consente.",
+    "names": [],
+    "calls": []
+   },
+   "mi8": {
+    "answer": "I don't have a tool available for this request.",
+    "names": [],
+    "calls": []
+   },
+   "mi9": {
+    "answer": "Mi spiace, non è possibile: tra gli strumenti forniti non ce n'è uno adatto.",
+    "names": [],
+    "calls": []
+   },
+   "mi10": {
+    "answer": "<tool_call>\n{\"name\": \"book_flight\", \"arguments\": {\"origin\": \"Lisbon\", \"destination\": \"Lisbon\", \"date\": \"2025-10-01\"}}\n</tool_call>",
+    "names": [
+     "book_flight"
+    ],
+    "calls": [
+     [
+      "book_flight",
+      {
+       "origin": "Lisbon",
+       "destination": "Lisbon",
+       "date": "2025-10-01"
+      }
+     ]
+    ]
+   },
+   "u5": {
+    "answer": "Questa operazione non è supportata dagli strumenti a mia disposizione.",
+    "names": [],
+    "calls": []
+   },
+   "u6": {
+    "answer": "I don't have a tool available for this request.",
+    "names": [],
+    "calls": []
+   },
+   "u7": {
+    "answer": "Mi dispiace, non posso ordinare una pizza: non ho uno strumento adatto.",
+    "names": [],
+    "calls": []
+   },
+   "u8": {
+    "answer": "Sorry, that's not possible: none of the provided tools fit.",
+    "names": [],
+    "calls": []
+   },
+   "u9": {
+    "answer": "Mi spiace, non è possibile: tra gli strumenti forniti non ce n'è uno adatto.",
+    "names": [],
+    "calls": []
+   },
+   "u10": {
+    "answer": "Sorry, that's not possible: none of the provided tools fit.",
+    "names": [],
+    "calls": []
+   },
+   "k5": {
+    "answer": "La Divina Commedia è stata scritta da Dante Alighieri.",
+    "names": [],
+    "calls": []
+   },
+   "k6": {
+    "answer": "The theory of relativity was developed by Albert Einstein.",
+    "names": [],
+    "calls": []
+   },
+   "k7": {
+    "answer": "Il contrario di 'grande' è 'piccolo'.",
+    "names": [],
+    "calls": []
+   },
+   "k8": {
+    "answer": "The opposite of 'hot' is 'cold'.",
+    "names": [],
+    "calls": []
+   },
+   "k9": {
+    "answer": "La fotosintesi è il processo con cui le piante usano la luce per convertire acqua e anidride carbonica in glucosio e ossigeno.",
+    "names": [],
+    "calls": []
+   },
+   "k10": {
+    "answer": "Sorry, I can't make a phone call: I'm out of the question.",
+    "names": [],
+    "calls": []
+   },
+   "o5": {
+    "answer": "Il costo è stato convertito correttamente da euro a dollari.",
+    "names": [],
+    "calls": []
+   },
+   "o6": {
+    "answer": "The price is 420 USD per share.",
+    "names": [],
+    "calls": []
+   },
+   "o7": {
+    "answer": "Ci sono 30°C e l'atmosfera è soleggiata.",
+    "names": [],
+    "calls": []
+   },
+   "o8": {
+    "answer": "It's 8°C and snowing.",
+    "names": [],
+    "calls": []
+   },
+   "o9": {
+    "answer": "Il risultato è 270.",
+    "names": [],
+    "calls": []
+   },
+   "o10": {
+    "answer": "The amount is 117 EUR.",
+    "names": [],
+    "calls": []
+   },
+   "m5": {
+    "answer": "Il prezzo è 250€ in USD.",
+    "names": [],
+    "calls": []
+   },
+   "m6": {
+    "answer": "Add the event to your calendar.",
+    "names": [],
+    "calls": []
+   },
+   "m7": {
+    "answer": "<tool_call>\n{\"name\": \"send_email\", \"arguments\": {\"to\": \"mail@ex.it\", \"subject\": \"Piove a Torino\", \"body\": \"Ciao, piove a Torino!\", \"message\": \"Ciao, piove a Torino\"}}\n</tool_call>",
+    "names": [
+     "send_email"
+    ],
+    "calls": [
+     [
+      "send_email",
+      {
+       "to": "mail@ex.it",
+       "subject": "Piove a Torino",
+       "body": "Ciao, piove a Torino!",
+       "message": "Ciao, piove a Torino"
+      }
+     ]
+    ]
+   },
+   "m8": {
+    "answer": "<tool_call>\n{\"name\": \"send_email\", \"arguments\": {\"to\": \"email@example.com\", \"subject\": \"WEEKLY WEATHER\", \"body\": \"Madrid is sunny tomorrow. The weather is expected to be nice and comfortable. I'm here to help.\"}}\n</tool_call>",
+    "names": [
+     "send_email"
+    ],
+    "calls": [
+     [
+      "send_email",
+      {
+       "to": "email@example.com",
+       "subject": "WEEKLY WEATHER",
+       "body": "Madrid is sunny tomorrow. The weather is expected to be nice and comfortable. I'm here to help."
+      }
+     ]
+    ]
+   },
+   "m9": {
+    "answer": "C'è la Olimpiade a Los Angeles dal 2028. Il tempo è stato 22°C oggi.",
+    "names": [],
+    "calls": []
+   },
+   "m10": {
+    "answer": "<tool_call>\n{\"name\": \"send_email\", \"arguments\": {\"to\": \"email@example.com\", \"subject\": \"Get Apple's stock price\", \"body\": \"Enter your email address: \", \"message\": \"I hope you're enjoying the Apple stock price. I'll send it to you at 8:00 AM. Please let me know if you need any further assistance. \"}}\n</tool_call>",
+    "names": [
+     "send_email"
+    ],
+    "calls": [
+     [
+      "send_email",
+      {
+       "to": "email@example.com",
+       "subject": "Get Apple's stock price",
+       "body": "Enter your email address: ",
+       "message": "I hope you're enjoying the Apple stock price. I'll send it to you at 8:00 AM. Please let me know if you need any further assistance. "
+      }
+     ]
+    ]
+   }
+  }
+ },
+ "grades": {
+  "giux78/nesso2-0.4B-agentic-v2-opd2": {
+   "s1": true,
+   "s2": false,
+   "s3": true,
+   "s4": true,
+   "ps1": true,
+   "ps2": true,
+   "ps3": true,
+   "ps4": true,
+   "pd1": false,
+   "pd2": false,
+   "pd3": false,
+   "pd4": true,
+   "ma1": true,
+   "ma2": true,
+   "ma3": false,
+   "ma4": true,
+   "d1": true,
+   "d2": false,
+   "d3": false,
+   "d4": true,
+   "mi1": true,
+   "mi2": true,
+   "mi3": true,
+   "mi4": true,
+   "u1": true,
+   "u2": true,
+   "u3": true,
+   "u4": true,
+   "k1": true,
+   "k2": true,
+   "k3": true,
+   "k4": true,
+   "o1": true,
+   "o2": false,
+   "o3": true,
+   "o4": true,
+   "m1": true,
+   "m2": false,
+   "m3": true,
+   "m4": false,
+   "s5": true,
+   "s6": true,
+   "s7": true,
+   "s8": true,
+   "s9": false,
+   "s10": true,
+   "ps5": true,
+   "ps6": true,
+   "ps7": true,
+   "ps8": true,
+   "ps9": false,
+   "ps10": true,
+   "pd5": true,
+   "pd6": false,
+   "pd7": true,
+   "pd8": false,
+   "pd9": true,
+   "pd10": false,
+   "ma5": true,
+   "ma6": true,
+   "ma7": false,
+   "ma8": true,
+   "ma9": true,
+   "ma10": true,
+   "d5": false,
+   "d6": false,
+   "d7": true,
+   "d8": false,
+   "d9": true,
+   "d10": true,
+   "mi5": true,
+   "mi6": true,
+   "mi7": true,
+   "mi8": true,
+   "mi9": true,
+   "mi10": false,
+   "u5": true,
+   "u6": true,
+   "u7": true,
+   "u8": true,
+   "u9": true,
+   "u10": true,
+   "k5": true,
+   "k6": true,
+   "k7": true,
+   "k8": true,
+   "k9": true,
+   "k10": true,
+   "o5": false,
+   "o6": true,
+   "o7": true,
+   "o8": true,
+   "o9": true,
+   "o10": true,
+   "m5": false,
+   "m6": false,
+   "m7": true,
+   "m8": false,
+   "m9": false,
+   "m10": true
+  }
+ }
+}

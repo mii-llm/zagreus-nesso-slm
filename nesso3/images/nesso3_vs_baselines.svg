@@ -1,0 +1,82 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 880 400' width='880' font-family='-apple-system,Segoe UI,Helvetica,Arial,sans-serif'>
+<rect width='880' height='400' fill='#ffffff'/>
+<text x='20' y='28' font-size='18' font-weight='700' fill='#111'>Nesso3-0.4B-Agentic vs Nesso2 v1 vs Qwen3-0.6B</text>
+<text x='20' y='48' font-size='12' fill='#555'>higher is better in every panel; Qwen3-0.6B is ahead on 4 of the 8 (robot, generic tools, academics, English chat) and we publish those too</text>
+<text x='20' y='84' font-size='11.5' font-weight='700' fill='#222'>100-case function calling (/100)</text>
+<rect x='30' y='120.1' width='40' height='62.9' rx='3' fill='#2563eb'/>
+<text x='50.0' y='116.1' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>74</text>
+<text x='50.0' y='197' font-size='9.5' fill='#444' text-anchor='middle'>Nesso3</text>
+<rect x='88' y='125.2' width='40' height='57.8' rx='3' fill='#8b95a5'/>
+<text x='108.0' y='121.2' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>68</text>
+<text x='108.0' y='197' font-size='9.5' fill='#444' text-anchor='middle'>Nesso2 v1</text>
+<rect x='146' y='126.0' width='40' height='57.0' rx='3' fill='#e0a030'/>
+<text x='166.0' y='122.0' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>67</text>
+<text x='166.0' y='197' font-size='9.5' fill='#444' text-anchor='middle'>Qwen3-0.6B</text>
+<text x='235' y='84' font-size='11.5' font-weight='700' fill='#222'>Italian half of the 100 (/50)</text>
+<rect x='245' y='118.4' width='40' height='64.6' rx='3' fill='#2563eb'/>
+<text x='265.0' y='114.4' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>38</text>
+<text x='265.0' y='197' font-size='9.5' fill='#444' text-anchor='middle'>Nesso3</text>
+<rect x='303' y='123.5' width='40' height='59.5' rx='3' fill='#8b95a5'/>
+<text x='323.0' y='119.5' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>35</text>
+<text x='323.0' y='197' font-size='9.5' fill='#444' text-anchor='middle'>Nesso2 v1</text>
+<rect x='361' y='133.7' width='40' height='49.3' rx='3' fill='#e0a030'/>
+<text x='381.0' y='129.7' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>29</text>
+<text x='381.0' y='197' font-size='9.5' fill='#444' text-anchor='middle'>Qwen3-0.6B</text>
+<text x='450' y='84' font-size='11.5' font-weight='700' fill='#222'>Held-out Italian healthcare (%)</text>
+<rect x='460' y='124.8' width='40' height='58.2' rx='3' fill='#2563eb'/>
+<text x='480.0' y='120.8' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>68.5</text>
+<text x='480.0' y='197' font-size='9.5' fill='#444' text-anchor='middle'>Nesso3</text>
+<rect x='518' y='127.5' width='40' height='55.5' rx='3' fill='#8b95a5'/>
+<text x='538.0' y='123.5' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>65.3</text>
+<text x='538.0' y='197' font-size='9.5' fill='#444' text-anchor='middle'>Nesso2 v1</text>
+<rect x='576' y='128.7' width='40' height='54.3' rx='3' fill='#e0a030'/>
+<text x='596.0' y='124.7' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>63.9</text>
+<text x='596.0' y='197' font-size='9.5' fill='#444' text-anchor='middle'>Qwen3-0.6B</text>
+<text x='665' y='84' font-size='11.5' font-weight='700' fill='#222'>Robot benchmark, novel tools (%)</text>
+<rect x='675' y='128.9' width='40' height='54.1' rx='3' fill='#2563eb'/>
+<text x='695.0' y='124.9' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>63.6</text>
+<text x='695.0' y='197' font-size='9.5' fill='#444' text-anchor='middle'>Nesso3</text>
+<rect x='733' y='137.7' width='40' height='45.3' rx='3' fill='#8b95a5'/>
+<text x='753.0' y='133.7' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>53.3</text>
+<text x='753.0' y='197' font-size='9.5' fill='#444' text-anchor='middle'>Nesso2 v1</text>
+<rect x='791' y='122.6' width='40' height='60.4' rx='3' fill='#e0a030'/>
+<text x='811.0' y='118.6' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>71.1</text>
+<text x='811.0' y='197' font-size='9.5' fill='#444' text-anchor='middle'>Qwen3-0.6B</text>
+<text x='20' y='234' font-size='11.5' font-weight='700' fill='#222'>Generic English tools (%)</text>
+<rect x='30' y='292.2' width='40' height='40.8' rx='3' fill='#2563eb'/>
+<text x='50.0' y='288.2' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>48</text>
+<text x='50.0' y='347' font-size='9.5' fill='#444' text-anchor='middle'>Nesso3</text>
+<rect x='88' y='261.6' width='40' height='71.4' rx='3' fill='#e0a030'/>
+<text x='108.0' y='257.6' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>84</text>
+<text x='108.0' y='347' font-size='9.5' fill='#444' text-anchor='middle'>Qwen3-0.6B</text>
+<text x='235' y='234' font-size='11.5' font-weight='700' fill='#222'>Academic average, IT+EN (x100)</text>
+<rect x='245' y='272.5' width='40' height='60.5' rx='3' fill='#2563eb'/>
+<text x='265.0' y='268.5' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>35.6</text>
+<text x='265.0' y='347' font-size='9.5' fill='#444' text-anchor='middle'>Nesso3</text>
+<rect x='303' y='273.0' width='40' height='60.0' rx='3' fill='#8b95a5'/>
+<text x='323.0' y='269.0' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>35.3</text>
+<text x='323.0' y='347' font-size='9.5' fill='#444' text-anchor='middle'>Nesso2 v1</text>
+<rect x='361' y='265.7' width='40' height='67.3' rx='3' fill='#e0a030'/>
+<text x='381.0' y='261.7' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>39.6</text>
+<text x='381.0' y='347' font-size='9.5' fill='#444' text-anchor='middle'>Qwen3-0.6B</text>
+<text x='450' y='234' font-size='11.5' font-weight='700' fill='#222'>Chat, LLM judge, Italian (/10)</text>
+<rect x='460' y='302.0' width='40' height='31.0' rx='3' fill='#2563eb'/>
+<text x='480.0' y='298.0' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>3.65</text>
+<text x='480.0' y='347' font-size='9.5' fill='#444' text-anchor='middle'>Nesso3</text>
+<rect x='518' y='296.0' width='40' height='37.0' rx='3' fill='#8b95a5'/>
+<text x='538.0' y='292.0' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>4.35</text>
+<text x='538.0' y='347' font-size='9.5' fill='#444' text-anchor='middle'>Nesso2 v1</text>
+<rect x='576' y='309.8' width='40' height='23.2' rx='3' fill='#e0a030'/>
+<text x='596.0' y='305.8' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>2.73</text>
+<text x='596.0' y='347' font-size='9.5' fill='#444' text-anchor='middle'>Qwen3-0.6B</text>
+<text x='665' y='234' font-size='11.5' font-weight='700' fill='#222'>Chat, LLM judge, English (/10)</text>
+<rect x='675' y='297.0' width='40' height='36.0' rx='3' fill='#2563eb'/>
+<text x='695.0' y='293.0' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>4.23</text>
+<text x='695.0' y='347' font-size='9.5' fill='#444' text-anchor='middle'>Nesso3</text>
+<rect x='733' y='299.0' width='40' height='34.0' rx='3' fill='#8b95a5'/>
+<text x='753.0' y='295.0' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>4.00</text>
+<text x='753.0' y='347' font-size='9.5' fill='#444' text-anchor='middle'>Nesso2 v1</text>
+<rect x='791' y='283.9' width='40' height='49.1' rx='3' fill='#e0a030'/>
+<text x='811.0' y='279.9' font-size='11' font-weight='700' fill='#111' text-anchor='middle'>5.78</text>
+<text x='811.0' y='347' font-size='9.5' fill='#444' text-anchor='middle'>Qwen3-0.6B</text>
+</svg>

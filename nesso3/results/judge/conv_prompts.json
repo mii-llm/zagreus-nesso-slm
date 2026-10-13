@@ -1,0 +1,342 @@
+{
+ "IT": {
+  "identity": [
+   {
+    "role": "system",
+    "content": "Sei un assistente utile."
+   },
+   {
+    "role": "user",
+    "content": "Ciao! Chi sei e chi ti ha creato?"
+   },
+   {
+    "role": "assistant",
+    "content": "Ciao! Sono un assistente AI. Come posso aiutarti?"
+   },
+   {
+    "role": "user",
+    "content": "Qual è la capitale d'Italia?"
+   }
+  ],
+  "quick_dinner": [
+   {
+    "role": "user",
+    "content": "Mi fai una lista di 3 idee per una cena veloce?"
+   }
+  ],
+  "vegetarian_followup": [
+   {
+    "role": "user",
+    "content": "Mi fai una lista di 3 idee per una cena veloce?"
+   },
+   {
+    "role": "assistant",
+    "content": "Eccone tre: pasta al pomodoro, insalata di riso, frittata di verdure."
+   },
+   {
+    "role": "user",
+    "content": "Rendila vegetariana."
+   }
+  ],
+  "math_reasoning": [
+   {
+    "role": "user",
+    "content": "Spiega passo per passo come calcolare il 15% di 240."
+   }
+  ],
+  "creative_writing": [
+   {
+    "role": "user",
+    "content": "Scrivi un breve paragrafo descrittivo su un tramonto in montagna."
+   }
+  ],
+  "translation": [
+   {
+    "role": "user",
+    "content": "Traduci in inglese: 'Il cielo è terso e il vento soffia leggero.'"
+   }
+  ],
+  "summarization": [
+   {
+    "role": "user",
+    "content": "Riassumi in due frasi: 'La fotosintesi è il processo con cui le piante convertono la luce solare, l'acqua e l'anidride carbonica in glucosio e ossigeno, fornendo energia alla pianta e rilasciando ossigeno nell'atmosfera.'"
+   }
+  ],
+  "code_generation": [
+   {
+    "role": "system",
+    "content": "Sei un assistente di programmazione."
+   },
+   {
+    "role": "user",
+    "content": "Scrivi una funzione Python che restituisce il fattoriale di n."
+   }
+  ],
+  "grammar_correction": [
+   {
+    "role": "user",
+    "content": "Correggi gli errori grammaticali: 'Io sono andato al mercato e ho comprato delle mele freschi.'"
+   }
+  ],
+  "opinion_pros_cons": [
+   {
+    "role": "user",
+    "content": "Quali sono i pro e i contro del lavoro da remoto?"
+   }
+  ],
+  "roleplay_tour_guide": [
+   {
+    "role": "system",
+    "content": "Sei una guida turistica esperta di Roma."
+   },
+   {
+    "role": "user",
+    "content": "Cosa dovrei assolutamente visitare se ho solo un giorno a Roma?"
+   }
+  ],
+  "classification": [
+   {
+    "role": "user",
+    "content": "Classifica queste parole come animale, frutto o colore: cane, mela, rosso, gatto, banana, blu."
+   }
+  ],
+  "logical_reasoning": [
+   {
+    "role": "user",
+    "content": "Se tutti i gatti sono animali e alcuni animali sono pericolosi, è necessariamente vero che alcuni gatti sono pericolosi? Spiega."
+   }
+  ],
+  "recipe_request": [
+   {
+    "role": "user",
+    "content": "Dammi una ricetta semplice per fare la carbonara tradizionale."
+   }
+  ],
+  "recipe_followup": [
+   {
+    "role": "user",
+    "content": "Dammi una ricetta semplice per fare la carbonara tradizionale."
+   },
+   {
+    "role": "assistant",
+    "content": "La carbonara tradizionale si fa con: guanciale, uova, pecorino romano, pepe nero e spaghetti."
+   },
+   {
+    "role": "user",
+    "content": "Quante calorie ha circa una porzione?"
+   }
+  ],
+  "explain_concept": [
+   {
+    "role": "user",
+    "content": "Spiega cos'è l'intelligenza artificiale come se avessi 10 anni."
+   }
+  ],
+  "list_generation": [
+   {
+    "role": "user",
+    "content": "Elenca 5 libri italiani classici che ogni studente dovrebbe leggere."
+   }
+  ],
+  "email_writing": [
+   {
+    "role": "system",
+    "content": "Sei un assistente professionale."
+   },
+   {
+    "role": "user",
+    "content": "Scrivi una breve email formale per chiedere un appuntamento con un cliente."
+   }
+  ],
+  "trivia": [
+   {
+    "role": "user",
+    "content": "Chi ha dipinto la Cappella Sistina e in quale periodo?"
+   }
+  ],
+  "multi_turn_advice": [
+   {
+    "role": "user",
+    "content": "Ho mal di schiena da qualche giorno. Cosa posso fare?"
+   },
+   {
+    "role": "assistant",
+    "content": "Puoi provare a fare stretching leggero, applicare calore sulla zona dolorante e riposare. Se il dolore persiste, consulta un medico."
+   },
+   {
+    "role": "user",
+    "content": "Quali esercizi di stretching consigli nello specifico?"
+   }
+  ]
+ },
+ "EN": {
+  "identity": [
+   {
+    "role": "system",
+    "content": "You are a helpful assistant."
+   },
+   {
+    "role": "user",
+    "content": "Hi! Who are you and who created you?"
+   },
+   {
+    "role": "assistant",
+    "content": "Hi! I am an AI assistant. How can I help you?"
+   },
+   {
+    "role": "user",
+    "content": "What is the capital of Italy?"
+   }
+  ],
+  "quick_dinner": [
+   {
+    "role": "user",
+    "content": "Can you give me a list of 3 quick dinner ideas?"
+   }
+  ],
+  "vegetarian_followup": [
+   {
+    "role": "user",
+    "content": "Can you give me a list of 3 quick dinner ideas?"
+   },
+   {
+    "role": "assistant",
+    "content": "Here are three: pasta with tomato sauce, rice salad, vegetable frittata."
+   },
+   {
+    "role": "user",
+    "content": "Make it vegetarian."
+   }
+  ],
+  "math_reasoning": [
+   {
+    "role": "user",
+    "content": "Explain step by step how to calculate 15% of 240."
+   }
+  ],
+  "creative_writing": [
+   {
+    "role": "user",
+    "content": "Write a short descriptive paragraph about a mountain sunset."
+   }
+  ],
+  "translation": [
+   {
+    "role": "user",
+    "content": "Translate into Italian: 'The sky is clear and the wind blows softly.'"
+   }
+  ],
+  "summarization": [
+   {
+    "role": "user",
+    "content": "Summarise in two sentences: 'Photosynthesis is the process by which plants convert sunlight, water and carbon dioxide into glucose and oxygen, providing energy to the plant and releasing oxygen into the atmosphere.'"
+   }
+  ],
+  "code_generation": [
+   {
+    "role": "system",
+    "content": "You are a programming assistant."
+   },
+   {
+    "role": "user",
+    "content": "Write a Python function that returns the factorial of n."
+   }
+  ],
+  "grammar_correction": [
+   {
+    "role": "user",
+    "content": "Correct the grammatical errors: 'She don't know nothing about the project and we was waiting for her answer.'"
+   }
+  ],
+  "opinion_pros_cons": [
+   {
+    "role": "user",
+    "content": "What are the pros and cons of remote work?"
+   }
+  ],
+  "roleplay_tour_guide": [
+   {
+    "role": "system",
+    "content": "You are an expert tour guide for Rome."
+   },
+   {
+    "role": "user",
+    "content": "What should I absolutely visit if I only have one day in Rome?"
+   }
+  ],
+  "classification": [
+   {
+    "role": "user",
+    "content": "Classify these words as animal, fruit or colour: dog, apple, red, cat, banana, blue."
+   }
+  ],
+  "logical_reasoning": [
+   {
+    "role": "user",
+    "content": "If all cats are animals and some animals are dangerous, is it necessarily true that some cats are dangerous? Explain."
+   }
+  ],
+  "recipe_request": [
+   {
+    "role": "user",
+    "content": "Give me a simple recipe for making traditional carbonara."
+   }
+  ],
+  "recipe_followup": [
+   {
+    "role": "user",
+    "content": "Give me a simple recipe for making traditional carbonara."
+   },
+   {
+    "role": "assistant",
+    "content": "Traditional carbonara is made with: guanciale, eggs, pecorino romano, black pepper and spaghetti."
+   },
+   {
+    "role": "user",
+    "content": "Roughly how many calories does one serving have?"
+   }
+  ],
+  "explain_concept": [
+   {
+    "role": "user",
+    "content": "Explain what artificial intelligence is as if I were 10 years old."
+   }
+  ],
+  "list_generation": [
+   {
+    "role": "user",
+    "content": "List 5 classic Italian books that every student should read."
+   }
+  ],
+  "email_writing": [
+   {
+    "role": "system",
+    "content": "You are a professional assistant."
+   },
+   {
+    "role": "user",
+    "content": "Write a short formal email to request a meeting with a client."
+   }
+  ],
+  "trivia": [
+   {
+    "role": "user",
+    "content": "Who painted the Sistine Chapel and in what period?"
+   }
+  ],
+  "multi_turn_advice": [
+   {
+    "role": "user",
+    "content": "I have had back pain for a few days. What can I do?"
+   },
+   {
+    "role": "assistant",
+    "content": "You can try gentle stretching, apply heat to the painful area and rest. If the pain persists, see a doctor."
+   },
+   {
+    "role": "user",
+    "content": "Which specific stretching exercises do you recommend?"
+   }
+  ]
+ }
+}

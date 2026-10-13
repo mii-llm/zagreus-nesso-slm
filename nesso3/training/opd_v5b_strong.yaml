@@ -1,0 +1,33 @@
+# OPD for Nesso3 (SFT v5b): repair free-form chat (esp. Italian) with nesso-3B as teacher, while a frozen copy of v5b
+# anchors the tool-use behaviour (tool prompts are scored by v5b itself => KL pulls the student back to its own tool policy).
+model:
+  student: mii-llm/nesso3-0.4B-agentic
+  gradient_checkpointing: true
+  use_liger_kernel: false
+teachers:
+  self:    {model: mii-llm/nesso3-0.4B-agentic, backend: hf}
+  teacher3b: {model: giux78/nesso-3B, backend: hf}
+sources:
+  chat_it:     {format: messages, path: ./data/chat_it.jsonl,     dev_path: ./data/chat_it_dev.jsonl,     teacher: teacher3b, weight: 0.50, max_new_tokens: 384}
+  chat_en:     {format: messages, path: ./data/chat_en.jsonl,     dev_path: ./data/chat_en_dev.jsonl,     teacher: teacher3b, weight: 0.20, max_new_tokens: 384}
+  agent_first: {format: messages, path: ./data/agent_first.jsonl, dev_path: ./data/agent_first_dev.jsonl, teacher: self,    weight: 0.15, max_new_tokens: 160}
+  agent_obs:   {format: messages, path: ./data/agent_obs.jsonl,   dev_path: ./data/agent_obs_dev.jsonl,   teacher: self,    weight: 0.15, max_new_tokens: 160}
+rollout:
+  backend: hf
+  batch_prompts: 32
+  temperature: 0.9
+  micro_seqs: 32
+train:
+  output_dir: ./runs/opd_v5b_strong
+  steps: 700
+  learning_rate: 2.0e-5
+  warmup_steps: 30
+  score_micro_seqs: 4
+  eval_every: 100
+  eval_samples: 60
+  save_steps: 175
+  keep_checkpoints: 1
+logging:
+  log_every: 1
+  use_wandb: false
+  run_name: opd_v5b_strong
